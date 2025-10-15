@@ -1,0 +1,76 @@
+<template>
+  <div
+    v-if="open"
+    ref="contentRef"
+    :class="contentClass"
+    role="listbox"
+    @keydown="handleKeydown"
+    @click.stop
+  >
+    <slot />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { computed, inject, onMounted, onUnmounted, ref, watch } from 'vue'
+import { cva } from 'class-variance-authority'
+
+const props = defineProps<{
+  class?: string
+  position?: 'item-aligned' | 'popper'
+}>()
+
+const selectContext = inject<{
+  value: any
+  setValue: (value: any) => void
+  open: boolean
+  setOpen: (open: boolean) => void
+}>('select')
+
+if (!selectContext) {
+  throw new Error('SelectContent must be used within a Select component')
+}
+
+const { open, setOpen } = selectContext
+
+const contentRef = ref<HTMLDivElement>()
+
+const contentClass = computed(() => {
+  return cva(
+    'relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-background text-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
+    {
+      variants: {
+        position: {
+          'item-aligned': '',
+          popper: 'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1',
+        },
+      },
+      defaultVariants: {
+        position: 'item-aligned',
+      },
+    }
+  )({
+    class: props.class,
+    position: props.position,
+  })
+})
+
+const handleKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'Escape') {
+    setOpen(false)
+  }
+}
+
+// Close on outside click
+watch(open, (isOpen) => {
+  if (isOpen) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (contentRef.value && !contentRef.value.contains(event.target as Node)) {
+        setOpen(false)
+      }
+    }
+    document.addEventListener('click', handleClickOutside)
+    return () => document.removeEventListener('click', handleClickOutside)
+  }
+})
+</script>
