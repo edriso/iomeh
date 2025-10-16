@@ -105,7 +105,7 @@ const onTabChange = (newTab: string) => {
                     >
                 </CardHeader>
                 <CardContent>
-                    <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+                    <div class="grid grid-cols-2 gap-6 sm:grid-cols-4">
                         <div class="text-center">
                             <p class="mb-1 text-xs text-muted-foreground">
                                 Today
