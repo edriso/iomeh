@@ -72,7 +72,7 @@ const shouldShowNavButton = (href: string) => {
                         class="flex h-auto items-center gap-2 p-0 font-heading hover:bg-transparent"
                     >
                         <AppLogo />
-                        <span class="text-xl text-foreground">{{
+                        <span class="text-xl font-medium text-foreground">{{
                             appName
                         }}</span>
                     </Button>
@@ -85,7 +85,7 @@ const shouldShowNavButton = (href: string) => {
                         title="Go to home"
                     >
                         <AppLogo />
-                        <span class="text-xl text-foreground">{{
+                        <span class="text-xl font-medium text-foreground">{{
                             appName
                         }}</span>
                     </Link>
