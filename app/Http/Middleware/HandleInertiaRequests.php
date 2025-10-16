@@ -43,19 +43,28 @@ class HandleInertiaRequests extends Middleware
             'name' => config('app.name'),
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
-                'user' => $request->user(),
-                'interests' => $request->user() 
-                    ? $request->user()->interests()
+                'user' => $request->user() ? [
+                    'id' => $request->user()->id,
+                    'username' => $request->user()->username,
+                    'name' => $request->user()->name,
+                    'email' => $request->user()->email,
+                    'avatar' => $request->user()->avatar,
+                    'current_streak' => $request->user()->current_streak ?? 0,
+                    'streak_tier' => $request->user()->getStreakTier(),
+                    'streak_multiplier' => $request->user()->streak_multiplier ?? 1.0,
+                ] : null,
+                'habits' => $request->user() 
+                    ? $request->user()->habits()
                         ->with('activityType:id,name,icon,category,base_points')
                         ->get()
-                        ->map(function ($interest) {
+                        ->map(function ($habit) {
                             return [
-                                'id' => $interest->id,
-                                'name' => $interest->activityType->name,
-                                'icon' => $interest->activityType->icon,
-                                'activity_type_id' => $interest->activity_type_id,
-                                'base_points' => $interest->activityType->base_points,
-                                'category' => $interest->activityType->category,
+                                'id' => $habit->id,
+                                'name' => $habit->activityType->name,
+                                'icon' => $habit->activityType->icon,
+                                'activity_type_id' => $habit->activity_type_id,
+                                'base_points' => $habit->activityType->base_points,
+                                'category' => $habit->activityType->category,
                             ];
                         })
                     : [],

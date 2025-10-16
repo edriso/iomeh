@@ -18,8 +18,8 @@ withDefaults(defineProps<Props>(), {
 const page = usePage();
 const { showLogActivityModal } = useLogActivity();
 
-// Get interests from shared Inertia data
-const interests = computed(() => (page.props.auth?.interests || []) as any[]);
+// Get habits from shared Inertia data
+const habits = computed(() => (page.props.auth?.habits || []) as any[]);
 </script>
 
 <template>
@@ -33,7 +33,7 @@ const interests = computed(() => (page.props.auth?.interests || []) as any[]);
         <!-- Global Log Activity Modal -->
         <LogActivityModal
             v-model:open="showLogActivityModal"
-            :interests="interests"
+            :habits="habits"
         />
     </div>
 </template>

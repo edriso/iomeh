@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Activity;
-use App\Models\Interest;
+use App\Models\Habit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -53,20 +53,20 @@ class HomeController extends Controller
     {
         $user = $request->user();
         
-        // Get user's interests with activity types
-        $interests = $user->interests()
+        // Get user's habits with activity types
+        $habits = $user->habits()
             ->with('activityType')
             ->orderBy('display_order')
             ->get()
-            ->map(function ($interest) {
+            ->map(function ($habit) {
                 return [
-                    'id' => $interest->id,
-                    'name' => $interest->custom_name,
-                    'icon' => $interest->activityType->icon,
-                    'category' => $interest->activityType->category->value,
-                    'activity_type_id' => $interest->activity_type_id,
-                    'base_points' => $interest->activityType->base_points,
-                    'has_activity_today' => $interest->hasActivityToday(),
+                    'id' => $habit->id,
+                    'name' => $habit->custom_name,
+                    'icon' => $habit->activityType->icon,
+                    'category' => $habit->activityType->category->value,
+                    'activity_type_id' => $habit->activity_type_id,
+                    'base_points' => $habit->activityType->base_points,
+                    'has_activity_today' => $habit->hasActivityToday(),
                 ];
             });
 
@@ -75,7 +75,7 @@ class HomeController extends Controller
             ->map(function ($activity) {
                 return [
                     'id' => $activity->id,
-                    'interest_name' => $activity->interest->custom_name,
+                    'habit_name' => $activity->habit->custom_name,
                     'points_earned' => $activity->points_earned,
                     'notes' => $activity->notes,
                     'created_at' => $activity->created_at->format('g:i A'),
@@ -96,7 +96,7 @@ class HomeController extends Controller
 
         // Get recent activities (last 7 days)
         $recentActivities = Activity::where('user_id', $user->id)
-            ->with(['interest.activityType'])
+            ->with(['habit.activityType'])
             ->whereDate('date', '>=', now()->subDays(7))
             ->orderBy('date', 'desc')
             ->orderBy('created_at', 'desc')
@@ -106,8 +106,8 @@ class HomeController extends Controller
                 return [
                     'id' => $activity->id,
                     'date' => $activity->date->format('M j'),
-                    'interest_name' => $activity->interest->custom_name,
-                    'icon' => $activity->interest->activityType->icon,
+                    'habit_name' => $activity->habit->custom_name,
+                    'icon' => $activity->habit->activityType->icon,
                     'points' => $activity->points_earned,
                     'notes' => $activity->notes,
                 ];
@@ -134,7 +134,7 @@ class HomeController extends Controller
                     'year' => now()->year,
                 ] : null,
             ],
-            'interests' => $interests,
+            'habits' => $habits,
             'today_activities' => $todayActivities,
             'recent_activities' => $recentActivities,
         ]);
@@ -149,7 +149,7 @@ class HomeController extends Controller
         $days = $request->get('days', 7);
 
         $activities = Activity::where('user_id', $user->id)
-            ->with(['interest.activityType'])
+            ->with(['habit.activityType'])
             ->whereDate('date', '>=', now()->subDays($days))
             ->orderBy('date', 'desc')
             ->orderBy('created_at', 'desc')
@@ -158,11 +158,11 @@ class HomeController extends Controller
                 return [
                     'id' => $activity->id,
                     'date' => $activity->date->format('M j, Y'),
-                    'interest_name' => $activity->interest->custom_name,
-                    'icon' => $activity->interest->activityType->icon,
+                    'habit_name' => $activity->habit->custom_name,
+                    'icon' => $activity->habit->activityType->icon,
                     'points' => $activity->points_earned,
                     'notes' => $activity->notes,
-                    'proof_url' => $activity->proof_url,
+                    'memory_url' => $activity->memory_url,
                 ];
             });
 

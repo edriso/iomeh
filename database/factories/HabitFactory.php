@@ -2,15 +2,15 @@
 
 namespace Database\Factories;
 
-use App\Models\Interest;
+use App\Models\Habit;
 use App\Models\User;
 use App\Models\ActivityType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Interest>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Habit>
  */
-class InterestFactory extends Factory
+class HabitFactory extends Factory
 {
     /**
      * Define the model's default state.

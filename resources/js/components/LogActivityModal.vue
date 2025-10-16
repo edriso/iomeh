@@ -18,10 +18,10 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { useForm } from '@inertiajs/vue3';
+import { useForm, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
-interface Interest {
+interface Habit {
     id: number;
     name: string;
     icon?: string;
@@ -31,7 +31,7 @@ interface Interest {
 
 interface Props {
     open: boolean;
-    interests: Interest[];
+    habits: Habit[];
 }
 
 const props = defineProps<Props>();
@@ -39,15 +39,43 @@ const emit = defineEmits<{
     (e: 'update:open', value: boolean): void;
 }>();
 
-const form = useForm({
-    interest_id: '',
-    date: new Date().toISOString().split('T')[0],
-    notes: '',
-    proof_url: '',
+const page = usePage();
+
+// Get user streak data from shared auth
+const userStreak = computed(() => {
+    const authUser = page.props.auth?.user as any;
+    return {
+        current_streak: authUser?.current_streak ?? 0,
+        multiplier: authUser?.streak_multiplier ?? 1.0,
+        tier_name: authUser?.streak_tier?.name ?? 'Newcomer',
+        tier_icon: authUser?.streak_tier?.icon ?? '🌱',
+    };
 });
 
-const selectedInterest = computed(() => {
-    return props.interests.find((i) => i.id === Number(form.interest_id));
+const form = useForm({
+    habit_id: '',
+    date: new Date().toISOString().split('T')[0],
+    notes: '',
+    memory_url: '',
+});
+
+const selectedHabit = computed(() => {
+    return props.habits.find((i) => i.id === Number(form.habit_id));
+});
+
+const calculatedPoints = computed(() => {
+    if (!selectedHabit.value) return null;
+
+    const basePoints = selectedHabit.value.base_points;
+    const multiplier = userStreak.value.multiplier;
+    const finalPoints = Math.round(basePoints * multiplier);
+
+    return {
+        base: basePoints,
+        multiplier: multiplier,
+        final: finalPoints,
+        hasBonus: multiplier > 1.0,
+    };
 });
 
 const handleSubmit = () => {
@@ -78,39 +106,39 @@ const handleClose = () => {
             </DialogHeader>
 
             <form @submit.prevent="handleSubmit" class="space-y-4">
-                <!-- Interest Selection -->
+                <!-- Habit Selection -->
                 <div class="space-y-2">
-                    <Label for="interest_id">Activity Type</Label>
-                    <Select v-model="form.interest_id" required>
-                        <SelectTrigger id="interest_id">
+                    <Label for="habit_id">Activity Type</Label>
+                    <Select v-model="form.habit_id" required>
+                        <SelectTrigger id="habit_id">
                             <SelectValue placeholder="Select an activity">
                                 <span
-                                    v-if="selectedInterest"
+                                    v-if="selectedHabit"
                                     class="flex items-center gap-2"
                                 >
-                                    <span v-if="selectedInterest.icon">{{
-                                        selectedInterest.icon
+                                    <span v-if="selectedHabit.icon">{{
+                                        selectedHabit.icon
                                     }}</span>
-                                    {{ selectedInterest.name }}
+                                    {{ selectedHabit.name }}
                                 </span>
                             </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem
-                                v-for="interest in interests"
-                                :key="interest.id"
-                                :value="String(interest.id)"
+                                v-for="habit in habits"
+                                :key="habit.id"
+                                :value="String(habit.id)"
                             >
                                 <span class="flex items-center gap-2">
-                                    <span v-if="interest.icon">{{
-                                        interest.icon
+                                    <span v-if="habit.icon">{{
+                                        habit.icon
                                     }}</span>
-                                    {{ interest.name }}
+                                    {{ habit.name }}
                                 </span>
                             </SelectItem>
                         </SelectContent>
                     </Select>
-                    <InputError :message="form.errors.interest_id" />
+                    <InputError :message="form.errors.habit_id" />
                 </div>
 
                 <!-- Date -->
@@ -127,21 +155,82 @@ const handleClose = () => {
                 </div>
 
                 <!-- Points Display (Read-only) -->
-                <div v-if="selectedInterest" class="space-y-2">
+                <div v-if="calculatedPoints" class="space-y-2">
                     <Label>Points You'll Earn</Label>
                     <div
-                        class="flex items-center gap-2 rounded-md border border-border bg-muted/50 px-3 py-2"
+                        class="rounded-lg border border-border bg-gradient-to-br from-muted/30 to-muted/50 p-4"
                     >
-                        <span class="text-2xl font-bold text-primary">{{
-                            selectedInterest.base_points
-                        }}</span>
-                        <span class="text-sm text-muted-foreground"
-                            >points</span
-                        >
+                        <div class="flex items-center justify-between">
+                            <!-- Base Points -->
+                            <div class="flex items-center gap-2">
+                                <span class="text-xl font-bold text-foreground">
+                                    {{ calculatedPoints.base }}
+                                </span>
+                                <span class="text-sm text-muted-foreground">
+                                    pts
+                                </span>
+                            </div>
+
+                            <!-- Multiplier (if applicable) -->
+                            <div
+                                v-if="calculatedPoints.hasBonus"
+                                class="flex items-center gap-2"
+                            >
+                                <span class="text-muted-foreground">×</span>
+                                <div
+                                    class="flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-1 text-xs font-semibold text-amber-700 dark:text-amber-400"
+                                >
+                                    <span
+                                        >{{
+                                            calculatedPoints.multiplier
+                                        }}×</span
+                                    >
+                                    <span class="text-[10px]"
+                                        >({{ userStreak.tier_icon }}
+                                        {{ userStreak.tier_name }})</span
+                                    >
+                                </div>
+                            </div>
+
+                            <!-- Arrow -->
+                            <div
+                                v-if="calculatedPoints.hasBonus"
+                                class="text-muted-foreground"
+                            >
+                                →
+                            </div>
+
+                            <!-- Final Points -->
+                            <div
+                                class="flex items-center gap-2 rounded-lg bg-primary/10 px-3 py-2"
+                            >
+                                <span
+                                    class="text-2xl font-bold text-primary"
+                                    :class="{
+                                        'text-amber-600 dark:text-amber-500':
+                                            calculatedPoints.hasBonus,
+                                    }"
+                                >
+                                    {{ calculatedPoints.final }}
+                                </span>
+                                <span class="text-sm text-muted-foreground">
+                                    pts
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Streak Info -->
+                        <p class="mt-3 text-xs text-muted-foreground">
+                            <span v-if="calculatedPoints.hasBonus">
+                                🔥 {{ userStreak.current_streak }}-day streak
+                                bonus applied!
+                            </span>
+                            <span v-else>
+                                Base points • Build a streak to multiply your
+                                rewards
+                            </span>
+                        </p>
                     </div>
-                    <p class="text-xs text-muted-foreground">
-                        Points are automatically assigned based on activity type
-                    </p>
                 </div>
 
                 <!-- Notes -->
@@ -157,18 +246,18 @@ const handleClose = () => {
                     <InputError :message="form.errors.notes" />
                 </div>
 
-                <!-- Proof URL -->
+                <!-- Memory URL -->
                 <div class="space-y-2">
-                    <Label for="proof_url">Proof URL (Optional)</Label>
+                    <Label for="memory_url">Memory URL (Optional)</Label>
                     <Input
-                        id="proof_url"
-                        v-model="form.proof_url"
+                        id="memory_url"
+                        v-model="form.memory_url"
                         type="url"
                         placeholder="https://..."
                     />
-                    <InputError :message="form.errors.proof_url" />
+                    <InputError :message="form.errors.memory_url" />
                     <p class="text-xs text-muted-foreground">
-                        Link to proof (workout screenshot, meal photo, etc.)
+                        Link to memory (workout screenshot, meal photo, etc.)
                     </p>
                 </div>
 
@@ -184,7 +273,7 @@ const handleClose = () => {
                     </Button>
                     <Button
                         type="submit"
-                        :disabled="form.processing || !form.interest_id"
+                        :disabled="form.processing || !form.habit_id"
                     >
                         {{ form.processing ? 'Logging...' : 'Log Activity' }}
                     </Button>

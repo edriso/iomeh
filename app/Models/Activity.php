@@ -11,11 +11,11 @@ class Activity extends Model
 
     protected $fillable = [
         'user_id',
-        'interest_id',
+        'habit_id',
         'date',
         'points_earned',
         'notes',
-        'proof_url',
+        'memory_url',
     ];
 
     protected function casts(): array
@@ -35,11 +35,11 @@ class Activity extends Model
     }
 
     /**
-     * Get the interest for the activity.
+     * Get the habit for the activity.
      */
-    public function interest()
+    public function habit()
     {
-        return $this->belongsTo(Interest::class);
+        return $this->belongsTo(Habit::class);
     }
 
     /**
@@ -97,11 +97,11 @@ class Activity extends Model
     }
 
     /**
-     * Get activity type through interest.
+     * Get activity type through habit.
      */
     public function getActivityTypeAttribute()
     {
-        return $this->interest?->activityType;
+        return $this->habit?->activityType;
     }
 }
 

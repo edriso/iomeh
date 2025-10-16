@@ -10,46 +10,46 @@ uses(RefreshDatabase::class);
 test('user can have activities', function () {
     $user = User::factory()->create();
     $activityType = ActivityType::factory()->create();
-    $interest = $user->interests()->create([
+    $habit = $user->habits()->create([
         'activity_type_id' => $activityType->id,
         'custom_name' => 'My Activity',
     ]);
     
     $activity = Activity::create([
         'user_id' => $user->id,
-        'interest_id' => $interest->id,
+        'habit_id' => $habit->id,
         'date' => now(),
         'points_earned' => 50,
     ]);
     
     expect($user->activities()->count())->toBe(1);
     expect($activity->user->id)->toBe($user->id);
-    expect($activity->interest->id)->toBe($interest->id);
+    expect($activity->habit->id)->toBe($habit->id);
 });
 
-test('activity belongs to user and interest', function () {
+test('activity belongs to user and habit', function () {
     $user = User::factory()->create();
     $activityType = ActivityType::factory()->create();
-    $interest = $user->interests()->create([
+    $habit = $user->habits()->create([
         'activity_type_id' => $activityType->id,
         'custom_name' => 'My Activity',
     ]);
     
     $activity = Activity::create([
         'user_id' => $user->id,
-        'interest_id' => $interest->id,
+        'habit_id' => $habit->id,
         'date' => now(),
         'points_earned' => 50,
     ]);
     
     expect($activity->user)->toBeInstanceOf(User::class);
-    expect($activity->interest)->toBeInstanceOf(\App\Models\Interest::class);
+    expect($activity->habit)->toBeInstanceOf(\App\Models\Habit::class);
 });
 
 test('can query activities for today', function () {
     $user = User::factory()->create();
     $activityType = ActivityType::factory()->create();
-    $interest = $user->interests()->create([
+    $habit = $user->habits()->create([
         'activity_type_id' => $activityType->id,
         'custom_name' => 'My Activity',
     ]);
@@ -57,7 +57,7 @@ test('can query activities for today', function () {
     // Create today's activity
     Activity::create([
         'user_id' => $user->id,
-        'interest_id' => $interest->id,
+        'habit_id' => $habit->id,
         'date' => now(),
         'points_earned' => 50,
     ]);
@@ -65,7 +65,7 @@ test('can query activities for today', function () {
     // Create yesterday's activity
     Activity::create([
         'user_id' => $user->id,
-        'interest_id' => $interest->id,
+        'habit_id' => $habit->id,
         'date' => now()->yesterday(),
         'points_earned' => 30,
     ]);
@@ -77,7 +77,7 @@ test('can query activities for today', function () {
 test('can query activities for yesterday', function () {
     $user = User::factory()->create();
     $activityType = ActivityType::factory()->create();
-    $interest = $user->interests()->create([
+    $habit = $user->habits()->create([
         'activity_type_id' => $activityType->id,
         'custom_name' => 'My Activity',
     ]);
@@ -85,7 +85,7 @@ test('can query activities for yesterday', function () {
     // Create today's activity
     Activity::create([
         'user_id' => $user->id,
-        'interest_id' => $interest->id,
+        'habit_id' => $habit->id,
         'date' => now(),
         'points_earned' => 50,
     ]);
@@ -93,7 +93,7 @@ test('can query activities for yesterday', function () {
     // Create yesterday's activity
     Activity::create([
         'user_id' => $user->id,
-        'interest_id' => $interest->id,
+        'habit_id' => $habit->id,
         'date' => now()->yesterday(),
         'points_earned' => 30,
     ]);
@@ -105,14 +105,14 @@ test('can query activities for yesterday', function () {
 test('activity casts date properly', function () {
     $user = User::factory()->create();
     $activityType = ActivityType::factory()->create();
-    $interest = $user->interests()->create([
+    $habit = $user->habits()->create([
         'activity_type_id' => $activityType->id,
         'custom_name' => 'My Activity',
     ]);
     
     $activity = Activity::create([
         'user_id' => $user->id,
-        'interest_id' => $interest->id,
+        'habit_id' => $habit->id,
         'date' => '2025-10-15',
         'points_earned' => 50,
     ]);
@@ -124,14 +124,14 @@ test('activity casts date properly', function () {
 test('activity creation automatically creates ranking records', function () {
     $user = User::factory()->create();
     $activityType = ActivityType::factory()->create(['base_points' => 100]);
-    $interest = $user->interests()->create([
+    $habit = $user->habits()->create([
         'activity_type_id' => $activityType->id,
         'custom_name' => 'My Activity',
     ]);
     
     Activity::create([
         'user_id' => $user->id,
-        'interest_id' => $interest->id,
+        'habit_id' => $habit->id,
         'date' => now(),
         'points_earned' => 100,
     ]);
@@ -153,14 +153,14 @@ test('activity creation automatically creates ranking records', function () {
 test('activity creation updates user lifetime points', function () {
     $user = User::factory()->create();
     $activityType = ActivityType::factory()->create(['base_points' => 75]);
-    $interest = $user->interests()->create([
+    $habit = $user->habits()->create([
         'activity_type_id' => $activityType->id,
         'custom_name' => 'My Activity',
     ]);
     
     Activity::create([
         'user_id' => $user->id,
-        'interest_id' => $interest->id,
+        'habit_id' => $habit->id,
         'date' => now(),
         'points_earned' => 75,
     ]);
@@ -172,7 +172,7 @@ test('activity creation updates user lifetime points', function () {
 test('activity on different dates creates appropriate rankings', function () {
     $user = User::factory()->create();
     $activityType = ActivityType::factory()->create(['base_points' => 50]);
-    $interest = $user->interests()->create([
+    $habit = $user->habits()->create([
         'activity_type_id' => $activityType->id,
         'custom_name' => 'My Activity',
     ]);
@@ -180,7 +180,7 @@ test('activity on different dates creates appropriate rankings', function () {
     // Activity in Q1
     Activity::create([
         'user_id' => $user->id,
-        'interest_id' => $interest->id,
+        'habit_id' => $habit->id,
         'date' => '2025-01-15',
         'points_earned' => 50,
     ]);
@@ -188,7 +188,7 @@ test('activity on different dates creates appropriate rankings', function () {
     // Activity in Q2
     Activity::create([
         'user_id' => $user->id,
-        'interest_id' => $interest->id,
+        'habit_id' => $habit->id,
         'date' => '2025-04-15',
         'points_earned' => 75,
     ]);
@@ -216,7 +216,7 @@ test('activity on different dates creates appropriate rankings', function () {
 test('activity notes can be up to 2000 characters', function () {
     $user = User::factory()->create();
     $activityType = ActivityType::factory()->create();
-    $interest = $user->interests()->create([
+    $habit = $user->habits()->create([
         'activity_type_id' => $activityType->id,
         'custom_name' => 'My Activity',
     ]);
@@ -226,7 +226,7 @@ test('activity notes can be up to 2000 characters', function () {
     $response = $this
         ->actingAs($user)
         ->post(route('activities.store'), [
-            'interest_id' => $interest->id,
+            'habit_id' => $habit->id,
             'date' => now()->toDateString(),
             'notes' => $notes,
         ]);
@@ -241,7 +241,7 @@ test('activity notes can be up to 2000 characters', function () {
 test('activity notes cannot exceed 2000 characters', function () {
     $user = User::factory()->create();
     $activityType = ActivityType::factory()->create();
-    $interest = $user->interests()->create([
+    $habit = $user->habits()->create([
         'activity_type_id' => $activityType->id,
         'custom_name' => 'My Activity',
     ]);
@@ -251,7 +251,7 @@ test('activity notes cannot exceed 2000 characters', function () {
     $response = $this
         ->actingAs($user)
         ->post(route('activities.store'), [
-            'interest_id' => $interest->id,
+            'habit_id' => $habit->id,
             'date' => now()->toDateString(),
             'notes' => $notes,
         ]);

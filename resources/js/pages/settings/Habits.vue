@@ -26,7 +26,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
-import { edit, update } from '@/routes/interests';
+import { edit, update } from '@/routes/habits';
 import { type BreadcrumbItem } from '@/types';
 import { GripVertical, Info, Plus, Save, Trash2 } from 'lucide-vue-next';
 
@@ -39,7 +39,7 @@ interface ActivityType {
     description: string | null;
 }
 
-interface Interest {
+interface Habit {
     id: number;
     activity_type_id: number;
     custom_name: string;
@@ -49,7 +49,7 @@ interface Interest {
 }
 
 interface Props {
-    interests: Interest[];
+    habits: Habit[];
     availableActivityTypes: Record<string, ActivityType[]>;
 }
 
@@ -62,10 +62,8 @@ const breadcrumbItems: BreadcrumbItem[] = [
     },
 ];
 
-// Local state for managing interests
-const localInterests = ref<Interest[]>(
-    JSON.parse(JSON.stringify(props.interests)),
-);
+// Local state for managing habits
+const localHabits = ref<Habit[]>(JSON.parse(JSON.stringify(props.habits)));
 const showAddDialog = ref(false);
 const selectedCategory = ref<string | null>(null);
 
@@ -75,7 +73,7 @@ const recentlySuccessful = ref(false);
 
 // Computed
 const selectedActivityTypeIds = computed(() =>
-    localInterests.value.map((i) => i.activity_type_id),
+    localHabits.value.map((i) => i.activity_type_id),
 );
 
 const availableTypes = computed(() => {
@@ -102,37 +100,37 @@ const categories = computed(() => {
 });
 
 // Functions
-function addInterest(activityType: ActivityType) {
-    const newInterest: Interest = {
-        id: Date.now(), // Temporary ID for new interests
+function addHabit(activityType: ActivityType) {
+    const newHabit: Habit = {
+        id: Date.now(), // Temporary ID for new habits
         activity_type_id: activityType.id,
         custom_name: activityType.name,
         notes: null,
-        display_order: localInterests.value.length,
+        display_order: localHabits.value.length,
         activity_type: activityType,
     };
 
-    localInterests.value.push(newInterest);
+    localHabits.value.push(newHabit);
     showAddDialog.value = false;
     selectedCategory.value = null;
 }
 
-function removeInterest(index: number) {
-    localInterests.value.splice(index, 1);
-    // Reorder remaining interests
-    localInterests.value.forEach((interest, idx) => {
-        interest.display_order = idx;
+function removeHabit(index: number) {
+    localHabits.value.splice(index, 1);
+    // Reorder remaining habits
+    localHabits.value.forEach((habit, idx) => {
+        habit.display_order = idx;
     });
 }
 
 function moveUp(index: number) {
     if (index > 0) {
-        const temp = localInterests.value[index];
-        localInterests.value[index] = localInterests.value[index - 1];
-        localInterests.value[index - 1] = temp;
+        const temp = localHabits.value[index];
+        localHabits.value[index] = localHabits.value[index - 1];
+        localHabits.value[index - 1] = temp;
         // Update display orders
-        localInterests.value.forEach((interest, idx) => {
-            interest.display_order = idx;
+        localHabits.value.forEach((habit, idx) => {
+            habit.display_order = idx;
         });
     }
 }
@@ -140,22 +138,21 @@ function moveUp(index: number) {
 function validateForm() {
     errors.value = {};
 
-    if (localInterests.value.length === 0) {
-        errors.value.interests = 'You must have at least one interest.';
+    if (localHabits.value.length === 0) {
+        errors.value.habits = 'You must have at least one habit.';
         return false;
     }
 
-    localInterests.value.forEach((interest, index) => {
-        if (!interest.custom_name || interest.custom_name.trim().length === 0) {
-            errors.value[`interests.${index}.custom_name`] =
-                'Name is required.';
-        } else if (interest.custom_name.length > 100) {
-            errors.value[`interests.${index}.custom_name`] =
+    localHabits.value.forEach((habit, index) => {
+        if (!habit.custom_name || habit.custom_name.trim().length === 0) {
+            errors.value[`habits.${index}.custom_name`] = 'Name is required.';
+        } else if (habit.custom_name.length > 100) {
+            errors.value[`habits.${index}.custom_name`] =
                 'Name must be 100 characters or less.';
         }
 
-        if (interest.notes && interest.notes.length > 500) {
-            errors.value[`interests.${index}.notes`] =
+        if (habit.notes && habit.notes.length > 500) {
+            errors.value[`habits.${index}.notes`] =
                 'Notes must be 500 characters or less.';
         }
     });
@@ -169,10 +166,10 @@ function handleSubmit() {
     }
 
     const formData = {
-        interests: localInterests.value.map((interest) => ({
-            activity_type_id: interest.activity_type_id,
-            custom_name: interest.custom_name,
-            notes: interest.notes || null,
+        habits: localHabits.value.map((habit) => ({
+            activity_type_id: habit.activity_type_id,
+            custom_name: habit.custom_name,
+            notes: habit.notes || null,
         })),
     };
 
@@ -215,18 +212,17 @@ function getCategoryColor(category: string): string {
                 <Alert>
                     <Info class="h-4 w-4" />
                     <AlertDescription>
-                        Your interests determine which activities you can log.
-                        Add the activities that matter most to your health
-                        journey.
+                        Your habits determine which activities you can log. Add
+                        the activities that matter most to your health journey.
                     </AlertDescription>
                 </Alert>
 
                 <div class="space-y-4">
-                    <!-- Current Interests -->
-                    <div v-if="localInterests.length > 0" class="space-y-3">
+                    <!-- Current Habits -->
+                    <div v-if="localHabits.length > 0" class="space-y-3">
                         <Card
-                            v-for="(interest, index) in localInterests"
-                            :key="interest.id"
+                            v-for="(habit, index) in localHabits"
+                            :key="habit.id"
                             class="relative"
                         >
                             <CardHeader class="pb-3">
@@ -251,28 +247,25 @@ function getCategoryColor(category: string): string {
                                             >
                                                 <span
                                                     v-if="
-                                                        interest.activity_type
-                                                            .icon
+                                                        habit.activity_type.icon
                                                     "
                                                     class="text-2xl"
                                                 >
                                                     {{
-                                                        interest.activity_type
-                                                            .icon
+                                                        habit.activity_type.icon
                                                     }}
                                                 </span>
                                                 <Badge
                                                     variant="outline"
                                                     :class="
                                                         getCategoryColor(
-                                                            interest
-                                                                .activity_type
+                                                            habit.activity_type
                                                                 .category,
                                                         )
                                                     "
                                                 >
                                                     {{
-                                                        interest.activity_type
+                                                        habit.activity_type
                                                             .category
                                                     }}
                                                 </Badge>
@@ -280,7 +273,7 @@ function getCategoryColor(category: string): string {
                                                     class="text-xs text-muted-foreground"
                                                 >
                                                     {{
-                                                        interest.activity_type
+                                                        habit.activity_type
                                                             .base_points
                                                     }}
                                                     pts
@@ -289,14 +282,14 @@ function getCategoryColor(category: string): string {
                                             <div class="space-y-3">
                                                 <div>
                                                     <Label
-                                                        :for="`name-${interest.id}`"
+                                                        :for="`name-${habit.id}`"
                                                     >
                                                         Custom Name
                                                     </Label>
                                                     <Input
-                                                        :id="`name-${interest.id}`"
+                                                        :id="`name-${habit.id}`"
                                                         v-model="
-                                                            interest.custom_name
+                                                            habit.custom_name
                                                         "
                                                         type="text"
                                                         placeholder="e.g., Morning Workout"
@@ -305,20 +298,20 @@ function getCategoryColor(category: string): string {
                                                     <InputError
                                                         :message="
                                                             errors[
-                                                                `interests.${index}.custom_name`
+                                                                `habits.${index}.custom_name`
                                                             ]
                                                         "
                                                     />
                                                 </div>
                                                 <div>
                                                     <Label
-                                                        :for="`notes-${interest.id}`"
+                                                        :for="`notes-${habit.id}`"
                                                     >
                                                         Notes (optional)
                                                     </Label>
                                                     <Textarea
-                                                        :id="`notes-${interest.id}`"
-                                                        v-model="interest.notes"
+                                                        :id="`notes-${habit.id}`"
+                                                        v-model="habit.notes"
                                                         placeholder="Add any personal notes..."
                                                         :rows="2"
                                                         class="mt-1"
@@ -326,7 +319,7 @@ function getCategoryColor(category: string): string {
                                                     <InputError
                                                         :message="
                                                             errors[
-                                                                `interests.${index}.notes`
+                                                                `habits.${index}.notes`
                                                             ]
                                                         "
                                                     />
@@ -339,7 +332,7 @@ function getCategoryColor(category: string): string {
                                             variant="ghost"
                                             size="sm"
                                             class="h-8 w-8 p-0 text-destructive hover:text-destructive"
-                                            @click="removeInterest(index)"
+                                            @click="removeHabit(index)"
                                         >
                                             <Trash2 class="h-4 w-4" />
                                         </Button>
@@ -354,12 +347,12 @@ function getCategoryColor(category: string): string {
                         class="rounded-lg border-2 border-dashed py-12 text-center"
                     >
                         <p class="mb-4 text-muted-foreground">
-                            No interests added yet. Add your first interest to
-                            start tracking activities!
+                            No habits added yet. Add your first habit to start
+                            tracking activities!
                         </p>
                     </div>
 
-                    <InputError :message="errors.interests" />
+                    <InputError :message="errors.habits" />
 
                     <!-- Add Activity Button -->
                     <Button
@@ -383,7 +376,7 @@ function getCategoryColor(category: string): string {
                     <div class="flex items-center gap-3 pt-4">
                         <Button
                             @click="handleSubmit"
-                            :disabled="localInterests.length === 0"
+                            :disabled="localHabits.length === 0"
                         >
                             <Save class="mr-2 h-4 w-4" />
                             Save Changes
@@ -391,8 +384,8 @@ function getCategoryColor(category: string): string {
                         <Button
                             variant="outline"
                             @click="
-                                localInterests = JSON.parse(
-                                    JSON.stringify(props.interests),
+                                localHabits = JSON.parse(
+                                    JSON.stringify(props.habits),
                                 )
                             "
                         >
@@ -455,7 +448,7 @@ function getCategoryColor(category: string): string {
                                 v-for="type in filteredAvailableTypes"
                                 :key="type.id"
                                 class="cursor-pointer transition-colors hover:border-primary"
-                                @click="addInterest(type)"
+                                @click="addHabit(type)"
                             >
                                 <CardHeader class="p-4">
                                     <div class="flex items-center gap-3">

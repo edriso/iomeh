@@ -49,7 +49,7 @@ interface RecentActivity {
     date: string;
     points_earned: number;
     notes?: string;
-    proof_url?: string;
+    memory_url?: string;
 }
 
 interface CalendarDay {
@@ -58,7 +58,7 @@ interface CalendarDay {
     points: number;
 }
 
-interface Interest {
+interface Habit {
     id: number;
     name: string;
     icon: string;
@@ -90,10 +90,10 @@ interface Props {
         longest_streak: number;
         total_activities: number;
         active_days: number;
-        interests_count: number;
+        habits_count: number;
     };
     is_own_profile?: boolean;
-    interests?: Interest[];
+    habits?: Habit[];
     ranking_histories?: RankingHistory[];
 }
 
@@ -109,17 +109,17 @@ const props = withDefaults(defineProps<Props>(), {
         longest_streak: 0,
         total_activities: 0,
         active_days: 0,
-        interests_count: 0,
+        habits_count: 0,
     }),
     is_own_profile: false,
-    interests: () => [],
+    habits: () => [],
     ranking_histories: () => [],
 });
 
 const { formatNumber } = useNumberFormat();
 
 const handleEditActivities = () => {
-    router.visit('/settings/interests');
+    router.visit('/settings/habits');
 };
 
 // Transform calendar data for heatmap
@@ -396,21 +396,19 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                         </CardHeader>
                         <CardContent>
                             <div
-                                v-if="interests && interests.length > 0"
+                                v-if="habits && habits.length > 0"
                                 class="flex cursor-default flex-wrap gap-2"
                             >
                                 <Badge
-                                    v-for="interest in interests"
-                                    :key="interest.id"
+                                    v-for="habit in habits"
+                                    :key="habit.id"
                                     variant="outline"
                                     class="border-secondary/20 bg-secondary px-3 py-1.5 text-sm text-secondary-foreground"
                                 >
-                                    <span class="mr-1.5">{{
-                                        interest.icon
-                                    }}</span>
-                                    {{ interest.name }}
+                                    <span class="mr-1.5">{{ habit.icon }}</span>
+                                    {{ habit.name }}
                                     <CheckCircle
-                                        v-if="interest.has_activity_today"
+                                        v-if="habit.has_activity_today"
                                         class="ml-1.5 h-3 w-3"
                                     />
                                 </Badge>
@@ -423,7 +421,7 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                     class="mx-auto mb-3 h-12 w-12 opacity-50"
                                 />
                                 <p v-if="is_own_profile">
-                                    No interests selected yet
+                                    No habits selected yet
                                 </p>
                                 <p v-else>No activities selected</p>
                                 <Button
@@ -575,7 +573,7 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                                     "{{ activity.notes }}"
                                                 </p>
                                                 <Button
-                                                    v-if="activity.proof_url"
+                                                    v-if="activity.memory_url"
                                                     variant="outline"
                                                     size="sm"
                                                     as-child
@@ -583,7 +581,7 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                                 >
                                                     <a
                                                         :href="
-                                                            activity.proof_url
+                                                            activity.memory_url
                                                         "
                                                         target="_blank"
                                                         rel="noopener noreferrer"

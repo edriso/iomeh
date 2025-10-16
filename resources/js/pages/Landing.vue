@@ -8,12 +8,13 @@ import {
     Apple,
     Award,
     Brain,
+    CalendarCheck,
     Flame,
+    Footprints,
     Heart,
     Moon,
     TrendingUp,
     Trophy,
-    Zap,
 } from 'lucide-vue-next';
 
 interface Props {
@@ -169,25 +170,51 @@ const seoData = {
                     </Link>
                 </div>
 
-                <!-- Example Rank Display -->
-                <div
-                    class="mt-12 flex justify-center gap-6 text-sm text-muted-foreground"
-                >
+                <!-- Achievement Preview -->
+                <div class="mt-16">
+                    <p class="mb-4 text-center text-sm text-muted-foreground">
+                        Track your progress across seasons
+                    </p>
                     <div
-                        class="rounded-lg border border-border/50 bg-card/50 px-4 py-2"
+                        class="flex flex-wrap items-center justify-center gap-3"
                     >
-                        <span class="font-medium">2025 Q1 #11</span>
-                    </div>
-                    <div
-                        class="rounded-lg border border-border/50 bg-card/50 px-4 py-2"
-                    >
-                        <span class="font-medium">2024 #156</span>
-                    </div>
-                    <div
-                        class="flex items-center gap-2 rounded-lg border border-border/50 bg-card/50 px-4 py-2"
-                    >
-                        <Flame class="h-4 w-4 text-orange-500" />
-                        <span class="font-medium">14 day streak</span>
+                        <!-- Season Badge -->
+                        <div
+                            class="group relative overflow-hidden rounded-xl border border-primary/30 bg-gradient-to-br from-primary/10 to-primary/5 px-6 py-3 transition-all hover:scale-105 hover:border-primary/50 hover:shadow-lg"
+                        >
+                            <div class="flex items-center gap-2">
+                                <Award class="h-5 w-5 text-primary" />
+                                <span class="font-bold text-foreground"
+                                    >2025 Q1 #11</span
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Year Badge -->
+                        <div
+                            class="group relative overflow-hidden rounded-xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-orange-500/5 px-6 py-3 transition-all hover:scale-105 hover:border-amber-500/50 hover:shadow-lg"
+                        >
+                            <div class="flex items-center gap-2">
+                                <Trophy
+                                    class="h-5 w-5 text-amber-600 dark:text-amber-500"
+                                />
+                                <span class="font-bold text-foreground"
+                                    >2024 #156</span
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Streak Badge -->
+                        <div
+                            class="group relative overflow-hidden rounded-xl border border-orange-500/30 bg-gradient-to-br from-orange-500/10 to-red-500/5 px-6 py-3 transition-all hover:scale-105 hover:border-orange-500/50 hover:shadow-lg"
+                        >
+                            <div class="flex items-center gap-2">
+                                <Flame class="h-5 w-5 text-orange-500" />
+                                <span class="font-bold text-foreground"
+                                    >14 Day Streak</span
+                                >
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -318,6 +345,278 @@ const seoData = {
             </div>
         </section>
 
+        <!-- Streak Bonus Section -->
+        <section class="container mx-auto px-4 py-20">
+            <div class="mx-auto max-w-5xl">
+                <div class="mb-16 text-center">
+                    <h2
+                        class="mb-4 text-3xl font-bold text-foreground md:text-4xl"
+                    >
+                        🔥 Streak Bonus System
+                    </h2>
+                    <p class="mx-auto max-w-2xl text-lg text-muted-foreground">
+                        Consistency is key. Build daily streaks and multiply
+                        your points with progressive rewards up to 5×.
+                    </p>
+                </div>
+
+                <!-- Streak Tiers Grid -->
+                <div
+                    class="mb-12 grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-8"
+                >
+                    <!-- Newcomer -->
+                    <div
+                        class="rounded-xl border border-border/50 bg-card/30 p-4 text-center transition-all hover:scale-105 hover:border-primary/50"
+                    >
+                        <div class="mb-2 text-2xl">🌱</div>
+                        <h3 class="mb-1 text-sm font-bold text-foreground">
+                            Newcomer
+                        </h3>
+                        <p class="mb-2 text-xs text-muted-foreground">
+                            Days 1-2
+                        </p>
+                        <div
+                            class="rounded-full bg-primary/10 px-2 py-1 text-xs font-bold text-primary"
+                        >
+                            1.0×
+                        </div>
+                    </div>
+
+                    <!-- Beginner -->
+                    <div
+                        class="rounded-xl border border-border/50 bg-card/30 p-4 text-center transition-all hover:scale-105 hover:border-primary/50"
+                    >
+                        <div class="mb-2 text-2xl">🔥</div>
+                        <h3 class="mb-1 text-sm font-bold text-foreground">
+                            Beginner
+                        </h3>
+                        <p class="mb-2 text-xs text-muted-foreground">
+                            Days 3-6
+                        </p>
+                        <div
+                            class="rounded-full bg-primary/10 px-2 py-1 text-xs font-bold text-primary"
+                        >
+                            1.2×
+                        </div>
+                    </div>
+
+                    <!-- Regular -->
+                    <div
+                        class="rounded-xl border border-border/50 bg-card/30 p-4 text-center transition-all hover:scale-105 hover:border-primary/50"
+                    >
+                        <div class="mb-2 text-2xl">⚡</div>
+                        <h3 class="mb-1 text-sm font-bold text-foreground">
+                            Regular
+                        </h3>
+                        <p class="mb-2 text-xs text-muted-foreground">
+                            Days 7-13
+                        </p>
+                        <div
+                            class="rounded-full bg-primary/10 px-2 py-1 text-xs font-bold text-primary"
+                        >
+                            1.5×
+                        </div>
+                    </div>
+
+                    <!-- Committed -->
+                    <div
+                        class="rounded-xl border border-border/50 bg-card/30 p-4 text-center transition-all hover:scale-105 hover:border-amber-500/50"
+                    >
+                        <div class="mb-2 text-2xl">💪</div>
+                        <h3 class="mb-1 text-sm font-bold text-foreground">
+                            Committed
+                        </h3>
+                        <p class="mb-2 text-xs text-muted-foreground">
+                            Days 14-29
+                        </p>
+                        <div
+                            class="rounded-full bg-amber-500/10 px-2 py-1 text-xs font-bold text-amber-600 dark:text-amber-500"
+                        >
+                            2.0×
+                        </div>
+                    </div>
+
+                    <!-- Dedicated -->
+                    <div
+                        class="rounded-xl border border-border/50 bg-card/30 p-4 text-center transition-all hover:scale-105 hover:border-amber-500/50"
+                    >
+                        <div class="mb-2 text-2xl">🚀</div>
+                        <h3 class="mb-1 text-sm font-bold text-foreground">
+                            Dedicated
+                        </h3>
+                        <p class="mb-2 text-xs text-muted-foreground">
+                            Days 30-59
+                        </p>
+                        <div
+                            class="rounded-full bg-amber-500/10 px-2 py-1 text-xs font-bold text-amber-600 dark:text-amber-500"
+                        >
+                            2.5×
+                        </div>
+                    </div>
+
+                    <!-- Expert -->
+                    <div
+                        class="rounded-xl border border-border/50 bg-card/30 p-4 text-center transition-all hover:scale-105 hover:border-amber-500/50"
+                    >
+                        <div class="mb-2 text-2xl">⭐</div>
+                        <h3 class="mb-1 text-sm font-bold text-foreground">
+                            Expert
+                        </h3>
+                        <p class="mb-2 text-xs text-muted-foreground">
+                            Days 60-99
+                        </p>
+                        <div
+                            class="rounded-full bg-amber-500/10 px-2 py-1 text-xs font-bold text-amber-600 dark:text-amber-500"
+                        >
+                            3.0×
+                        </div>
+                    </div>
+
+                    <!-- Master -->
+                    <div
+                        class="rounded-xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-orange-500/10 p-4 text-center transition-all hover:scale-105 hover:border-amber-500/70"
+                    >
+                        <div class="mb-2 text-2xl">👑</div>
+                        <h3 class="mb-1 text-sm font-bold text-foreground">
+                            Master
+                        </h3>
+                        <p class="mb-2 text-xs text-muted-foreground">
+                            Days 100-199
+                        </p>
+                        <div
+                            class="rounded-full bg-amber-500/20 px-2 py-1 text-xs font-bold text-amber-700 dark:text-amber-400"
+                        >
+                            4.0×
+                        </div>
+                    </div>
+
+                    <!-- Legend -->
+                    <div
+                        class="rounded-xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-orange-500/10 p-4 text-center transition-all hover:scale-105 hover:border-amber-500/70"
+                    >
+                        <div class="mb-2 text-2xl">🏆</div>
+                        <h3 class="mb-1 text-sm font-bold text-foreground">
+                            Legend
+                        </h3>
+                        <p class="mb-2 text-xs text-muted-foreground">
+                            Days 200+
+                        </p>
+                        <div
+                            class="rounded-full bg-amber-500/20 px-2 py-1 text-xs font-bold text-amber-700 dark:text-amber-400"
+                        >
+                            5.0×
+                        </div>
+                    </div>
+                </div>
+
+                <!-- How it Works -->
+                <div
+                    class="mb-12 rounded-2xl border border-border/50 bg-card/30 p-8"
+                >
+                    <h3
+                        class="mb-6 text-center text-2xl font-bold text-foreground"
+                    >
+                        How It Works
+                    </h3>
+                    <div class="grid gap-6 md:grid-cols-3">
+                        <div class="text-center">
+                            <div
+                                class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10"
+                            >
+                                <Flame class="h-6 w-6 text-primary" />
+                            </div>
+                            <h4 class="mb-2 font-bold text-foreground">
+                                Build Streaks
+                            </h4>
+                            <p class="text-sm text-muted-foreground">
+                                Log activities daily to maintain your streak.
+                                Miss a day and it resets to 1.
+                            </p>
+                        </div>
+                        <div class="text-center">
+                            <div
+                                class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/10"
+                            >
+                                <TrendingUp
+                                    class="h-6 w-6 text-amber-600 dark:text-amber-500"
+                                />
+                            </div>
+                            <h4 class="mb-2 font-bold text-foreground">
+                                Multiply Points
+                            </h4>
+                            <p class="text-sm text-muted-foreground">
+                                Your streak tier multiplies all activity points.
+                                30-day streak = 2.5× points!
+                            </p>
+                        </div>
+                        <div class="text-center">
+                            <div
+                                class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-purple-500/10"
+                            >
+                                <Trophy class="h-6 w-6 text-purple-600" />
+                            </div>
+                            <h4 class="mb-2 font-bold text-foreground">
+                                Milestone Bonuses
+                            </h4>
+                            <p class="text-sm text-muted-foreground">
+                                Hit milestones (7, 30, 100, 365 days) for extra
+                                bonus points on top of multipliers!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Example Calculation -->
+                <div
+                    class="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/5 to-background p-8"
+                >
+                    <h3
+                        class="mb-6 text-center text-xl font-bold text-foreground"
+                    >
+                        📊 Example: 30-Day Streak
+                    </h3>
+                    <div class="space-y-4 text-center">
+                        <div>
+                            <p class="text-sm text-muted-foreground">
+                                Base Activity Points
+                            </p>
+                            <p class="text-2xl font-bold text-foreground">
+                                20 pts
+                            </p>
+                        </div>
+                        <div class="text-2xl text-muted-foreground">×</div>
+                        <div>
+                            <p class="text-sm text-muted-foreground">
+                                Dedicated Tier (30 days)
+                            </p>
+                            <p
+                                class="text-2xl font-bold text-amber-600 dark:text-amber-500"
+                            >
+                                2.5× Multiplier
+                            </p>
+                        </div>
+                        <div class="text-2xl text-muted-foreground">+</div>
+                        <div>
+                            <p class="text-sm text-muted-foreground">
+                                Milestone Bonus
+                            </p>
+                            <p class="text-2xl font-bold text-purple-600">
+                                +200 pts
+                            </p>
+                        </div>
+                        <div class="border-t border-border pt-4">
+                            <p class="text-sm text-muted-foreground">
+                                Total Points Earned
+                            </p>
+                            <p class="text-3xl font-bold text-primary">
+                                250 pts 🎉
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Rankings Section -->
         <section class="container mx-auto px-4 py-20">
             <div class="mx-auto max-w-5xl">
@@ -340,7 +639,7 @@ const seoData = {
                         class="rounded-xl border border-border/50 bg-card/50 p-6 text-center"
                     >
                         <div class="mb-2 flex justify-center">
-                            <Zap class="h-8 w-8 text-yellow-500" />
+                            <Footprints class="h-8 w-8 text-yellow-500" />
                         </div>
                         <h3 class="mb-1 font-bold text-foreground">Today</h3>
                         <p class="text-sm text-muted-foreground">
@@ -352,7 +651,7 @@ const seoData = {
                         class="rounded-xl border border-border/50 bg-card/50 p-6 text-center"
                     >
                         <div class="mb-2 flex justify-center">
-                            <TrendingUp class="h-8 w-8 text-blue-500" />
+                            <CalendarCheck class="h-8 w-8 text-blue-500" />
                         </div>
                         <h3 class="mb-1 font-bold text-foreground">
                             Yesterday

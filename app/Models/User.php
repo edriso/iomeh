@@ -8,8 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 /**
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Interest> $interests
- * @method \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Interest> interests()
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Habit> $habits
+ * @method \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Habit> habits()
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -81,11 +81,11 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Get all interests for the user.
+     * Get all habits for the user.
      */
-    public function interests()
+    public function habits()
     {
-        return $this->hasMany(Interest::class)->orderBy('display_order');
+        return $this->hasMany(Habit::class)->orderBy('display_order');
     }
 
     /**
@@ -151,7 +151,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->activities()
             ->whereDate('date', now()->toDateString())
-            ->with(['interest.activityType'])
+            ->with(['habit.activityType'])
             ->orderBy('created_at', 'desc')
             ->get();
     }
@@ -186,6 +186,11 @@ class User extends Authenticatable implements MustVerifyEmail
         // If last activity was not yesterday and not today, reset streak
         elseif (!$this->last_activity_date || $this->last_activity_date->toDateString() !== $today) {
             $this->current_streak = 1;
+            
+            // Update longest streak if this is the first ever streak
+            if ($this->current_streak > $this->longest_streak) {
+                $this->longest_streak = $this->current_streak;
+            }
         }
         
         $this->last_activity_date = $today;
@@ -295,7 +300,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getActivityCalendar()
     {
         return $this->activities()
-            ->with(['interest.activityType'])
+            ->with(['habit.activityType'])
             ->latest('date')
             ->get()
             ->groupBy(function ($activity) {
@@ -310,8 +315,8 @@ class User extends Authenticatable implements MustVerifyEmail
                     'activities' => $dayActivities->map(function ($activity) {
                         return [
                             'id' => $activity->id,
-                            'interest_name' => $activity->interest->custom_name,
-                            'activity_type' => $activity->interest->activityType->name,
+                            'habit_name' => $activity->habit->custom_name,
+                            'activity_type' => $activity->habit->activityType->name,
                             'points_earned' => $activity->points_earned,
                             'notes' => $activity->notes,
                         ];
@@ -319,5 +324,62 @@ class User extends Authenticatable implements MustVerifyEmail
                 ];
             })
             ->values();
+    }
+
+    /**
+     * Get the current streak tier information
+     */
+    public function getStreakTier(): array
+    {
+        $streak = $this->current_streak ?? 0;
+        $tiers = config('gamification.streak_tiers', []);
+        
+        foreach ($tiers as $tier) {
+            if ($streak >= $tier['min'] && $streak <= $tier['max']) {
+                return $tier;
+            }
+        }
+        
+        // Fallback to first tier if no match
+        return $tiers[0] ?? ['min' => 1, 'max' => 2, 'name' => 'Newcomer', 'multiplier' => 1.0, 'icon' => '🌱'];
+    }
+
+    /**
+     * Calculate points with streak bonus applied
+     */
+    public function calculatePointsWithStreakBonus(int $basePoints): int
+    {
+        $tier = $this->getStreakTier();
+        $multiplier = $tier['multiplier'] ?? 1.0;
+        
+        return (int) round($basePoints * $multiplier);
+    }
+
+    /**
+     * Check if user has reached a milestone and return bonus points
+     */
+    public function getMilestoneBonus(): int
+    {
+        $milestones = config('gamification.milestone_bonuses', []);
+        $currentStreak = $this->current_streak ?? 0;
+        
+        // Check if current streak matches a milestone
+        return $milestones[$currentStreak] ?? 0;
+    }
+
+    /**
+     * Get streak tier name (e.g., "Regular", "Master")
+     */
+    public function getStreakTierNameAttribute(): string
+    {
+        return $this->getStreakTier()['name'] ?? 'Newcomer';
+    }
+
+    /**
+     * Get streak multiplier (e.g., 2.5)
+     */
+    public function getStreakMultiplierAttribute(): float
+    {
+        return $this->getStreakTier()['multiplier'] ?? 1.0;
     }
 }

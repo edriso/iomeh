@@ -14,15 +14,15 @@ return new class extends Migration
         Schema::create('activities', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('interest_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('habit_id')->constrained()->cascadeOnDelete();
             $table->date('date');
             $table->unsignedSmallInteger('points_earned')->default(0);
             $table->text('notes')->nullable();
-            $table->string('proof_url')->nullable();
+            $table->string('memory_url')->nullable();
             $table->timestamps();
             
-            // Unique constraint: one activity per interest per day
-            $table->unique(['user_id', 'interest_id', 'date'], 'unique_user_interest_date');
+            // Unique constraint: one activity per habit per day
+            $table->unique(['user_id', 'habit_id', 'date'], 'unique_user_habit_date');
             
             // Indexes for performance
             $table->index(['user_id', 'date'], 'idx_user_date'); // For checking today's activities

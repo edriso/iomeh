@@ -14,8 +14,8 @@ class DatabaseSeeder extends Seeder
         $seeders = [
             ActivityTypeSeeder::class,  // Create activity types first
             UserSeeder::class,           // Create users
-            InterestSeeder::class,       // Create interests (depends on users and activity types)
-            ActivitySeeder::class,       // Create activities (depends on users and interests)
+            HabitSeeder::class,       // Create habits (depends on users and activity types)
+            ActivitySeeder::class,       // Create activities (depends on users and habits)
             RankingSeeder::class,        // Recalculate seasons (depends on users, runs last)
         ];
 

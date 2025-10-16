@@ -17,10 +17,10 @@ class ActivitySeeder extends Seeder
         // Disable auto-updates during seeding for better performance
         Activity::$skipAutoUpdate = true;
         
-        $users = User::with('interests')->get();
+        $users = User::with('habits')->get();
 
         foreach ($users as $user) {
-            if ($user->interests->isEmpty()) {
+            if ($user->habits->isEmpty()) {
                 continue;
             }
 
@@ -31,18 +31,18 @@ class ActivitySeeder extends Seeder
                 // 70% chance of having activity on any given day
                 if (rand(1, 100) <= 70) {
                     // User does 1-3 activities per active day
-                    $activitiesPerDay = rand(1, min(3, $user->interests->count()));
-                    $selectedInterests = $user->interests->random($activitiesPerDay);
-                    
-                    foreach ($selectedInterests as $interest) {
+                    $activitiesPerDay = rand(1, min(3, $user->habits->count()));
+                    $selectedHabits = $user->habits->random($activitiesPerDay);
+
+                    foreach ($selectedHabits as $habit) {
                         // Get base points from activity type
-                        $basePoints = $interest->activityType->base_points;
+                        $basePoints = $habit->activityType->base_points;
                         
                         // Add some variance (-5 to +10 points)
                         $points = $basePoints + rand(-5, 10);
                         $points = max(5, $points); // Minimum 5 points
                         
-                        // Generate more realistic notes and proof URLs for better testing
+                        // Generate more realistic notes and memory URLs for better testing
                         $activityNotes = [
                             'Morning workout felt great! 💪',
                             'Hit a new personal record today',
@@ -56,7 +56,7 @@ class ActivitySeeder extends Seeder
                             'Best session this week!',
                         ];
                         
-                        $proofUrls = [
+                        $memoryUrls = [
                             'https://www.strava.com/activities/123456',
                             'https://www.instagram.com/p/example',
                             'https://example.com/workout-proof',
@@ -65,11 +65,11 @@ class ActivitySeeder extends Seeder
                         
                         Activity::create([
                             'user_id' => $user->id,
-                            'interest_id' => $interest->id,
+                            'habit_id' => $habit->id,
                             'date' => $date,
                             'points_earned' => $points,
                             'notes' => fake()->optional(0.6)->randomElement($activityNotes),
-                            'proof_url' => fake()->optional(0.3)->randomElement($proofUrls),
+                            'memory_url' => fake()->optional(0.3)->randomElement($memoryUrls),
                         ]);
                     }
                 }

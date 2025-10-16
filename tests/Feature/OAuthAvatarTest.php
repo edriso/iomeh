@@ -5,7 +5,7 @@ use App\Models\SocialLogin;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\User as SocialiteUser;
-use Mockery;
+use Mockery\MockInterface;
 
 uses(RefreshDatabase::class);
 

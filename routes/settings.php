@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Settings\EmailController;
-use App\Http\Controllers\Settings\InterestsController;
+use App\Http\Controllers\Settings\HabitsController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -34,6 +34,6 @@ Route::middleware('auth')->group(function () {
         return Inertia::render('settings/Account');
     })->name('account.edit');
 
-    Route::get('settings/interests', [InterestsController::class, 'edit'])->name('interests.edit');
-    Route::put('settings/interests', [InterestsController::class, 'update'])->name('interests.update');
+    Route::get('settings/habits', [HabitsController::class, 'edit'])->name('habits.edit');
+    Route::put('settings/habits', [HabitsController::class, 'update'])->name('habits.update');
 });

@@ -3,6 +3,7 @@
     v-if="open"
     ref="contentRef"
     :class="contentClass"
+    :style="contentStyle"
     role="listbox"
     @keydown="handleKeydown"
     @click.stop
@@ -34,10 +35,39 @@ if (!selectContext) {
 const { open, setOpen } = selectContext
 
 const contentRef = ref<HTMLDivElement>()
+const contentStyle = ref<Record<string, string>>({})
+
+// Calculate and set dropdown width based on trigger
+const updatePosition = () => {
+  if (contentRef.value) {
+    // Find the trigger button - it's a sibling in the parent container
+    const parent = contentRef.value.parentElement
+    const trigger = parent?.querySelector('button') || parent?.querySelector('[role="combobox"]')
+    
+    if (trigger) {
+      const triggerRect = trigger.getBoundingClientRect()
+      contentStyle.value = {
+        width: `${triggerRect.width}px`,
+      }
+    } else {
+      // Fallback: use parent width
+      contentStyle.value = {
+        width: '100%',
+      }
+    }
+  }
+}
+
+watch(open, (isOpen) => {
+  if (isOpen) {
+    // Use nextTick to ensure DOM is updated
+    setTimeout(updatePosition, 10)
+  }
+})
 
 const contentClass = computed(() => {
   return cva(
-    'relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-background text-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
+    'absolute left-0 right-0 z-[100] mt-1 max-h-96 w-full overflow-y-auto overflow-x-hidden rounded-md border bg-popover text-popover-foreground shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
     {
       variants: {
         position: {

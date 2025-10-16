@@ -2,7 +2,7 @@
 
 use App\Models\Activity;
 use App\Models\ActivityType;
-use App\Models\Interest;
+use App\Models\Habit;
 use App\Models\RankingHistory;
 use App\Models\Season;
 use App\Models\User;
@@ -100,13 +100,13 @@ test('profile displays recent activities', function () {
     $viewer = User::factory()->create();
     $user = User::factory()->create(['username' => 'testuser']);
     
-    // Create activity type and interest
+    // Create activity type and habit
     $activityType = ActivityType::factory()->create([
         'name' => 'Running',
         'icon' => '🏃',
     ]);
     
-    $interest = Interest::factory()->create([
+    $habit = Habit::factory()->create([
         'user_id' => $user->id,
         'activity_type_id' => $activityType->id,
         'custom_name' => 'Morning Run',
@@ -115,7 +115,7 @@ test('profile displays recent activities', function () {
     // Create activities
     Activity::factory()->create([
         'user_id' => $user->id,
-        'interest_id' => $interest->id,
+        'habit_id' => $habit->id,
         'date' => now(),
         'points_earned' => 30,
     ]);
@@ -135,31 +135,31 @@ test('profile displays calendar data', function () {
     $viewer = User::factory()->create();
     $user = User::factory()->create(['username' => 'testuser']);
     
-    // Create activity types and interests
+    // Create activity types and habits
     $activityType1 = ActivityType::factory()->create();
     $activityType2 = ActivityType::factory()->create();
     
-    $interest1 = Interest::factory()->create([
+    $habit1 = Habit::factory()->create([
         'user_id' => $user->id,
         'activity_type_id' => $activityType1->id,
     ]);
     
-    $interest2 = Interest::factory()->create([
+    $habit2 = Habit::factory()->create([
         'user_id' => $user->id,
         'activity_type_id' => $activityType2->id,
     ]);
 
-    // Create activities on specific dates with different interests
+    // Create activities on specific dates with different habits
     Activity::factory()->create([
         'user_id' => $user->id,
-        'interest_id' => $interest1->id,
+        'habit_id' => $habit1->id,
         'date' => now()->subDays(1),
         'points_earned' => 20,
     ]);
 
     Activity::factory()->create([
         'user_id' => $user->id,
-        'interest_id' => $interest2->id,
+        'habit_id' => $habit2->id,
         'date' => now()->subDays(1),
         'points_earned' => 30,
     ]);
@@ -176,11 +176,11 @@ test('profile displays calendar data', function () {
     );
 });
 
-test('profile displays user interests', function () {
+test('profile displays user habits', function () {
     $viewer = User::factory()->create();
     $user = User::factory()->create(['username' => 'testuser']);
     
-    // Create activity types and interests
+    // Create activity types and habits
     $activityType1 = ActivityType::factory()->create([
         'name' => 'Running',
         'icon' => '🏃',
@@ -191,14 +191,14 @@ test('profile displays user interests', function () {
         'icon' => '🧘',
     ]);
     
-    Interest::factory()->create([
+    Habit::factory()->create([
         'user_id' => $user->id,
         'activity_type_id' => $activityType1->id,
         'custom_name' => 'Morning Run',
         'display_order' => 1,
     ]);
     
-    Interest::factory()->create([
+    Habit::factory()->create([
         'user_id' => $user->id,
         'activity_type_id' => $activityType2->id,
         'custom_name' => 'Evening Meditation',
@@ -210,9 +210,9 @@ test('profile displays user interests', function () {
     $response->assertOk();
     $response->assertInertia(fn (Assert $page) => $page
         ->component('Profile')
-        ->has('interests', 2)
-        ->where('interests.0.name', 'Morning Run')
-        ->where('interests.1.name', 'Evening Meditation')
+        ->has('habits', 2)
+        ->where('habits.0.name', 'Morning Run')
+        ->where('habits.1.name', 'Evening Meditation')
     );
 });
 
@@ -247,8 +247,8 @@ test('profile displays ranking histories', function () {
     $response->assertInertia(fn (Assert $page) => $page
         ->component('Profile')
         ->has('ranking_histories', 2)
-        ->where('ranking_histories.0.display_name', '2024 #10')
-        ->where('ranking_histories.1.display_name', '2024 Q1 #5')
+        ->where('ranking_histories.0.display_name', '2024 Q1 #5')
+        ->where('ranking_histories.1.display_name', '2024 #10')
     );
 });
 
@@ -279,38 +279,38 @@ test('profile stats are calculated correctly', function () {
     $viewer = User::factory()->create();
     $user = User::factory()->create(['username' => 'testuser']);
     
-    // Create activity types and interests
+    // Create activity types and habits
     $activityType1 = ActivityType::factory()->create();
     $activityType2 = ActivityType::factory()->create();
     
-    $interest1 = Interest::factory()->create([
+    $habit1 = Habit::factory()->create([
         'user_id' => $user->id,
         'activity_type_id' => $activityType1->id,
     ]);
     
-    $interest2 = Interest::factory()->create([
+    $habit2 = Habit::factory()->create([
         'user_id' => $user->id,
         'activity_type_id' => $activityType2->id,
     ]);
 
-    // Create activities on different dates with different interests
+    // Create activities on different dates with different habits
     Activity::factory()->create([
         'user_id' => $user->id,
-        'interest_id' => $interest1->id,
+        'habit_id' => $habit1->id,
         'date' => now()->subDays(1),
         'points_earned' => 20,
     ]);
 
     Activity::factory()->create([
         'user_id' => $user->id,
-        'interest_id' => $interest2->id,
+        'habit_id' => $habit2->id,
         'date' => now()->subDays(1),
         'points_earned' => 30,
     ]);
 
     Activity::factory()->create([
         'user_id' => $user->id,
-        'interest_id' => $interest1->id,
+        'habit_id' => $habit1->id,
         'date' => now()->subDays(2),
         'points_earned' => 25,
     ]);
@@ -322,7 +322,7 @@ test('profile stats are calculated correctly', function () {
         ->component('Profile')
         ->where('stats.total_activities', 3)
         ->where('stats.active_days', 2)
-        ->where('stats.interests_count', 2)
+        ->where('stats.habits_count', 2)
     );
 });
 

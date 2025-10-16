@@ -99,14 +99,14 @@ test('ranking stores points correctly', function () {
 test('activity in current quarter creates season ranking with both points', function () {
     $user = User::factory()->create();
     $activityType = \App\Models\ActivityType::factory()->create(['base_points' => 50]);
-    $interest = $user->interests()->create([
+    $habit = $user->habits()->create([
         'activity_type_id' => $activityType->id,
         'custom_name' => 'Test Activity',
     ]);
     
     $activity = \App\Models\Activity::create([
         'user_id' => $user->id,
-        'interest_id' => $interest->id,
+            'habit_id' => $habit->id,
         'date' => now(),
         'points_earned' => 50,
     ]);
@@ -132,7 +132,7 @@ test('activity in current quarter creates season ranking with both points', func
 test('activity in next quarter creates new season ranking and updates season_year_points', function () {
     $user = User::factory()->create();
     $activityType = \App\Models\ActivityType::factory()->create(['base_points' => 50]);
-    $interest = $user->interests()->create([
+    $habit = $user->habits()->create([
         'activity_type_id' => $activityType->id,
         'custom_name' => 'Test Activity',
     ]);
@@ -140,7 +140,7 @@ test('activity in next quarter creates new season ranking and updates season_yea
     // Create activity in current quarter
     \App\Models\Activity::create([
         'user_id' => $user->id,
-        'interest_id' => $interest->id,
+            'habit_id' => $habit->id,
         'date' => now(),
         'points_earned' => 50,
     ]);
@@ -151,7 +151,7 @@ test('activity in next quarter creates new season ranking and updates season_yea
     
     \App\Models\Activity::create([
         'user_id' => $user->id,
-        'interest_id' => $interest->id,
+            'habit_id' => $habit->id,
         'date' => $nextQuarterDate,
         'points_earned' => 75,
     ]);
@@ -181,7 +181,7 @@ test('activity in next quarter creates new season ranking and updates season_yea
 test('activity in next year creates separate year rankings', function () {
     $user = User::factory()->create();
     $activityType = \App\Models\ActivityType::factory()->create(['base_points' => 100]);
-    $interest = $user->interests()->create([
+    $habit = $user->habits()->create([
         'activity_type_id' => $activityType->id,
         'custom_name' => 'Test Activity',
     ]);
@@ -189,7 +189,7 @@ test('activity in next year creates separate year rankings', function () {
     // Create activity in current year
     \App\Models\Activity::create([
         'user_id' => $user->id,
-        'interest_id' => $interest->id,
+            'habit_id' => $habit->id,
         'date' => now(),
         'points_earned' => 100,
     ]);
@@ -200,7 +200,7 @@ test('activity in next year creates separate year rankings', function () {
     
     \App\Models\Activity::create([
         'user_id' => $user->id,
-        'interest_id' => $interest->id,
+            'habit_id' => $habit->id,
         'date' => $nextYearDate,
         'points_earned' => 200,
     ]);
@@ -228,7 +228,7 @@ test('activity in next year creates separate year rankings', function () {
 test('multiple activities in same quarter accumulate points', function () {
     $user = User::factory()->create();
     $activityType = \App\Models\ActivityType::factory()->create(['base_points' => 50]);
-    $interest = $user->interests()->create([
+    $habit = $user->habits()->create([
         'activity_type_id' => $activityType->id,
         'custom_name' => 'Test Activity',
     ]);
@@ -236,21 +236,21 @@ test('multiple activities in same quarter accumulate points', function () {
     // Create 3 activities in current quarter
     \App\Models\Activity::create([
         'user_id' => $user->id,
-        'interest_id' => $interest->id,
+            'habit_id' => $habit->id,
         'date' => now(),
         'points_earned' => 50,
     ]);
     
     \App\Models\Activity::create([
         'user_id' => $user->id,
-        'interest_id' => $interest->id,
+            'habit_id' => $habit->id,
         'date' => now()->addDays(1),
         'points_earned' => 75,
     ]);
     
     \App\Models\Activity::create([
         'user_id' => $user->id,
-        'interest_id' => $interest->id,
+            'habit_id' => $habit->id,
         'date' => now()->addDays(2),
         'points_earned' => 100,
     ]);

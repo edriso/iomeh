@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Interest extends Model
+class Habit extends Model
 {
     use HasFactory;
 
@@ -25,7 +25,7 @@ class Interest extends Model
     }
 
     /**
-     * Get the user that owns the interest.
+     * Get the user that owns the habit.
      */
     public function user()
     {
@@ -33,7 +33,7 @@ class Interest extends Model
     }
 
     /**
-     * Get the activity type for the interest.
+     * Get the activity type for the habit.
      */
     public function activityType()
     {
@@ -41,7 +41,7 @@ class Interest extends Model
     }
 
     /**
-     * Get all activities for this interest.
+     * Get all activities for this habit.
      */
     public function activities()
     {
@@ -49,7 +49,7 @@ class Interest extends Model
     }
 
     /**
-     * Get today's activity for this interest.
+     * Get today's activity for this habit.
      */
     public function getTodayActivity()
     {
@@ -79,7 +79,7 @@ class Interest extends Model
     }
 
     /**
-     * Get total points earned from this interest.
+     * Get total points earned from this habit.
      */
     public function getTotalPoints()
     {

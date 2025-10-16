@@ -18,7 +18,7 @@ import { computed } from 'vue';
 
 interface TodayActivity {
     id: number;
-    interest_name: string;
+    habit_name: string;
     points_earned: number;
     notes?: string;
     created_at: string;
@@ -27,7 +27,7 @@ interface TodayActivity {
 interface RecentActivity {
     id: number;
     date: string;
-    interest_name: string;
+    habit_name: string;
     icon: string;
     points: number;
     notes?: string;
@@ -74,6 +74,10 @@ const handleLogActivity = () => {
 const goToRankings = () => {
     router.visit('/rankings');
 };
+
+const handleEditActivity = () => {
+    router.visit('/settings/habits');
+};
 </script>
 
 <template>
@@ -119,7 +123,7 @@ const goToRankings = () => {
                                 <div
                                     v-for="activity in today_activities"
                                     :key="activity.id"
-                                    class="flex items-start justify-between rounded-lg border border-border/50 bg-card/50 p-4"
+                                    class="flex items-start justify-between gap-3 rounded-lg border border-border/50 bg-card/50 p-4 transition-colors hover:border-primary/30"
                                 >
                                     <div class="flex-1">
                                         <div
@@ -128,7 +132,7 @@ const goToRankings = () => {
                                             <span
                                                 class="font-medium text-foreground"
                                             >
-                                                {{ activity.interest_name }}
+                                                {{ activity.habit_name }}
                                             </span>
                                             <Badge
                                                 variant="secondary"
@@ -163,9 +167,8 @@ const goToRankings = () => {
                                 <p class="mb-4 text-sm">
                                     Start tracking your health!
                                 </p>
-                                <Button size="sm" @click="handleLogActivity">
-                                    <Plus class="h-4 w-4" />
-                                    Log First Activity
+                                <Button size="sm" @click="handleEditActivity">
+                                    Edit Activities
                                 </Button>
                             </div>
                         </CardContent>
@@ -256,7 +259,7 @@ const goToRankings = () => {
                                             <p
                                                 class="truncate font-medium text-foreground"
                                             >
-                                                {{ activity.interest_name }}
+                                                {{ activity.habit_name }}
                                             </p>
                                             <p
                                                 class="text-xs text-muted-foreground"

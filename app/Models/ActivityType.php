@@ -49,19 +49,19 @@ class ActivityType extends Model
     }
 
     /**
-     * Get all interests that use this activity type.
+     * Get all habits that use this activity type.
      */
-    public function interests()
+    public function habits()
     {
-        return $this->hasMany(Interest::class);
+        return $this->hasMany(Habit::class);
     }
 
     /**
-     * Get activities through interests for this activity type.
+     * Get activities through habits for this activity type.
      */
     public function activities()
     {
-        return $this->hasManyThrough(Activity::class, Interest::class);
+        return $this->hasManyThrough(Activity::class, Habit::class);
     }
 
     /**

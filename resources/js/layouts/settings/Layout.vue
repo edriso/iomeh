@@ -6,7 +6,7 @@ import { toUrl, urlIsActive } from '@/lib/utils';
 import { edit as editAccount } from '@/routes/account';
 import { edit as editAppearance } from '@/routes/appearance';
 import { edit as editEmail } from '@/routes/email';
-import { edit as editInterests } from '@/routes/interests';
+import { edit as editHabits } from '@/routes/habits';
 import { edit as editPassword } from '@/routes/password';
 import { edit as editProfile } from '@/routes/profile';
 import { type NavItem } from '@/types';
@@ -19,7 +19,7 @@ const sidebarNavItems: NavItem[] = [
     },
     {
         title: 'My Activities',
-        href: editInterests(),
+        href: editHabits(),
     },
     {
         title: 'Password',

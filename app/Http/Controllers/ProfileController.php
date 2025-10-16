@@ -41,7 +41,7 @@ class ProfileController extends Controller
             'recent_activities' => $this->getRecentActivities($user),
             'calendar_data' => $this->getCalendarData($user),
             'stats' => $this->getUserStats($user, $seasons, $currentSeasonName),
-            'interests' => $this->getUserInterests($user, $isOwnProfile),
+            'habits' => $this->getUserHabits($user, $isOwnProfile),
             'ranking_histories' => $this->getRankingHistories($user),
         ]);
     }
@@ -79,15 +79,15 @@ class ProfileController extends Controller
     private function getRecentActivities(User $user): array
     {
         return $user->activities()
-            ->with(['interest.activityType'])
+            ->with(['habit.activityType'])
             ->orderBy('date', 'desc')
             ->limit(20)
             ->get()
             ->map(fn($activity) => [
                 'id' => $activity->id,
-                'activity_type_name' => $activity->interest->activityType->name,
-                'activity_type_icon' => $activity->interest->activityType->icon,
-                'custom_name' => $activity->interest->custom_name,
+                'activity_type_name' => $activity->habit->activityType->name,
+                'activity_type_icon' => $activity->habit->activityType->icon,
+                'custom_name' => $activity->habit->custom_name,
                 'date' => $activity->date->format('Y-m-d'),
                 'points_earned' => $activity->points_earned,
                 'notes' => $activity->notes,
@@ -134,27 +134,27 @@ class ProfileController extends Controller
             'longest_streak' => $user->longest_streak,
             'total_activities' => $activityStats->total_activities ?? 0,
             'active_days' => $activityStats->active_days ?? 0,
-            'interests_count' => $user->interests()->count(),
+            'habits_count' => $user->habits()->count(),
         ];
     }
 
     /**
-     * Get user's interests
+     * Get user's habits
      */
-    private function getUserInterests(User $user, bool $isOwnProfile): array
+    private function getUserHabits(User $user, bool $isOwnProfile): array
     {
-        return $user->interests()
+        return $user->habits()
             ->with('activityType')
             ->orderBy('display_order')
             ->get()
-            ->map(fn($interest) => [
-                'id' => $interest->id,
-                'name' => $interest->custom_name,
-                'icon' => $interest->activityType->icon,
-                'category' => $interest->activityType->category->value,
-                'activity_type_id' => $interest->activity_type_id,
-                'base_points' => $interest->activityType->base_points,
-                'has_activity_today' => $isOwnProfile && $interest->hasActivityToday(),
+            ->map(fn($habit) => [
+                'id' => $habit->id,
+                'name' => $habit->custom_name,
+                'icon' => $habit->activityType->icon,
+                'category' => $habit->activityType->category->value,
+                'activity_type_id' => $habit->activity_type_id,
+                'base_points' => $habit->activityType->base_points,
+                'has_activity_today' => $isOwnProfile && $habit->hasActivityToday(),
             ])
             ->toArray();
     }

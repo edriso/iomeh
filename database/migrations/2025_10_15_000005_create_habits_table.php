@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('interests', function (Blueprint $table) {
+        Schema::create('habits', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('activity_type_id')->constrained()->cascadeOnDelete();
@@ -23,7 +23,7 @@ return new class extends Migration
             // Unique constraint: can't favorite the same activity type twice
             $table->unique(['user_id', 'activity_type_id'], 'unique_user_activity_type');
             
-            // Index for user interests ordering
+            // Index for user habits ordering
             $table->index(['user_id', 'display_order']);
         });
     }
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('interests');
+        Schema::dropIfExists('habits');
     }
 };

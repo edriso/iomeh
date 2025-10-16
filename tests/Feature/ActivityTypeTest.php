@@ -52,10 +52,10 @@ test('activity type has activities relationship', function () {
     expect($activityType->activities())->toBeInstanceOf(\Illuminate\Database\Eloquent\Relations\HasManyThrough::class);
 });
 
-test('activity type has interests relationship', function () {
+test('activity type has habits relationship', function () {
     $activityType = ActivityType::factory()->create();
     
-    expect($activityType->interests())->toBeInstanceOf(\Illuminate\Database\Eloquent\Relations\HasMany::class);
+    expect($activityType->habits())->toBeInstanceOf(\Illuminate\Database\Eloquent\Relations\HasMany::class);
 });
 
 test('all activity categories are valid', function () {

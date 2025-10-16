@@ -33,9 +33,9 @@ class UserFactory extends Factory
             'avatar' => null,
             'bio' => fake()->optional(0.6)->paragraph(),
             'website_url' => fake()->optional(0.3)->url(),
-            'current_streak' => fake()->numberBetween(0, 50),
-            'longest_streak' => fake()->numberBetween(0, 100),
-            'last_activity_date' => fake()->optional(0.8)->date(),
+            'current_streak' => 0,
+            'longest_streak' => 0,
+            'last_activity_date' => null,
             'is_active' => fake()->boolean(98),
         ];
     }
