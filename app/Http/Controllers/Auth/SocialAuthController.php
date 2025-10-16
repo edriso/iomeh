@@ -77,8 +77,13 @@ class SocialAuthController extends Controller
                 ->first();
 
             if ($socialLogin) {
-                // User exists, update tokens
+                // User exists, update tokens and avatar
                 $socialLogin->update($this->getOAuthTokenData($googleUser));
+
+                // Update user avatar from Google profile
+                $socialLogin->user->update([
+                    'avatar' => $googleUser->getAvatar(),
+                ]);
 
                 // Ensure email is verified since Google emails are verified
                 $this->ensureEmailVerified($socialLogin->user);
@@ -100,6 +105,11 @@ class SocialAuthController extends Controller
                 // Link the Google account to existing user
                 $existingUser->socialLogins()->create($this->getOAuthTokenData($googleUser));
 
+                // Update user avatar from Google profile if they don't have one or to keep it synced
+                $existingUser->update([
+                    'avatar' => $googleUser->getAvatar(),
+                ]);
+
                 // Mark email as verified since Google emails are verified
                 $this->ensureEmailVerified($existingUser);
 
@@ -118,7 +128,8 @@ class SocialAuthController extends Controller
             $user = User::create([
                 'username' => $this->generateUniqueUsername($googleUser->getName()),
                 'email' => $googleUser->getEmail(),
-                'full_name' => $googleUser->getName(),
+                'name' => $googleUser->getName(),
+                'avatar' => $googleUser->getAvatar(),
                 'password' => null, // No password for OAuth users
             ]);
 
@@ -239,6 +250,11 @@ class SocialAuthController extends Controller
                 // Create new social login
                 $user->socialLogins()->create($this->getOAuthTokenData($socialUser));
             }
+
+            // Update user avatar from Google profile
+            $user->update([
+                'avatar' => $socialUser->getAvatar(),
+            ]);
 
             return redirect()->back()->with('success', 'Google account linked successfully.');
 
