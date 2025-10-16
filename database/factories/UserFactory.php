@@ -33,9 +33,6 @@ class UserFactory extends Factory
             'avatar' => null,
             'bio' => fake()->optional(0.6)->paragraph(),
             'website_url' => fake()->optional(0.3)->url(),
-            'current_season_points' => fake()->numberBetween(0, 500),
-            'current_year_points' => fake()->numberBetween(0, 2000),
-            'lifetime_points' => fake()->numberBetween(0, 10000),
             'current_streak' => fake()->numberBetween(0, 50),
             'longest_streak' => fake()->numberBetween(0, 100),
             'last_activity_date' => fake()->optional(0.8)->date(),
@@ -69,9 +66,6 @@ class UserFactory extends Factory
     public function active(): static
     {
         return $this->state(fn (array $attributes) => [
-            'current_season_points' => fake()->numberBetween(300, 1000),
-            'current_year_points' => fake()->numberBetween(1000, 5000),
-            'lifetime_points' => fake()->numberBetween(5000, 50000),
             'current_streak' => fake()->numberBetween(7, 100),
             'longest_streak' => fake()->numberBetween(30, 200),
             'last_activity_date' => now()->toDateString(),

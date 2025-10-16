@@ -5,30 +5,32 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Ranking extends Model
+class Season extends Model
 {
     use HasFactory;
 
+    protected $table = 'seasons';
+
     protected $fillable = [
         'user_id',
-        'season',
+        'name',
         'year',
         'points',
-        'rank',
+        'season_year_points',
     ];
 
     protected function casts(): array
     {
         return [
-            'season' => 'integer',
+            'name' => 'integer',
             'year' => 'integer',
             'points' => 'integer',
-            'rank' => 'integer',
+            'season_year_points' => 'integer',
         ];
     }
 
     /**
-     * Get the user for the ranking.
+     * Get the user for the season.
      */
     public function user()
     {
@@ -36,57 +38,52 @@ class Ranking extends Model
     }
 
     /**
-     * Scope to get season rankings.
+     * Scope to get seasons filtered by year and name, ordered by points.
      */
-    public function scopeSeason($query, $year, $season)
+    public function scopeForSeason($query, $year, $name)
     {
         return $query->where('year', $year)
-                    ->where('season', $season)
-                    ->orderBy('rank');
+                    ->where('name', $name)
+                    ->orderBy('points', 'desc');
     }
 
     /**
-     * Scope to get year rankings.
+     * Scope to get year rankings ordered by season year points.
      */
     public function scopeYear($query, $year)
     {
         return $query->where('year', $year)
-                    ->whereNull('season')
-                    ->orderBy('rank');
+                    ->orderBy('season_year_points', 'desc');
     }
 
     /**
-     * Recalculate all ranks for a given season/year.
+     * Calculate user's rank for this specific season.
      */
-    public static function recalculateRanks($year, $season = null)
+    public function getSeasonRankAttribute()
     {
-        $query = self::where('year', $year);
-        
-        if ($season !== null) {
-            $query->where('season', $season);
-        } else {
-            $query->whereNull('season');
-        }
-        
-        $rankings = $query->orderBy('points', 'desc')->get();
-        
-        $rank = 1;
-        foreach ($rankings as $ranking) {
-            $ranking->rank = $rank++;
-            $ranking->save();
-        }
+        return self::where('year', $this->year)
+            ->where('name', $this->name)
+            ->where('points', '>', $this->points)
+            ->count() + 1;
     }
 
     /**
-     * Get season name (Q1, Q2, Q3, Q4).
+     * Calculate user's rank for the year (across all users in the same year).
      */
-    public function getSeasonNameAttribute()
+    public function getYearRankAttribute()
     {
-        if ($this->season === null) {
-            return 'Year';
-        }
-        
-        return 'Q' . $this->season;
+        return self::where('year', $this->year)
+            ->where('season_year_points', '>', $this->season_year_points)
+            ->distinct('user_id')
+            ->count('user_id') + 1;
+    }
+
+    /**
+     * Get season display name (Q1, Q2, Q3, Q4).
+     */
+    public function getDisplayNameAttribute()
+    {
+        return 'Q' . $this->name;
     }
 
     /**
@@ -126,30 +123,51 @@ class Ranking extends Model
     }
 
     /**
-     * Get top rankings for current season.
+     * Get top seasons for current season.
      */
     public static function getCurrentSeasonTop($limit = 10)
     {
         $currentYear = now()->year;
-        $currentSeason = ceil(now()->month / 3);
+        $currentSeasonName = ceil(now()->month / 3);
         
-        return self::season($currentYear, $currentSeason)
+        $seasons = self::forSeason($currentYear, $currentSeasonName)
             ->with('user')
             ->limit($limit)
             ->get();
+        
+        // Add rank as attribute
+        $rank = 1;
+        foreach ($seasons as $season) {
+            $season->rank = $rank++;
+        }
+        
+        return $seasons;
     }
 
     /**
-     * Get top rankings for current year.
+     * Get top seasons for current year.
+     * Groups by user and gets their best season_year_points from any season.
      */
     public static function getCurrentYearTop($limit = 10)
     {
         $currentYear = now()->year;
         
-        return self::year($currentYear)
-            ->with('user')
+        // Get max season_year_points for each user
+        $seasons = self::where('year', $currentYear)
+            ->selectRaw('user_id, MAX(season_year_points) as season_year_points')
+            ->groupBy('user_id')
+            ->orderBy('season_year_points', 'desc')
             ->limit($limit)
+            ->with('user')
             ->get();
+        
+        // Add rank as attribute
+        $rank = 1;
+        foreach ($seasons as $season) {
+            $season->rank = $rank++;
+        }
+        
+        return $seasons;
     }
 }
 

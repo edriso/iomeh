@@ -79,27 +79,27 @@ class ActivitySeeder extends Seeder
         // Re-enable auto-updates
         Activity::$skipAutoUpdate = false;
         
-        // Now manually calculate points and streaks for all users
-        $this->command->info('Calculating points and streaks for seeded users...');
+        // Now manually calculate points, streaks and seasons for all users
+        $this->command->info('Calculating points, streaks and seasons for seeded users...');
         
         foreach ($users as $user) {
-            // Calculate total points from all activities
-            $totalPoints = Activity::where('user_id', $user->id)->sum('points_earned');
+            $user->refresh();
             
-            $user->update([
-                'lifetime_points' => $totalPoints,
-                'current_season_points' => $totalPoints,
-                'current_year_points' => $totalPoints,
-            ]);
+            // Get all activities for this user
+            $activities = Activity::where('user_id', $user->id)
+                ->orderBy('date', 'asc')
+                ->get();
+            
+            // Update seasons for each activity date
+            foreach ($activities as $activity) {
+                $user->updateSeasons($activity->date, $activity->points_earned);
+            }
             
             // Calculate streak from most recent activities
             $this->calculateStreak($user);
-            
-            // Update rankings
-            $user->updateRankings();
         }
 
-        $this->command->info('Created activities for the last 30 days with updated points and streaks');
+        $this->command->info('Created activities for the last 30 days with updated points, streaks and seasons');
     }
     
     /**

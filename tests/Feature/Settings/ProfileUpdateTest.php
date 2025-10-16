@@ -85,7 +85,22 @@ test('correct password must be provided to delete account', function () {
 });
 
 test('user cannot upload profile picture without enough points', function () {
-    $user = User::factory()->create(['lifetime_points' => 49]); // Not enough points
+    $user = User::factory()->create();
+    
+    // Create activity with less than 50 points
+    $activityType = \App\Models\ActivityType::factory()->create(['base_points' => 25]);
+    $interest = $user->interests()->create([
+        'activity_type_id' => $activityType->id,
+        'custom_name' => 'Test Activity',
+    ]);
+    \App\Models\Activity::create([
+        'user_id' => $user->id,
+        'interest_id' => $interest->id,
+        'date' => now()->toDateString(),
+        'points_earned' => 25,
+    ]);
+    
+    // User now has 25 points, which is less than 50
 
     $response = $this
         ->actingAs($user)
@@ -102,7 +117,22 @@ test('user cannot upload profile picture without enough points', function () {
 });
 
 test('user can upload profile picture with enough points', function () {
-    $user = User::factory()->create(['lifetime_points' => 150]); // Enough points
+    $user = User::factory()->create();
+    
+    // Create activity with more than 50 points
+    $activityType = \App\Models\ActivityType::factory()->create(['base_points' => 150]);
+    $interest = $user->interests()->create([
+        'activity_type_id' => $activityType->id,
+        'custom_name' => 'Test Activity',
+    ]);
+    \App\Models\Activity::create([
+        'user_id' => $user->id,
+        'interest_id' => $interest->id,
+        'date' => now()->toDateString(),
+        'points_earned' => 150,
+    ]);
+    
+    // User now has 150 points, which is more than 50
 
     $response = $this
         ->actingAs($user)

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Settings;
 use App\Http\Controllers\Controller;
 use App\Models\ActivityType;
 use App\Models\Interest;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -16,6 +17,7 @@ class InterestsController extends Controller
      */
     public function edit()
     {
+        /** @var User $user */
         $user = Auth::user();
 
         // Get user's current interests with activity type details
@@ -74,6 +76,7 @@ class InterestsController extends Controller
             'interests.*.notes' => ['nullable', 'string', 'max:500'],
         ]);
 
+        /** @var User $user */
         $user = Auth::user();
 
         // Get IDs of interests to keep
@@ -103,4 +106,3 @@ class InterestsController extends Controller
         return back()->with('success', 'Interests updated successfully!');
     }
 }
-

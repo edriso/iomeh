@@ -121,3 +121,95 @@ test('activity casts date properly', function () {
     expect($activity->date->format('Y-m-d'))->toBe('2025-10-15');
 });
 
+test('activity creation automatically creates ranking records', function () {
+    $user = User::factory()->create();
+    $activityType = ActivityType::factory()->create(['base_points' => 100]);
+    $interest = $user->interests()->create([
+        'activity_type_id' => $activityType->id,
+        'custom_name' => 'My Activity',
+    ]);
+    
+    Activity::create([
+        'user_id' => $user->id,
+        'interest_id' => $interest->id,
+        'date' => now(),
+        'points_earned' => 100,
+    ]);
+    
+    $currentYear = now()->year;
+    $currentSeason = ceil(now()->month / 3);
+    
+    // Check ranking record was created
+    $seasonRanking = \App\Models\Season::where('user_id', $user->id)
+        ->where('year', $currentYear)
+        ->where('name', $currentSeason)
+        ->first();
+    
+    expect($seasonRanking)->not->toBeNull();
+    expect($seasonRanking->points)->toBe(100);
+    expect($seasonRanking->season_year_points)->toBe(100);
+});
+
+test('activity creation updates user lifetime points', function () {
+    $user = User::factory()->create();
+    $activityType = ActivityType::factory()->create(['base_points' => 75]);
+    $interest = $user->interests()->create([
+        'activity_type_id' => $activityType->id,
+        'custom_name' => 'My Activity',
+    ]);
+    
+    Activity::create([
+        'user_id' => $user->id,
+        'interest_id' => $interest->id,
+        'date' => now(),
+        'points_earned' => 75,
+    ]);
+    
+    $user->refresh();
+    expect($user->lifetime_points)->toBe(75);
+});
+
+test('activity on different dates creates appropriate rankings', function () {
+    $user = User::factory()->create();
+    $activityType = ActivityType::factory()->create(['base_points' => 50]);
+    $interest = $user->interests()->create([
+        'activity_type_id' => $activityType->id,
+        'custom_name' => 'My Activity',
+    ]);
+    
+    // Activity in Q1
+    Activity::create([
+        'user_id' => $user->id,
+        'interest_id' => $interest->id,
+        'date' => '2025-01-15',
+        'points_earned' => 50,
+    ]);
+    
+    // Activity in Q2
+    Activity::create([
+        'user_id' => $user->id,
+        'interest_id' => $interest->id,
+        'date' => '2025-04-15',
+        'points_earned' => 75,
+    ]);
+    
+    // Check Q1 ranking
+    $q1Ranking = \App\Models\Season::where('user_id', $user->id)
+        ->where('year', 2025)
+        ->where('name', 1)
+        ->first();
+    
+    // Check Q2 ranking
+    $q2Ranking = \App\Models\Season::where('user_id', $user->id)
+        ->where('year', 2025)
+        ->where('name', 2)
+        ->first();
+    
+    expect($q1Ranking->points)->toBe(50);
+    expect($q2Ranking->points)->toBe(75);
+    
+    // Both should have same season_year_points (sum of all quarters)
+    expect($q1Ranking->season_year_points)->toBe(125);
+    expect($q2Ranking->season_year_points)->toBe(125);
+});
+

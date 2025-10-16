@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Activity;
-use App\Models\Ranking;
+use App\Models\Season;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -159,27 +159,27 @@ class RankingsController extends Controller
     private function getCurrentSeasonRankings($limit = 20)
     {
         $currentYear = now()->year;
-        $currentSeason = ceil(now()->month / 3);
+        $currentSeasonName = ceil(now()->month / 3);
         
-        $rankings = Ranking::where('year', $currentYear)
-            ->where('season', $currentSeason)
+        $seasons = Season::where('year', $currentYear)
+            ->where('name', $currentSeasonName)
             ->with('user:id,username,name,avatar')
-            ->orderBy('rank')
+            ->orderBy('points', 'desc')
             ->limit($limit)
             ->get();
 
-        return $rankings->map(function ($ranking) {
+        return $seasons->map(function ($season, $index) {
             return [
-                'rank' => $ranking->rank,
+                'rank' => $index + 1,
                 'user' => [
-                    'id' => $ranking->user->id,
-                    'username' => $ranking->user->username,
-                    'name' => $ranking->user->name ?: $ranking->user->username,
-                    'avatar' => $ranking->user->avatar,
+                    'id' => $season->user->id,
+                    'username' => $season->user->username,
+                    'name' => $season->user->name ?: $season->user->username,
+                    'avatar' => $season->user->avatar,
                 ],
-                'points' => $ranking->points,
-                'season' => 'Q' . $ranking->season,
-                'year' => $ranking->year,
+                'points' => $season->points,
+                'season' => 'Q' . $season->name,
+                'year' => $season->year,
             ];
         });
     }
@@ -191,24 +191,26 @@ class RankingsController extends Controller
     {
         $currentYear = now()->year;
         
-        $rankings = Ranking::where('year', $currentYear)
-            ->whereNull('season')
+        // Get max season_year_points for each user (from any season in the current year)
+        $seasons = Season::where('year', $currentYear)
+            ->selectRaw('user_id, MAX(season_year_points) as season_year_points')
+            ->groupBy('user_id')
             ->with('user:id,username,name,avatar')
-            ->orderBy('rank')
+            ->orderBy('season_year_points', 'desc')
             ->limit($limit)
             ->get();
 
-        return $rankings->map(function ($ranking) {
+        return $seasons->map(function ($season, $index) {
             return [
-                'rank' => $ranking->rank,
+                'rank' => $index + 1,
                 'user' => [
-                    'id' => $ranking->user->id,
-                    'username' => $ranking->user->username,
-                    'name' => $ranking->user->name ?: $ranking->user->username,
-                    'avatar' => $ranking->user->avatar,
+                    'id' => $season->user->id,
+                    'username' => $season->user->username,
+                    'name' => $season->user->name ?: $season->user->username,
+                    'avatar' => $season->user->avatar,
                 ],
-                'points' => $ranking->points,
-                'year' => $ranking->year,
+                'points' => $season->season_year_points,
+                'year' => now()->year,
             ];
         });
     }
@@ -283,17 +285,17 @@ class RankingsController extends Controller
     private function getCurrentUserRankSeason($user)
     {
         $currentYear = now()->year;
-        $currentSeason = ceil(now()->month / 3);
+        $currentSeasonName = ceil(now()->month / 3);
         
-        $ranking = $user->rankings()
+        $season = $user->seasons()
             ->where('year', $currentYear)
-            ->where('season', $currentSeason)
+            ->where('name', $currentSeasonName)
             ->first();
 
-        return $ranking ? [
-            'rank' => $ranking->rank,
-            'points' => $ranking->points,
-            'season' => 'Q' . $currentSeason,
+        return $season ? [
+            'rank' => $season->season_rank,
+            'points' => $season->points,
+            'season' => 'Q' . $currentSeasonName,
         ] : null;
     }
 
@@ -304,14 +306,14 @@ class RankingsController extends Controller
     {
         $currentYear = now()->year;
         
-        $ranking = $user->rankings()
+        $season = $user->seasons()
             ->where('year', $currentYear)
-            ->whereNull('season')
+            ->orderBy('season_year_points', 'desc')
             ->first();
 
-        return $ranking ? [
-            'rank' => $ranking->rank,
-            'points' => $ranking->points,
+        return $season ? [
+            'rank' => $season->year_rank,
+            'points' => $season->season_year_points,
         ] : null;
     }
 }

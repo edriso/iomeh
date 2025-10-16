@@ -20,9 +20,6 @@ return new class extends Migration
             $table->string('bio')->nullable();
             $table->string('website_url')->nullable();
             $table->string('password')->nullable();
-            $table->unsignedInteger('current_season_points')->default(0);
-            $table->unsignedInteger('current_year_points')->default(0);
-            $table->unsignedBigInteger('lifetime_points')->default(0);
             $table->unsignedSmallInteger('current_streak')->default(0);
             $table->unsignedSmallInteger('longest_streak')->default(0);
             $table->date('last_activity_date')->nullable();

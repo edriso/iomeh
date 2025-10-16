@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Activity;
 use App\Models\Interest;
-use App\Models\Ranking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -83,16 +82,16 @@ class HomeController extends Controller
                 ];
             });
 
-        // Get user's current rankings
-        $currentSeason = ceil(now()->month / 3);
-        $seasonRanking = $user->rankings()
+        // Get user's current seasons
+        $currentSeasonName = ceil(now()->month / 3);
+        $userSeason = $user->seasons()
             ->where('year', now()->year)
-            ->where('season', $currentSeason)
+            ->where('name', $currentSeasonName)
             ->first();
 
-        $yearRanking = $user->rankings()
+        $yearSeason = $user->seasons()
             ->where('year', now()->year)
-            ->whereNull('season')
+            ->orderBy('season_year_points', 'desc')
             ->first();
 
         // Get recent activities (last 7 days)
@@ -120,18 +119,18 @@ class HomeController extends Controller
                 'username' => $user->username,
                 'name' => $user->name ?: $user->username,
                 'avatar' => $user->avatar,
-                'current_season_points' => $user->current_season_points,
-                'current_year_points' => $user->current_year_points,
+                'current_season_points' => $userSeason?->points ?? 0,
+                'current_year_points' => $yearSeason?->season_year_points ?? 0,
                 'lifetime_points' => $user->lifetime_points,
                 'current_streak' => $user->current_streak,
                 'longest_streak' => $user->longest_streak,
-                'season_rank' => $seasonRanking ? [
-                    'rank' => $seasonRanking->rank,
-                    'season' => 'Q' . $currentSeason,
+                'season_rank' => $userSeason ? [
+                    'rank' => $userSeason->season_rank,
+                    'season' => 'Q' . $currentSeasonName,
                     'year' => now()->year,
                 ] : null,
-                'year_rank' => $yearRanking ? [
-                    'rank' => $yearRanking->rank,
+                'year_rank' => $yearSeason ? [
+                    'rank' => $yearSeason->year_rank,
                     'year' => now()->year,
                 ] : null,
             ],

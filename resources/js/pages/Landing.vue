@@ -2,7 +2,7 @@
 import AppLogo from '@/components/AppLogo.vue';
 import SEO from '@/components/SEO.vue';
 import { Button } from '@/components/ui/button';
-import { login, register } from '@/routes';
+import { login, register } from '@/routes/index';
 import { Link } from '@inertiajs/vue3';
 import {
     Activity,

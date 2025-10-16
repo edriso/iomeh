@@ -65,9 +65,9 @@ class Activity extends Model
             // Update user's streak
             $activity->user->updateStreak();
             
-            // Award points to user
+            // Award points to user based on the activity date
             if ($activity->points_earned > 0) {
-                $activity->user->addPoints($activity->points_earned);
+                $activity->user->addPoints($activity->points_earned, $activity->date);
             }
         });
     }

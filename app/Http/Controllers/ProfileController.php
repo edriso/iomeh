@@ -39,6 +39,17 @@ class ProfileController extends Controller
      */
     private function formatUserData(User $user): array
     {
+        $currentSeasonName = ceil(now()->month / 3);
+        $userSeason = $user->seasons()
+            ->where('year', now()->year)
+            ->where('name', $currentSeasonName)
+            ->first();
+        
+        $yearSeason = $user->seasons()
+            ->where('year', now()->year)
+            ->orderBy('season_year_points', 'desc')
+            ->first();
+        
         return [
             'id' => $user->id,
             'name' => $user->name ?? $user->username,
@@ -47,8 +58,8 @@ class ProfileController extends Controller
             'title' => $user->title ?? null,
             'website_url' => $user->website_url ?? null,
             'avatar' => $user->avatar ?? null,
-            'current_season_points' => $user->current_season_points ?? 0,
-            'current_year_points' => $user->current_year_points ?? 0,
+            'current_season_points' => $userSeason?->points ?? 0,
+            'current_year_points' => $yearSeason?->season_year_points ?? 0,
             'lifetime_points' => $user->lifetime_points ?? 0,
             'current_streak' => $user->current_streak ?? 0,
             'longest_streak' => $user->longest_streak ?? 0,
@@ -119,10 +130,21 @@ class ProfileController extends Controller
             ->first()
             ->days ?? 0;
         
+        $currentSeasonName = ceil(now()->month / 3);
+        $userSeason = $user->seasons()
+            ->where('year', now()->year)
+            ->where('name', $currentSeasonName)
+            ->first();
+        
+        $yearSeason = $user->seasons()
+            ->where('year', now()->year)
+            ->orderBy('season_year_points', 'desc')
+            ->first();
+        
         return [
             'lifetime_points' => $user->lifetime_points ?? 0,
-            'current_season_points' => $user->current_season_points ?? 0,
-            'current_year_points' => $user->current_year_points ?? 0,
+            'current_season_points' => $userSeason?->points ?? 0,
+            'current_year_points' => $yearSeason?->season_year_points ?? 0,
             'current_streak' => $user->current_streak ?? 0,
             'longest_streak' => $user->longest_streak ?? 0,
             'total_activities' => $totalActivities,

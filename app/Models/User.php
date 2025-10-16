@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Interest> $interests
+ * @method \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Interest> interests()
+ */
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -25,9 +29,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'avatar',
         'bio',
         'website_url',
-        'current_season_points',
-        'current_year_points',
-        'lifetime_points',
+        'current_season_id',
         'current_streak',
         'longest_streak',
         'last_activity_date',
@@ -55,9 +57,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_active' => 'boolean',
-            'current_season_points' => 'integer',
-            'current_year_points' => 'integer',
-            'lifetime_points' => 'integer',
+            'current_season_id' => 'integer',
             'current_streak' => 'integer',
             'longest_streak' => 'integer',
             'last_activity_date' => 'date',
@@ -89,11 +89,27 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Get all rankings for the user.
+     * Get all seasons for the user.
      */
-    public function rankings()
+    public function seasons()
     {
-        return $this->hasMany(Ranking::class);
+        return $this->hasMany(Season::class);
+    }
+
+    /**
+     * Get the user's current season.
+     */
+    public function currentSeason()
+    {
+        return $this->belongsTo(Season::class, 'current_season_id');
+    }
+
+    /**
+     * Get all ranking history for the user.
+     */
+    public function rankingHistory()
+    {
+        return $this->hasMany(RankingHistory::class);
     }
 
     /**
@@ -176,76 +192,99 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Add points to user and update rankings
+     * Get the user's lifetime points calculated from all activities
      */
-    public function addPoints(int $points): void
+    public function getLifetimePointsAttribute(): int
     {
-        $this->current_season_points += $points;
-        $this->current_year_points += $points;
-        $this->lifetime_points += $points;
-        $this->save();
-        
-        // Update rankings
-        $this->updateRankings();
+        return $this->activities()->sum('points_earned');
     }
 
     /**
-     * Update user's rankings for current season and year
+     * Add points to user and update seasons
      */
-    public function updateRankings(): void
+    public function addPoints(int $points, $date = null): void
     {
-        $currentYear = now()->year;
-        $currentSeason = ceil(now()->month / 3); // Q1-Q4
+        $date = $date ? \Carbon\Carbon::parse($date) : now();
         
-        // Update season ranking
-        Ranking::updateOrCreate(
-            [
-                'user_id' => $this->id,
-                'year' => $currentYear,
-                'season' => $currentSeason,
-            ],
-            [
-                'points' => $this->current_season_points,
-            ]
-        );
-        
-        // Update yearly ranking
-        Ranking::updateOrCreate(
-            [
-                'user_id' => $this->id,
-                'year' => $currentYear,
-                'season' => null,
-            ],
-            [
-                'points' => $this->current_year_points,
-            ]
-        );
+        // Update seasons based on the activity date
+        $this->updateSeasons($date, $points);
     }
 
     /**
-     * Get user's current season ranking
+     * Update user's seasons for a specific date
+     * This handles year/quarter transitions automatically
+     * 
+     * New structure: Each season record stores both points and season_year_points
      */
-    public function getCurrentSeasonRank()
+    public function updateSeasons($date = null, int $points = 0): void
+    {
+        $date = $date ? \Carbon\Carbon::parse($date) : now();
+        $year = $date->year;
+        $seasonName = ceil($date->month / 3); // Q1-Q4
+        
+        $today = now();
+        $currentYear = $today->year;
+        $currentSeasonName = ceil($today->month / 3);
+        
+        // Update the season (add points to points)
+        $season = Season::firstOrCreate(
+            [
+                'user_id' => $this->id,
+                'year' => $year,
+                'name' => $seasonName,
+            ],
+            [
+                'points' => 0,
+                'season_year_points' => 0,
+            ]
+        );
+        
+        // Add points to points
+        $season->increment('points', $points);
+        
+        // Calculate new season_year_points by summing all seasons in this year
+        $yearTotal = Season::where('user_id', $this->id)
+            ->where('year', $year)
+            ->sum('points');
+        
+        // Update season_year_points for ALL season records in this year
+        Season::where('user_id', $this->id)
+            ->where('year', $year)
+            ->update(['season_year_points' => $yearTotal]);
+        
+        // Update current_season_id if this is for the current season
+        if ($year === $currentYear && $seasonName === $currentSeasonName) {
+            // Refresh to get updated season_year_points
+            $season->refresh();
+            $this->current_season_id = $season->id;
+            $this->save();
+        }
+    }
+
+    /**
+     * Get user's current season
+     */
+    public function getCurrentSeason()
     {
         $currentYear = now()->year;
-        $currentSeason = ceil(now()->month / 3);
+        $currentSeasonName = ceil(now()->month / 3);
         
-        return $this->rankings()
+        return $this->seasons()
             ->where('year', $currentYear)
-            ->where('season', $currentSeason)
+            ->where('name', $currentSeasonName)
             ->first();
     }
 
     /**
-     * Get user's current year ranking
+     * Get user's current year season (from any season in current year with highest points)
      */
-    public function getCurrentYearRank()
+    public function getCurrentYearSeason()
     {
         $currentYear = now()->year;
         
-        return $this->rankings()
+        return $this->seasons()
             ->where('year', $currentYear)
-            ->whereNull('season')
+            ->orderBy('season_year_points', 'desc')
             ->first();
     }
 
