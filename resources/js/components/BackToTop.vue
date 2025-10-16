@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { useLogActivity } from '@/composables/useLogActivity';
 import { Button } from '@/components/ui/button';
+import { useLogActivity } from '@/composables/useLogActivity';
+import { usePage } from '@inertiajs/vue3';
 import { ChevronUp, Plus } from 'lucide-vue-next';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
-import { usePage } from '@inertiajs/vue3';
 
 const page = usePage();
 const isAuthenticated = computed(() => !!page.props.auth?.user);
@@ -44,7 +44,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div v-if="isAuthenticated" class="fixed right-6 bottom-6 z-50 flex flex-col gap-3">
+    <div
+        v-if="isAuthenticated"
+        class="fixed right-6 bottom-6 z-50 flex flex-col gap-3"
+    >
         <!-- Back to Top Button (appears above) -->
         <Transition
             enter-active-class="transition duration-300 ease-out"
@@ -79,7 +82,7 @@ onUnmounted(() => {
         <Button
             @click="handleLogActivity"
             size="icon"
-            class="h-14 w-14 rounded-full bg-primary shadow-lg transition-all duration-300 hover:scale-105 hover:bg-primary hover:shadow-xl hover:text-primary-foreground"
+            class="h-14 w-14 rounded-full bg-primary shadow-lg transition-all duration-300 hover:scale-105 hover:bg-primary hover:text-primary-foreground hover:shadow-xl"
             aria-label="Log activity"
             title="Log activity"
         >

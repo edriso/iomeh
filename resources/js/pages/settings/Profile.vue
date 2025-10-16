@@ -1,20 +1,17 @@
 <script setup lang="ts">
 import { edit } from '@/routes/profile';
-import { Head, router, usePage } from '@inertiajs/vue3';
-import { computed, ref, watch } from 'vue';
+import { Head, router } from '@inertiajs/vue3';
+import { ref, watch } from 'vue';
 
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import InputError from '@/components/InputError.vue';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { useNumberFormat } from '@/composables/useNumberFormat';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { type BreadcrumbItem } from '@/types';
-import { Info } from 'lucide-vue-next';
 
 interface Props {
     user: {
@@ -25,11 +22,9 @@ interface Props {
         avatar: string | null;
         lifetime_points: number;
     };
-    profile_picture_points_required: number;
 }
 
 const props = defineProps<Props>();
-const { formatNumber } = useNumberFormat();
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
@@ -37,9 +32,6 @@ const breadcrumbItems: BreadcrumbItem[] = [
         href: edit().url,
     },
 ];
-
-const page = usePage();
-const authUser = page.props.auth.user;
 
 // Form data - initialize with user data
 const username = ref(props.user.username || '');
@@ -55,13 +47,6 @@ const bioCharCount = ref(bio.value.length);
 watch(bio, (newBio) => {
     bioCharCount.value = newBio.length;
 });
-
-// Point thresholds - get from backend
-const PROFILE_PICTURE_POINTS = props.profile_picture_points_required || 50;
-
-const canUploadAvatar = computed(
-    () => (authUser.lifetime_points || 0) >= PROFILE_PICTURE_POINTS,
-);
 
 // Client-side validation
 const clientErrors = ref<Record<string, string>>({});
@@ -256,19 +241,9 @@ const handleSubmit = (event: Event) => {
                             type="url"
                             class="mt-1 block w-full"
                             name="avatar"
-                            :disabled="!canUploadAvatar"
                             placeholder="Enter URL for your profile picture"
                         />
-                        <Alert v-if="!canUploadAvatar" variant="destructive">
-                            <Info class="h-4 w-4" />
-                            <AlertDescription>
-                                You need at least
-                                {{ formatNumber(PROFILE_PICTURE_POINTS) }} coins
-                                to set a profile picture. You currently have
-                                {{ formatNumber(user.lifetime_points) }} points.
-                            </AlertDescription>
-                        </Alert>
-                        <p v-else class="text-xs text-muted-foreground">
+                        <p class="text-xs text-muted-foreground">
                             Enter a direct URL to your profile picture
                         </p>
                         <InputError

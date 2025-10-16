@@ -51,7 +51,7 @@ const selectedInterest = computed(() => {
 });
 
 const handleSubmit = () => {
-    form.post(route('activities.store'), {
+    form.post('/activities', {
         preserveScroll: true,
         onSuccess: () => {
             emit('update:open', false);
@@ -84,8 +84,13 @@ const handleClose = () => {
                     <Select v-model="form.interest_id" required>
                         <SelectTrigger id="interest_id">
                             <SelectValue placeholder="Select an activity">
-                                <span v-if="selectedInterest" class="flex items-center gap-2">
-                                    <span v-if="selectedInterest.icon">{{ selectedInterest.icon }}</span>
+                                <span
+                                    v-if="selectedInterest"
+                                    class="flex items-center gap-2"
+                                >
+                                    <span v-if="selectedInterest.icon">{{
+                                        selectedInterest.icon
+                                    }}</span>
                                     {{ selectedInterest.name }}
                                 </span>
                             </SelectValue>
@@ -146,8 +151,8 @@ const handleClose = () => {
                         id="notes"
                         v-model="form.notes"
                         placeholder="Add any notes about this activity..."
-                        rows="3"
-                        maxlength="500"
+                        :rows="3"
+                        :maxlength="2000"
                     />
                     <InputError :message="form.errors.notes" />
                 </div>

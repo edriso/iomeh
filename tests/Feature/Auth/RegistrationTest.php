@@ -19,7 +19,7 @@ test('new users can register', function () {
     $response->assertRedirect(route('home', absolute: false));
 });
 
-test('new users cannot upload profile picture without enough points', function () {
+test('new users can register with profile picture', function () {
     $response = $this->post(route('register.store'), [
         'username' => 'testuser',
         'name' => 'Test User',
@@ -29,8 +29,13 @@ test('new users cannot upload profile picture without enough points', function (
         'avatar' => 'https://example.com/profile.jpg',
     ]);
 
-    $response->assertSessionHasErrors(['avatar']);
-    $response->assertSessionHasErrors(['avatar' => 'You need at least 50 points to upload a profile picture.']);
+    $this->assertAuthenticated();
+    $response->assertRedirect(route('home', absolute: false));
+    
+    $this->assertDatabaseHas('users', [
+        'username' => 'testuser',
+        'avatar' => 'https://example.com/profile.jpg',
+    ]);
 });
 
 test('username must be unique case-insensitively', function () {

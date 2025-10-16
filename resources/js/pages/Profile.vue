@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ActivityCalendarHeatmap from '@/components/ActivityCalendarHeatmap.vue';
 import IconPointCounter from '@/components/IconPointCounter.vue';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -10,12 +11,19 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { useNumberFormat } from '@/composables/useNumberFormat';
-import { useLogActivity } from '@/composables/useLogActivity';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
-import { Activity, CheckCircle, Edit, Link as LinkIcon, Lock, Plus, Settings } from 'lucide-vue-next';
+import {
+    Activity,
+    Award,
+    CheckCircle,
+    Edit,
+    Link as LinkIcon,
+    Lock,
+    Settings,
+    Trophy,
+} from 'lucide-vue-next';
 import { computed, ref } from 'vue';
-import { Badge } from '@/components/ui/badge';
 
 interface ProfileUser {
     id: number;
@@ -62,6 +70,16 @@ interface Interest {
     has_activity_today: boolean;
 }
 
+interface RankingHistory {
+    id: number;
+    season: number | null;
+    year: number;
+    points: number;
+    rank: number;
+    season_name: string;
+    display_name: string;
+}
+
 interface Props {
     user?: ProfileUser;
     recent_activities?: RecentActivity[];
@@ -78,6 +96,7 @@ interface Props {
     };
     is_own_profile?: boolean;
     interests?: Interest[];
+    ranking_histories?: RankingHistory[];
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -96,6 +115,7 @@ const props = withDefaults(defineProps<Props>(), {
     }),
     is_own_profile: false,
     interests: () => [],
+    ranking_histories: () => [],
 });
 
 const { formatNumber } = useNumberFormat();
@@ -105,13 +125,6 @@ const categoryColors: Record<string, string> = {
     nutrition: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20',
     wellness: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
     mindfulness: 'bg-purple-500/10 text-purple-600 border-purple-500/20',
-};
-
-// Log Activity Modal
-const { showLogActivityModal, openLogActivityModal } = useLogActivity();
-
-const handleLogActivity = () => {
-    openLogActivityModal();
 };
 
 const handleEditActivities = () => {
@@ -135,19 +148,19 @@ const loadingActivities = ref(false);
 
 const handleDayClick = async (date: string) => {
     if (!props.is_own_profile) return; // Only for own profile
-    
+
     selectedDate.value = date;
     loadingActivities.value = true;
-    
+
     try {
         // Fetch activities for the selected date
         const response = await fetch(`/api/activities/date/${date}`, {
             headers: {
-                'Accept': 'application/json',
+                Accept: 'application/json',
                 'X-Requested-With': 'XMLHttpRequest',
             },
         });
-        
+
         if (response.ok) {
             const data = await response.json();
             selectedDateActivities.value = data.activities || [];
@@ -168,6 +181,23 @@ const formatDate = (dateString: string) => {
         month: 'long',
         day: 'numeric',
     });
+};
+
+// Get badge style based on ranking type
+const getRankingBadgeStyle = (history: RankingHistory) => {
+    // Yearly rankings (season is null) - more prominent with gradient
+    if (history.season === null) {
+        return {
+            class: 'inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-gradient-to-r from-amber-500/20 to-orange-500/20 px-3 py-1.5 text-xs font-semibold text-amber-700 dark:text-amber-400 shadow-sm',
+            icon: 'trophy',
+        };
+    }
+
+    // Seasonal rankings (Q1-Q4) - subtle style
+    return {
+        class: 'inline-flex items-center gap-2 rounded-full border border-secondary/20 bg-secondary px-3 py-1.5 text-xs font-medium text-secondary-foreground',
+        icon: 'award',
+    };
 };
 </script>
 
@@ -287,19 +317,18 @@ const formatDate = (dateString: string) => {
                                                             <IconPointCounter
                                                                 class="h-4 w-4 text-secondary-foreground"
                                                             />
-                                                        <span
-                                                            class="text-sm font-medium text-secondary-foreground"
-                                                        >
-                                                            {{
-                                                                formatNumber(
-                                                                    user.current_year_points ||
-                                                                        0,
-                                                                )
-                                                            }}
-                                                        </span>
+                                                            <span
+                                                                class="text-sm font-medium text-secondary-foreground"
+                                                            >
+                                                                {{
+                                                                    formatNumber(
+                                                                        user.current_season_points ||
+                                                                            0,
+                                                                    )
+                                                                }}
+                                                            </span>
                                                         </div>
                                                     </div>
-
                                                 </div>
 
                                                 <p
@@ -338,7 +367,6 @@ const formatDate = (dateString: string) => {
                                                     </a>
                                                 </Button>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -349,24 +377,31 @@ const formatDate = (dateString: string) => {
 
                 <!-- Main Content -->
                 <div class="space-y-8">
-                    <!-- My Activities (Only for own profile) -->
-                    <Card v-if="is_own_profile">
+                    <!-- My Activities -->
+                    <Card>
                         <CardHeader>
                             <div class="flex items-center justify-between">
                                 <div>
-                                    <CardTitle>My Activities</CardTitle>
-                                    <CardDescription>
+                                    <CardTitle>{{
+                                        is_own_profile
+                                            ? 'My Activities'
+                                            : 'Activities'
+                                    }}</CardTitle>
+                                    <CardDescription v-if="is_own_profile">
                                         Activities you're tracking
                                     </CardDescription>
+                                    <CardDescription v-else>
+                                        Activities being tracked
+                                    </CardDescription>
                                 </div>
-                                <div class="flex gap-2">
-                                    <Button size="sm" variant="outline" @click="handleEditActivities">
+                                <div v-if="is_own_profile">
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
+                                        @click="handleEditActivities"
+                                    >
                                         <Settings class="h-4 w-4" />
                                         Edit Activities
-                                    </Button>
-                                    <Button size="sm" @click="handleLogActivity">
-                                        <Plus class="h-4 w-4" />
-                                        Log Activity
                                     </Button>
                                 </div>
                             </div>
@@ -374,7 +409,7 @@ const formatDate = (dateString: string) => {
                         <CardContent>
                             <div
                                 v-if="interests && interests.length > 0"
-                                class="flex flex-wrap gap-2"
+                                class="flex cursor-default flex-wrap gap-2"
                             >
                                 <Badge
                                     v-for="interest in interests"
@@ -406,8 +441,12 @@ const formatDate = (dateString: string) => {
                                 <Activity
                                     class="mx-auto mb-3 h-12 w-12 opacity-50"
                                 />
-                                <p>No interests selected yet</p>
+                                <p v-if="is_own_profile">
+                                    No interests selected yet
+                                </p>
+                                <p v-else>No activities selected</p>
                                 <Button
+                                    v-if="is_own_profile"
                                     size="sm"
                                     variant="outline"
                                     class="mt-3"
@@ -415,6 +454,56 @@ const formatDate = (dateString: string) => {
                                 >
                                     Select Activities
                                 </Button>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <!-- Ranking Badges Section -->
+                    <Card
+                        v-if="ranking_histories && ranking_histories.length > 0"
+                    >
+                        <CardHeader>
+                            <CardTitle>Ranking Badges</CardTitle>
+                            <CardDescription>
+                                {{
+                                    is_own_profile
+                                        ? 'Your achievements across seasons'
+                                        : 'Achievements across seasons'
+                                }}
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div class="space-y-4">
+                                <div
+                                    class="flex cursor-default flex-wrap gap-2"
+                                >
+                                    <template
+                                        v-for="history in ranking_histories.slice(
+                                            0,
+                                            8,
+                                        )"
+                                        :key="history.id"
+                                    >
+                                        <div
+                                            :title="`${history.display_name} - ${formatNumber(history.points)} points`"
+                                            :class="
+                                                getRankingBadgeStyle(history)
+                                                    .class
+                                            "
+                                        >
+                                            <Trophy
+                                                v-if="history.season === null"
+                                                class="h-3 w-3"
+                                            />
+                                            <Award v-else class="h-3 w-3" />
+                                            <span
+                                                class="max-w-[200px] truncate"
+                                            >
+                                                {{ history.display_name }}
+                                            </span>
+                                        </div>
+                                    </template>
+                                </div>
                             </div>
                         </CardContent>
                     </Card>
@@ -442,8 +531,12 @@ const formatDate = (dateString: string) => {
                                 v-if="is_own_profile && selectedDate"
                                 class="mt-6 space-y-4"
                             >
-                                <div class="flex items-center justify-between border-t border-border pt-4">
-                                    <h4 class="text-lg font-semibold text-foreground">
+                                <div
+                                    class="flex items-center justify-between border-t border-border pt-4"
+                                >
+                                    <h4
+                                        class="text-lg font-semibold text-foreground"
+                                    >
                                         {{ formatDate(selectedDate) }}
                                     </h4>
                                     <Button
@@ -467,7 +560,9 @@ const formatDate = (dateString: string) => {
 
                                 <!-- Activities List -->
                                 <div
-                                    v-else-if="selectedDateActivities.length > 0"
+                                    v-else-if="
+                                        selectedDateActivities.length > 0
+                                    "
                                     class="space-y-3"
                                 >
                                     <div
@@ -480,15 +575,21 @@ const formatDate = (dateString: string) => {
                                                 activity.activity_type_icon
                                             }}</span>
                                             <div class="flex-1">
-                                                <p class="font-medium text-foreground">
+                                                <p
+                                                    class="font-medium text-foreground"
+                                                >
                                                     {{ activity.custom_name }}
                                                 </p>
-                                                <p class="text-sm text-muted-foreground">
-                                                    {{ activity.activity_type_name }}
+                                                <p
+                                                    class="text-sm text-muted-foreground"
+                                                >
+                                                    {{
+                                                        activity.activity_type_name
+                                                    }}
                                                 </p>
                                                 <p
                                                     v-if="activity.notes"
-                                                    class="mt-1 text-xs italic text-muted-foreground"
+                                                    class="mt-1 text-xs text-muted-foreground italic"
                                                 >
                                                     "{{ activity.notes }}"
                                                 </p>
@@ -500,18 +601,25 @@ const formatDate = (dateString: string) => {
                                                     class="mt-2 h-7 border-border/50 bg-white/50 backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-primary hover:text-primary-foreground dark:bg-black/20 dark:hover:bg-primary dark:hover:text-primary-foreground"
                                                 >
                                                     <a
-                                                        :href="activity.proof_url"
+                                                        :href="
+                                                            activity.proof_url
+                                                        "
                                                         target="_blank"
                                                         rel="noopener noreferrer"
                                                         class="flex items-center gap-1.5 text-xs"
                                                     >
-                                                        <LinkIcon class="h-3 w-3" />
+                                                        <LinkIcon
+                                                            class="h-3 w-3"
+                                                        />
                                                         View proof
                                                     </a>
                                                 </Button>
                                             </div>
                                         </div>
-                                        <Badge variant="secondary" class="ml-2 flex-shrink-0">
+                                        <Badge
+                                            variant="secondary"
+                                            class="ml-2 flex-shrink-0"
+                                        >
                                             +{{ activity.points_earned }} pts
                                         </Badge>
                                     </div>
@@ -522,7 +630,9 @@ const formatDate = (dateString: string) => {
                                     v-else
                                     class="flex flex-col items-center justify-center rounded-lg border border-dashed border-border py-8 text-center"
                                 >
-                                    <Activity class="mb-2 h-8 w-8 text-muted-foreground opacity-50" />
+                                    <Activity
+                                        class="mb-2 h-8 w-8 text-muted-foreground opacity-50"
+                                    />
                                     <p class="text-sm text-muted-foreground">
                                         No activities logged on this day
                                     </p>
@@ -559,7 +669,6 @@ const formatDate = (dateString: string) => {
                             </div>
                         </CardContent>
                     </Card>
-
                 </div>
             </div>
         </div>

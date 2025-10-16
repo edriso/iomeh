@@ -213,3 +213,49 @@ test('activity on different dates creates appropriate rankings', function () {
     expect($q2Ranking->season_year_points)->toBe(125);
 });
 
+test('activity notes can be up to 2000 characters', function () {
+    $user = User::factory()->create();
+    $activityType = ActivityType::factory()->create();
+    $interest = $user->interests()->create([
+        'activity_type_id' => $activityType->id,
+        'custom_name' => 'My Activity',
+    ]);
+    
+    $notes = str_repeat('A', 2000); // Exactly 2000 characters
+    
+    $response = $this
+        ->actingAs($user)
+        ->post(route('activities.store'), [
+            'interest_id' => $interest->id,
+            'date' => now()->toDateString(),
+            'notes' => $notes,
+        ]);
+    
+    $response->assertSessionHasNoErrors();
+    
+    $activity = Activity::first();
+    expect($activity->notes)->toBe($notes);
+    expect(strlen($activity->notes))->toBe(2000);
+});
+
+test('activity notes cannot exceed 2000 characters', function () {
+    $user = User::factory()->create();
+    $activityType = ActivityType::factory()->create();
+    $interest = $user->interests()->create([
+        'activity_type_id' => $activityType->id,
+        'custom_name' => 'My Activity',
+    ]);
+    
+    $notes = str_repeat('A', 2001); // 2001 characters - should fail
+    
+    $response = $this
+        ->actingAs($user)
+        ->post(route('activities.store'), [
+            'interest_id' => $interest->id,
+            'date' => now()->toDateString(),
+            'notes' => $notes,
+        ]);
+    
+    $response->assertSessionHasErrors(['notes']);
+});
+

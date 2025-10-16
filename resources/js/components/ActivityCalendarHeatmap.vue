@@ -373,7 +373,11 @@ const goToNextMonth = async () => {
                             },
                         ]"
                         @click="handleDayClick(day.date, day.count)"
-                        :title="day.count > 0 ? `${day.count} ${day.count === 1 ? 'activity' : 'activities'}` : ''"
+                        :title="
+                            day.count > 0
+                                ? `${day.count} ${day.count === 1 ? 'activity' : 'activities'}`
+                                : ''
+                        "
                     >
                         {{ day.dayNumber }}
                     </div>

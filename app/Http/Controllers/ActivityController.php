@@ -18,7 +18,7 @@ class ActivityController extends Controller
         $validated = $request->validate([
             'interest_id' => ['required', 'exists:interests,id'],
             'date' => ['required', 'date', 'before_or_equal:today'],
-            'notes' => ['nullable', 'string', 'max:500'],
+            'notes' => ['nullable', 'string', 'max:2000'],
             'proof_url' => ['nullable', 'url', 'max:255'],
         ]);
 
@@ -67,7 +67,7 @@ class ActivityController extends Controller
 
         // Users can only update notes and proof_url, not points
         $validated = $request->validate([
-            'notes' => ['nullable', 'string', 'max:500'],
+            'notes' => ['nullable', 'string', 'max:2000'],
             'proof_url' => ['nullable', 'url', 'max:255'],
         ]);
 

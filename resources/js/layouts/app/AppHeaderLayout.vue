@@ -29,7 +29,7 @@ const interests = computed(() => (page.props.auth?.interests || []) as any[]);
             <slot />
         </main>
         <BackToTop />
-        
+
         <!-- Global Log Activity Modal -->
         <LogActivityModal
             v-model:open="showLogActivityModal"

@@ -126,7 +126,10 @@ const seoData = {
                         class="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium"
                     >
                         <Trophy class="h-4 w-4" />
-                        <span>Your Global Wellness Rank — Shaped by Your Daily Habits</span>
+                        <span
+                            >Your Global Wellness Rank — Shaped by Your Daily
+                            Habits</span
+                        >
                     </div>
                 </div>
 
@@ -161,7 +164,7 @@ const seoData = {
                             size="lg"
                             class="px-8 py-4 text-lg"
                         >
-                            Sign In
+                            Log In
                         </Button>
                     </Link>
                 </div>
@@ -200,8 +203,8 @@ const seoData = {
                         Track All Dimensions of Wellness
                     </h2>
                     <p class="mx-auto max-w-2xl text-lg text-muted-foreground">
-                        True wellness is multi-dimensional. IOMeW tracks all four
-                        pillars with 45+ activities.
+                        True wellness is multi-dimensional. IOMeW tracks all
+                        four pillars with 45+ activities.
                     </p>
                 </div>
 
@@ -600,8 +603,9 @@ const seoData = {
                     Ready to Compete in Wellness?
                 </h2>
                 <p class="mb-8 text-lg text-muted-foreground">
-                    Join IOMeW today and turn "I should prioritize wellness" into "I
-                    compete in wellness." Track, compete, and earn your rank.
+                    Join IOMeW today and turn "I should prioritize wellness"
+                    into "I compete in wellness." Track, compete, and earn your
+                    rank.
                 </p>
                 <Link href="/register">
                     <Button size="lg" class="px-8 py-4 text-lg">

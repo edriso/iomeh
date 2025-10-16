@@ -33,7 +33,8 @@ class ProfileController extends Controller
             'recent_activities' => $this->getRecentActivities($user),
             'calendar_data' => $this->getCalendarData($user),
             'stats' => $this->getUserStats($user),
-            'interests' => $isOwnProfile ? $this->getUserInterests($user) : [],
+            'interests' => $this->getUserInterests($user, $isOwnProfile),
+            'ranking_histories' => $this->getRankingHistories($user),
         ]);
     }
 
@@ -159,13 +160,13 @@ class ProfileController extends Controller
     /**
      * Get user's interests
      */
-    private function getUserInterests(User $user): array
+    private function getUserInterests(User $user, bool $isOwnProfile): array
     {
         return $user->interests()
             ->with('activityType')
             ->orderBy('display_order')
             ->get()
-            ->map(function ($interest) {
+            ->map(function ($interest) use ($isOwnProfile) {
                 return [
                     'id' => $interest->id,
                     'name' => $interest->custom_name,
@@ -173,7 +174,30 @@ class ProfileController extends Controller
                     'category' => $interest->activityType->category->value,
                     'activity_type_id' => $interest->activity_type_id,
                     'base_points' => $interest->activityType->base_points,
-                    'has_activity_today' => $interest->hasActivityToday(),
+                    'has_activity_today' => $isOwnProfile ? $interest->hasActivityToday() : false,
+                ];
+            })
+            ->toArray();
+    }
+
+    /**
+     * Get user's ranking histories
+     */
+    private function getRankingHistories(User $user): array
+    {
+        return $user->rankingHistory()
+            ->orderBy('year', 'desc')
+            ->orderBy('season', 'desc')
+            ->get()
+            ->map(function ($history) {
+                return [
+                    'id' => $history->id,
+                    'season' => $history->season,
+                    'year' => $history->year,
+                    'points' => $history->points,
+                    'rank' => $history->rank,
+                    'season_name' => $history->season_name,
+                    'display_name' => $history->display_name,
                 ];
             })
             ->toArray();

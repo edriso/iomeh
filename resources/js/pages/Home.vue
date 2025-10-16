@@ -9,6 +9,7 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import { useLogActivity } from '@/composables/useLogActivity';
 import { seoConfigs } from '@/config/seo';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { router } from '@inertiajs/vue3';
@@ -21,8 +22,7 @@ import {
     Trophy,
     Zap,
 } from 'lucide-vue-next';
-import { computed, ref } from 'vue';
-import { useLogActivity } from '@/composables/useLogActivity';
+import { computed } from 'vue';
 
 interface Interest {
     id: number;
@@ -246,9 +246,7 @@ const goToRankings = () => {
                                                 variant="secondary"
                                                 class="text-xs"
                                             >
-                                                +{{
-                                                    activity.points_earned
-                                                }}
+                                                +{{ activity.points_earned }}
                                                 pts
                                             </Badge>
                                         </div>

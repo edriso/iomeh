@@ -84,55 +84,8 @@ test('correct password must be provided to delete account', function () {
     expect($user->fresh())->not->toBeNull();
 });
 
-test('user cannot upload profile picture without enough points', function () {
+test('user can upload profile picture regardless of points', function () {
     $user = User::factory()->create();
-    
-    // Create activity with less than 50 points
-    $activityType = \App\Models\ActivityType::factory()->create(['base_points' => 25]);
-    $interest = $user->interests()->create([
-        'activity_type_id' => $activityType->id,
-        'custom_name' => 'Test Activity',
-    ]);
-    \App\Models\Activity::create([
-        'user_id' => $user->id,
-        'interest_id' => $interest->id,
-        'date' => now()->toDateString(),
-        'points_earned' => 25,
-    ]);
-    
-    // User now has 25 points, which is less than 50
-
-    $response = $this
-        ->actingAs($user)
-        ->from(route('profile.edit'))
-        ->patch(route('profile.update'), [
-            'name' => 'Test User',
-            'username' => 'testuser',
-            'avatar' => 'https://example.com/profile.jpg',
-        ]);
-
-    $response
-        ->assertSessionHasErrors(['avatar'])
-        ->assertRedirect(route('profile.edit'));
-});
-
-test('user can upload profile picture with enough points', function () {
-    $user = User::factory()->create();
-    
-    // Create activity with more than 50 points
-    $activityType = \App\Models\ActivityType::factory()->create(['base_points' => 150]);
-    $interest = $user->interests()->create([
-        'activity_type_id' => $activityType->id,
-        'custom_name' => 'Test Activity',
-    ]);
-    \App\Models\Activity::create([
-        'user_id' => $user->id,
-        'interest_id' => $interest->id,
-        'date' => now()->toDateString(),
-        'points_earned' => 150,
-    ]);
-    
-    // User now has 150 points, which is more than 50
 
     $response = $this
         ->actingAs($user)

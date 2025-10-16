@@ -23,20 +23,4 @@ class ProfileUpdateRequest extends FormRequest
             'website_url' => ['nullable', 'url', 'max:255'],
         ];
     }
-
-    public function withValidator($validator)
-    {
-        $validator->after(function ($validator) {
-            // Validate avatar only if user has enough points
-            if ($this->has('avatar') && $this->avatar) {
-                $userPoints = $this->user()->lifetime_points ?? 0;
-                if ($userPoints < 50) {
-                    $validator->errors()->add(
-                        'avatar',
-                        'You need at least 50 points to upload a profile picture.'
-                    );
-                }
-            }
-        });
-    }
 }

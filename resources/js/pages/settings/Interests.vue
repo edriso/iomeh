@@ -28,13 +28,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { edit, update } from '@/routes/interests';
 import { type BreadcrumbItem } from '@/types';
-import {
-    GripVertical,
-    Info,
-    Plus,
-    Save,
-    Trash2,
-} from 'lucide-vue-next';
+import { GripVertical, Info, Plus, Save, Trash2 } from 'lucide-vue-next';
 
 interface ActivityType {
     id: number;
@@ -69,7 +63,9 @@ const breadcrumbItems: BreadcrumbItem[] = [
 ];
 
 // Local state for managing interests
-const localInterests = ref<Interest[]>(JSON.parse(JSON.stringify(props.interests)));
+const localInterests = ref<Interest[]>(
+    JSON.parse(JSON.stringify(props.interests)),
+);
 const showAddDialog = ref(false);
 const selectedCategory = ref<string | null>(null);
 
@@ -227,21 +223,18 @@ function getCategoryColor(category: string): string {
 
                 <div class="space-y-4">
                     <!-- Current Interests -->
-                    <div
-                        v-if="localInterests.length > 0"
-                        class="space-y-3"
-                    >
+                    <div v-if="localInterests.length > 0" class="space-y-3">
                         <Card
                             v-for="(interest, index) in localInterests"
                             :key="interest.id"
                             class="relative"
                         >
                             <CardHeader class="pb-3">
-                                <div class="flex items-start justify-between gap-4">
-                                    <div class="flex items-center gap-3 flex-1">
-                                        <div
-                                            class="flex items-center gap-1"
-                                        >
+                                <div
+                                    class="flex items-start justify-between gap-4"
+                                >
+                                    <div class="flex flex-1 items-center gap-3">
+                                        <div class="flex items-center gap-1">
                                             <Button
                                                 variant="ghost"
                                                 size="sm"
@@ -254,7 +247,7 @@ function getCategoryColor(category: string): string {
                                         </div>
                                         <div class="flex-1">
                                             <div
-                                                class="flex items-center gap-2 mb-2"
+                                                class="mb-2 flex items-center gap-2"
                                             >
                                                 <span
                                                     v-if="
@@ -325,9 +318,7 @@ function getCategoryColor(category: string): string {
                                                     </Label>
                                                     <Textarea
                                                         :id="`notes-${interest.id}`"
-                                                        v-model="
-                                                            interest.notes
-                                                        "
+                                                        v-model="interest.notes"
                                                         placeholder="Add any personal notes..."
                                                         :rows="2"
                                                         class="mt-1"
@@ -360,9 +351,9 @@ function getCategoryColor(category: string): string {
 
                     <div
                         v-else
-                        class="text-center py-12 border-2 border-dashed rounded-lg"
+                        class="rounded-lg border-2 border-dashed py-12 text-center"
                     >
-                        <p class="text-muted-foreground mb-4">
+                        <p class="mb-4 text-muted-foreground">
                             No interests added yet. Add your first interest to
                             start tracking activities!
                         </p>
@@ -377,13 +368,13 @@ function getCategoryColor(category: string): string {
                         @click="showAddDialog = true"
                         :disabled="availableTypes.length === 0"
                     >
-                        <Plus class="h-4 w-4 mr-2" />
+                        <Plus class="mr-2 h-4 w-4" />
                         Add Activity
                     </Button>
 
                     <p
                         v-if="availableTypes.length === 0"
-                        class="text-sm text-muted-foreground text-center"
+                        class="text-center text-sm text-muted-foreground"
                     >
                         You've added all available activity types!
                     </p>
@@ -394,7 +385,7 @@ function getCategoryColor(category: string): string {
                             @click="handleSubmit"
                             :disabled="localInterests.length === 0"
                         >
-                            <Save class="h-4 w-4 mr-2" />
+                            <Save class="mr-2 h-4 w-4" />
                             Save Changes
                         </Button>
                         <Button
@@ -420,7 +411,7 @@ function getCategoryColor(category: string): string {
 
         <!-- Add Activity Dialog -->
         <Dialog v-model:open="showAddDialog">
-            <DialogContent class="max-w-2xl max-h-[80vh]">
+            <DialogContent class="max-h-[80vh] max-w-2xl">
                 <DialogHeader>
                     <DialogTitle>Add New Activity</DialogTitle>
                     <DialogDescription>
@@ -430,7 +421,7 @@ function getCategoryColor(category: string): string {
 
                 <div class="space-y-4">
                     <!-- Category Filter -->
-                    <div class="flex gap-2 flex-wrap">
+                    <div class="flex flex-wrap gap-2">
                         <Button
                             variant="outline"
                             size="sm"
@@ -463,17 +454,12 @@ function getCategoryColor(category: string): string {
                             <Card
                                 v-for="type in filteredAvailableTypes"
                                 :key="type.id"
-                                class="cursor-pointer hover:border-primary transition-colors"
+                                class="cursor-pointer transition-colors hover:border-primary"
                                 @click="addInterest(type)"
                             >
                                 <CardHeader class="p-4">
-                                    <div
-                                        class="flex items-center gap-3"
-                                    >
-                                        <span
-                                            v-if="type.icon"
-                                            class="text-3xl"
-                                        >
+                                    <div class="flex items-center gap-3">
+                                        <span v-if="type.icon" class="text-3xl">
                                             {{ type.icon }}
                                         </span>
                                         <div class="flex-1">
@@ -482,14 +468,12 @@ function getCategoryColor(category: string): string {
                                             </CardTitle>
                                             <CardDescription
                                                 v-if="type.description"
-                                                class="text-xs mt-1"
+                                                class="mt-1 text-xs"
                                             >
                                                 {{ type.description }}
                                             </CardDescription>
                                         </div>
-                                        <div
-                                            class="flex items-center gap-2"
-                                        >
+                                        <div class="flex items-center gap-2">
                                             <Badge
                                                 variant="outline"
                                                 :class="
@@ -512,7 +496,7 @@ function getCategoryColor(category: string): string {
 
                             <div
                                 v-if="filteredAvailableTypes.length === 0"
-                                class="text-center py-8 text-muted-foreground"
+                                class="py-8 text-center text-muted-foreground"
                             >
                                 No available activity types in this category
                             </div>
@@ -523,4 +507,3 @@ function getCategoryColor(category: string): string {
         </Dialog>
     </AppLayout>
 </template>
-

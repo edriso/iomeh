@@ -28,7 +28,6 @@ class ProfileController extends Controller
                 'avatar' => $user->avatar,
                 'lifetime_points' => $user->lifetime_points,
             ],
-            'profile_picture_points_required' => 50,
         ]);
     }
 

@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
-import { Home, Dumbbell } from 'lucide-vue-next';
+import { Dumbbell, Home } from 'lucide-vue-next';
 
 interface Props {
     title?: string;

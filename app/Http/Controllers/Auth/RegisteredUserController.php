@@ -48,19 +48,13 @@ class RegisteredUserController extends Controller
             return back()->withErrors(['username' => 'The username has already been taken.']);
         }
 
-        // New users cannot upload avatar during registration
-        if ($request->has('avatar') && $request->avatar) {
-            return back()->withErrors([
-                'avatar' => 'You need at least 50 points to upload a profile picture.'
-            ]);
-        }
-
         try {
             $user = User::create([
                 'username' => $request->username,
                 'name' => $request->name,
                 'email' => strtolower($request->email), // Convert to lowercase
                 'password' => Hash::make($request->password),
+                'avatar' => $request->avatar,
                 'bio' => $request->bio,
                 'website_url' => $request->website_url,
             ]);
