@@ -1,24 +1,24 @@
 @extends('emails.layout')
 
-@section('title', 'Welcome to IOMEH!')
+@section('title', 'Welcome to IOMeW!')
 
 @section('content')
-    <div class="greeting">Welcome to IOMEH, {{ $user->name ?? $user->username }}! 🎉</div>
+    <div class="greeting">Welcome to IOMeW, {{ $user->name ?? $user->username }}! 🎉</div>
     
     <div class="content">
         Hi <strong>{{ $user->name ?? $user->username }}</strong>,
     </div>
     
     <div class="content">
-        You've successfully joined <strong>IOMEH - I Owe Me Health</strong> using your {{ $provider }} account! We're thrilled to have you on this health journey where <em>consistency beats intensity</em>.
+        You've successfully joined <strong>IOMeW - I Owe Me Wellness</strong> using your {{ $provider }} account! We're thrilled to have you on this wellness journey where <em>consistency beats intensity</em>.
     </div>
 
     <div class="highlight-box">
         <h2 style="margin-top: 0; color: #c4e456;">You're All Set!</h2>
-        <p style="margin-bottom: 25px;">Your account is ready to go. No email verification needed - you're signed in with {{ $provider }} and ready to start tracking your health!</p>
+        <p style="margin-bottom: 25px;">Your account is ready to go. No email verification needed - you're signed in with {{ $provider }} and ready to start tracking your wellness!</p>
         
         <div style="text-align: center;">
-            <a href="{{ $dashboardUrl }}" class="button">Start Your Health Journey</a>
+            <a href="{{ $dashboardUrl }}" class="button">Start Your Wellness Journey</a>
         </div>
     </div>
 
@@ -43,20 +43,20 @@
     @endif
 
     <div class="content">
-        <strong>What makes IOMEH different:</strong>
+        <strong>What makes IOMeW different:</strong>
         <ul style="margin: 15px 0; padding-left: 20px;">
-            <li><strong>Global Rankings</strong> - Compete with health enthusiasts worldwide across seasons and years.</li>
+            <li><strong>Global Rankings</strong> - Compete with wellness enthusiasts worldwide across seasons and years.</li>
             <li><strong>Consistency Points</strong> - Earn points for daily activities, build streaks, and stay motivated.</li>
-            <li><strong>Holistic Health</strong> - Track workouts, nutrition, wellness, and mindfulness all in one place.</li>
-            <li><strong>Community</strong> - Join others on their health journey and stay accountable.</li>
+            <li><strong>Holistic Wellness</strong> - Track workouts, nutrition, wellness, and mindfulness all in one place.</li>
+            <li><strong>Community</strong> - Join others on their wellness journey and stay accountable.</li>
         </ul>
     </div>
 
     <div class="secondary-text">
-        <em>Remember: You owe it to yourself to be healthy. Every activity counts towards a better you!</em>
+        <em>Remember: You owe it to yourself to prioritize wellness. Every activity counts towards a better you!</em>
     </div>
 
     <div class="content">
-        <strong>Need help?</strong> We're here for you! Reply to this email or contact us at hello@iomeh.com
+        <strong>Need help?</strong> We're here for you! Reply to this email or contact us at hello@iomew.com
     </div>
 @endsection

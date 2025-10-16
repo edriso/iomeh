@@ -1,8 +1,8 @@
-# IOMEH - I Owe Me Health
+# IOMeW - I Owe Me Wellness
 
-> **Your Personal Health Ranking Organization**
+> **Your Global Wellness Rank — Built by Everyday Choices.**
 
-A global health tracking and ranking platform that gamifies your wellness journey. Track workouts, nutrition, sleep, and mindfulness activities while competing on global leaderboards.
+A global wellness tracking and ranking platform that gamifies your wellness journey. Track workouts, nutrition, sleep, and mindfulness activities while competing on global leaderboards.
 
 ## ✨ Features
 
@@ -32,7 +32,7 @@ A global health tracking and ranking platform that gamifies your wellness journe
 
 ```bash
 # Setup
-git clone <your-repo-url> && cd iomeh
+git clone git@github.com:edriso/iomew.git && cd iomew
 composer install && npm install
 cp .env.example .env
 php artisan key:generate
@@ -135,4 +135,4 @@ MIT License
 
 ---
 
-**Track Your Health. Earn Your Rank. Own Your Wellness.** 💪🏆
+**Your Global Wellness Rank — Built by Everyday Choices.** 💪🏆

@@ -11,53 +11,53 @@ export interface SEOConfig {
 
 export const defaultSEO: Partial<SEOConfig> = {
     description:
-        'Track your health and fitness journey with IOMEH (I Owe Me Health) - the gamified health tracking platform that helps you build consistent habits, earn points, compete on global rankings, and achieve your wellness goals.',
+        'Track your wellness journey with IOMeW (I Owe Me Wellness) - the gamified wellness tracking platform that helps you build consistent habits, earn points, compete on global rankings, and achieve your wellness goals.',
     keywords: [
-        'health tracking',
+        'wellness tracking',
         'fitness platform',
         'wellness',
-        'health gamification',
+        'wellness gamification',
         'workout tracking',
         'nutrition tracking',
-        'health rankings',
+        'wellness rankings',
         'fitness goals',
         'habit tracking',
     ],
     type: 'website',
-    image: '/iomeh.png',
+    image: '/iomew.png',
 };
 
 // Common SEO configurations for different page types
-// Note: The SEO component automatically appends " | IOMEH" to titles
+// Note: The SEO component automatically appends " | IOMeW" to titles
 export const seoConfigs = {
     home: {
-        title: 'Compete in Health - Earn Your Rank',
+        title: 'Compete in Wellness - Earn Your Rank',
         description:
-            'Transform your health with IOMEH. Track workouts, nutrition, wellness, and mindfulness. Earn points, build streaks, and compete on global rankings. You owe it to yourself!',
+            'Transform your wellness with IOMeW. Track workouts, nutrition, wellness, and mindfulness. Earn points, build streaks, and compete on global rankings. You owe it to yourself!',
         keywords: [
-            'health tracking',
+            'wellness tracking',
             'fitness platform',
             'wellness app',
             'workout tracking',
             'nutrition tracking',
-            'health gamification',
+            'wellness gamification',
             'fitness rankings',
-            'health goals',
+            'wellness goals',
             'habit building',
         ],
         url: '/',
     },
 
     rankings: {
-        title: 'Health Rankings',
+        title: 'Wellness Rankings',
         description:
-            'See how you rank among health enthusiasts worldwide on IOMEH. Track your progress across daily, seasonal, and yearly rankings. Celebrate your health achievements!',
+            'See how you rank among wellness enthusiasts worldwide on IOMeW. Track your progress across daily, seasonal, and yearly rankings. Celebrate your wellness achievements!',
         keywords: [
-            'health rankings',
+            'wellness rankings',
             'fitness leaderboard',
-            'health competition',
+            'wellness competition',
             'global rankings',
-            'health achievements',
+            'wellness achievements',
             'fitness progress',
         ],
         url: '/rankings',
@@ -66,7 +66,7 @@ export const seoConfigs = {
     settings: {
         title: 'Account Settings',
         description:
-            'Manage your IOMEH account settings, preferences, and profile information.',
+            'Manage your IOMeW account settings, preferences, and profile information.',
         keywords: [
             'account settings',
             'profile',
@@ -124,7 +124,7 @@ export const createStructuredData = {
         url,
         isPartOf: {
             '@type': 'WebSite',
-            name: 'IOMEH',
+            name: 'IOMeW',
         },
     }),
 

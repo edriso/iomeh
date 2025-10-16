@@ -31,7 +31,7 @@ it('can create oauth welcome email with password reset url', function () {
     
     // Assert the email contains the expected content
     $emailHtml = $email->render();
-    expect($emailHtml)->toContain('Welcome to IOMEH');
+    expect($emailHtml)->toContain('Welcome to IOMeW');
     expect($emailHtml)->toContain('Set Up Password (Optional)');
     expect($emailHtml)->toContain($passwordResetUrl);
 });
@@ -53,6 +53,6 @@ it('oauth welcome email works without password reset url', function () {
     
     // Assert the email doesn't contain backup password section
     $emailHtml = $email->render();
-    expect($emailHtml)->toContain('Welcome to IOMEH');
+    expect($emailHtml)->toContain('Welcome to IOMeW');
     expect($emailHtml)->not->toContain('Set Up Password (Optional)');
 });

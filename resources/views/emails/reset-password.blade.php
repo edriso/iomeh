@@ -10,12 +10,12 @@
     </div>
     
     <div class="content">
-        We received a request to reset your password for your <strong>IOMEH</strong> account.
+        We received a request to reset your password for your <strong>IOMeW</strong> account.
     </div>
 
     <div class="highlight-box">
         <h2 style="margin-top: 0; color: #c4e456;">Reset Your Password</h2>
-        <p style="margin-bottom: 25px;">Click the button below to create a new password and get back to your health journey!</p>
+        <p style="margin-bottom: 25px;">Click the button below to create a new password and get back to your wellness journey!</p>
         
         <div style="text-align: center;">
             <a href="{{ $resetUrl }}" class="button">Reset Password</a>
@@ -35,7 +35,7 @@
         <strong>Once you reset your password:</strong>
         <ul style="margin: 15px 0; padding-left: 20px;">
             <li>✅ You'll be able to log in to your account</li>
-            <li>🎯 Continue your health journey where you left off</li>
+            <li>🎯 Continue your wellness journey where you left off</li>
             <li>🪙 Keep earning those consistency points</li>
             <li>📊 Your progress, streaks, and rankings are safely stored</li>
         </ul>
@@ -47,6 +47,6 @@
     </div>
 
     <div class="secondary-text">
-        <em>Don't let a forgotten password stop your health momentum. Get back on track with just one click!</em>
+        <em>Don't let a forgotten password stop your wellness momentum. Get back on track with just one click!</em>
     </div>
 @endsection

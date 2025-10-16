@@ -20,10 +20,10 @@ class EmailTemplatesTest extends TestCase
             'email' => 'john@example.com'
         ]);
 
-        $verificationUrl = 'https://iomeh.com/verify-email?token=abc123';
+        $verificationUrl = 'https://iomew.com/verify-email?token=abc123';
         $mailable = new WelcomeEmail($user, $verificationUrl);
         
-        $mailable->assertSeeInHtml('Welcome to IOMEH');
+        $mailable->assertSeeInHtml('Welcome to IOMeW');
         $mailable->assertSeeInHtml('John Doe');
         $mailable->assertSeeInHtml($verificationUrl);
     }
@@ -35,7 +35,7 @@ class EmailTemplatesTest extends TestCase
             'email' => 'jane@example.com'
         ]);
 
-        $verificationUrl = 'https://iomeh.com/verify-email?token=abc123';
+        $verificationUrl = 'https://iomew.com/verify-email?token=abc123';
         $mailable = new VerifyEmail($user, $verificationUrl);
         
         $mailable->assertSeeInHtml('Verify Your Email');
@@ -50,7 +50,7 @@ class EmailTemplatesTest extends TestCase
             'email' => 'bob@example.com'
         ]);
 
-        $resetUrl = 'https://iomeh.com/reset-password?token=xyz789';
+        $resetUrl = 'https://iomew.com/reset-password?token=xyz789';
         $mailable = new ResetPasswordEmail($user, $resetUrl);
         
         $mailable->assertSeeInHtml('Password Reset');

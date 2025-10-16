@@ -29,7 +29,7 @@ class OAuthWelcomeEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Welcome to IOMEH! Start Your Health Journey',
+            subject: 'Welcome to IOMeW! Start Your Wellness Journey',
         );
     }
 

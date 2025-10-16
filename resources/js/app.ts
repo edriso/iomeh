@@ -6,7 +6,7 @@ import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 import { initializeTheme } from './composables/useAppearance';
 
-const appName = import.meta.env.VITE_APP_NAME || 'IOMEH';
+const appName = import.meta.env.VITE_APP_NAME || 'IOMeW';
 
 // Configure global session timeout handling
 const handleSessionTimeout = () => {
