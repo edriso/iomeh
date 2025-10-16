@@ -46,7 +46,7 @@ onUnmounted(() => {
 <template>
     <div
         v-if="isAuthenticated"
-        class="fixed right-6 bottom-6 z-50 flex flex-col gap-3"
+        class="fixed right-6 bottom-6 z-50 flex flex-col items-center gap-3"
     >
         <!-- Back to Top Button (appears above) -->
         <Transition
