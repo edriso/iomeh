@@ -126,7 +126,7 @@ const seoData = {
                         class="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium"
                     >
                         <Trophy class="h-4 w-4" />
-                        <span>Your Global Wellness Rank — Built by Everyday Choices</span>
+                        <span>Your Global Wellness Rank — Shaped by Your Daily Habits</span>
                     </div>
                 </div>
 

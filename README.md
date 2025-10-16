@@ -1,6 +1,6 @@
 # IOMeW - I Owe Me Wellness
 
-> **Your Global Wellness Rank — Built by Everyday Choices.**
+> **Your Global Wellness Rank — Shaped by Your Daily Habits.**
 
 A global wellness tracking and ranking platform that gamifies your wellness journey. Track workouts, nutrition, sleep, and mindfulness activities while competing on global leaderboards.
 
@@ -135,4 +135,4 @@ MIT License
 
 ---
 
-**Your Global Wellness Rank — Built by Everyday Choices.** 💪🏆
+**Your Global Wellness Rank — Shaped by Your Daily Habits.** 💪🏆
