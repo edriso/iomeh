@@ -152,6 +152,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->activities()
             ->whereDate('date', now()->toDateString())
             ->with(['interest.activityType'])
+            ->orderBy('created_at', 'desc')
             ->get();
     }
 
