@@ -20,7 +20,6 @@ import {
     Flame,
     Link as LinkIcon,
     Lock,
-    Settings,
     Trophy,
 } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
@@ -38,7 +37,6 @@ interface ProfileUser {
     current_streak: number;
     longest_streak: number;
     last_activity_date?: string;
-    joined_at: string;
     created_at: string;
     week_starts_on?: number;
 }
@@ -391,7 +389,6 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                         variant="outline"
                                         @click="handleEditActivities"
                                     >
-                                        <Settings class="h-4 w-4" />
                                         Edit Activities
                                     </Button>
                                 </div>
@@ -620,35 +617,6 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                     <p class="text-sm text-muted-foreground">
                                         No activities logged on this day
                                     </p>
-                                </div>
-                            </div>
-
-                            <!-- Join Date -->
-                            <div class="mt-4 border-t border-border pt-4">
-                                <div
-                                    class="flex items-center gap-2 text-sm text-muted-foreground"
-                                >
-                                    <div
-                                        class="h-1 w-1 rounded-full bg-muted-foreground"
-                                    ></div>
-                                    <span>
-                                        {{
-                                            (() => {
-                                                const daysDiff = Math.floor(
-                                                    (new Date().getTime() -
-                                                        new Date(
-                                                            user.joined_at,
-                                                        ).getTime()) /
-                                                        (1000 * 60 * 60 * 24),
-                                                );
-                                                if (daysDiff === 0)
-                                                    return 'Joined today';
-                                                if (daysDiff === 1)
-                                                    return 'Joined yesterday';
-                                                return `Joined ${daysDiff} days ago`;
-                                            })()
-                                        }}
-                                    </span>
                                 </div>
                             </div>
                         </CardContent>
