@@ -169,11 +169,11 @@ const onTabChange = (newTab: string) => {
                         <span class="hidden sm:inline">Yesterday</span>
                     </TabsTrigger>
                     <TabsTrigger value="season" class="flex items-center gap-2">
-                        <Trophy class="h-4 w-4" />
+                        <Award class="h-4 w-4" />
                         <span class="hidden sm:inline">Season</span>
                     </TabsTrigger>
                     <TabsTrigger value="year" class="flex items-center gap-2">
-                        <Award class="h-4 w-4" />
+                        <Trophy class="h-4 w-4" />
                         <span class="hidden sm:inline">Year</span>
                     </TabsTrigger>
                 </TabsList>

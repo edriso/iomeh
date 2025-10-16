@@ -366,7 +366,7 @@ const seoData = {
                         class="rounded-xl border border-border/50 bg-card/50 p-6 text-center"
                     >
                         <div class="mb-2 flex justify-center">
-                            <Trophy class="h-8 w-8 text-primary" />
+                            <Award class="h-8 w-8 text-primary" />
                         </div>
                         <h3 class="mb-1 font-bold text-foreground">
                             Season (Q1-Q4)
@@ -380,7 +380,7 @@ const seoData = {
                         class="rounded-xl border border-border/50 bg-card/50 p-6 text-center"
                     >
                         <div class="mb-2 flex justify-center">
-                            <Award class="h-8 w-8 text-purple-500" />
+                            <Trophy class="h-8 w-8 text-amber-500" />
                         </div>
                         <h3 class="mb-1 font-bold text-foreground">Year</h3>
                         <p class="text-sm text-muted-foreground">

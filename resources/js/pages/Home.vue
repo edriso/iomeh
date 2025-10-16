@@ -13,26 +13,8 @@ import { useLogActivity } from '@/composables/useLogActivity';
 import { seoConfigs } from '@/config/seo';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { router } from '@inertiajs/vue3';
-import {
-    Award,
-    Calendar,
-    Flame,
-    Plus,
-    TrendingUp,
-    Trophy,
-    Zap,
-} from 'lucide-vue-next';
+import { Award, Calendar, Plus, TrendingUp, Trophy } from 'lucide-vue-next';
 import { computed } from 'vue';
-
-interface Interest {
-    id: number;
-    name: string;
-    icon: string;
-    category: string;
-    activity_type_id: number;
-    base_points: number;
-    has_activity_today: boolean;
-}
 
 interface TodayActivity {
     id: number;
@@ -57,11 +39,6 @@ interface Props {
         username: string;
         name: string;
         avatar?: string;
-        current_season_points: number;
-        current_year_points: number;
-        lifetime_points: number;
-        current_streak: number;
-        longest_streak: number;
         season_rank?: {
             rank: number;
             season: string;
@@ -72,7 +49,6 @@ interface Props {
             year: number;
         };
     };
-    interests: Interest[];
     today_activities: TodayActivity[];
     recent_activities: RecentActivity[];
 }
@@ -88,7 +64,7 @@ const todayPoints = computed(() => {
 });
 
 // State
-const { showLogActivityModal, openLogActivityModal } = useLogActivity();
+const { openLogActivityModal } = useLogActivity();
 
 // Methods
 const handleLogActivity = () => {
@@ -113,94 +89,6 @@ const goToRankings = () => {
                 <p class="text-muted-foreground">
                     Track your health, earn points, and climb the rankings
                 </p>
-            </div>
-
-            <!-- Stats Cards -->
-            <div
-                class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
-            >
-                <!-- Today's Points -->
-                <Card>
-                    <CardHeader class="pb-3">
-                        <CardDescription class="flex items-center gap-2">
-                            <Zap class="h-4 w-4 text-yellow-500" />
-                            Today's Points
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div class="text-3xl font-bold text-primary">
-                            {{ todayPoints }}
-                        </div>
-                        <p class="mt-1 text-xs text-muted-foreground">
-                            {{ today_activities.length }} activities logged
-                        </p>
-                    </CardContent>
-                </Card>
-
-                <!-- Current Streak -->
-                <Card>
-                    <CardHeader class="pb-3">
-                        <CardDescription class="flex items-center gap-2">
-                            <Flame class="h-4 w-4 text-orange-500" />
-                            Current Streak
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div class="text-3xl font-bold text-foreground">
-                            {{ user.current_streak }}
-                        </div>
-                        <p class="mt-1 text-xs text-muted-foreground">
-                            Longest: {{ user.longest_streak }} days
-                        </p>
-                    </CardContent>
-                </Card>
-
-                <!-- Season Rank -->
-                <Card>
-                    <CardHeader class="pb-3">
-                        <CardDescription class="flex items-center gap-2">
-                            <Trophy class="h-4 w-4 text-primary" />
-                            Season Rank
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div
-                            v-if="user.season_rank"
-                            class="text-3xl font-bold text-foreground"
-                        >
-                            #{{ user.season_rank.rank }}
-                        </div>
-                        <div
-                            v-else
-                            class="text-3xl font-bold text-muted-foreground"
-                        >
-                            —
-                        </div>
-                        <p class="mt-1 text-xs text-muted-foreground">
-                            {{ user.season_rank?.season }}
-                            {{ user.season_rank?.year }} •
-                            {{ user.current_season_points }} pts
-                        </p>
-                    </CardContent>
-                </Card>
-
-                <!-- Lifetime Points -->
-                <Card>
-                    <CardHeader class="pb-3">
-                        <CardDescription class="flex items-center gap-2">
-                            <Award class="h-4 w-4 text-purple-500" />
-                            Lifetime Points
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div class="text-3xl font-bold text-foreground">
-                            {{ user.lifetime_points.toLocaleString() }}
-                        </div>
-                        <p class="mt-1 text-xs text-muted-foreground">
-                            {{ user.current_year_points }} this year
-                        </p>
-                    </CardContent>
-                </Card>
             </div>
 
             <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
@@ -290,16 +178,17 @@ const goToRankings = () => {
                     <Card>
                         <CardHeader>
                             <CardTitle class="flex items-center gap-2">
-                                <Trophy class="h-5 w-5 text-primary" />
+                                <TrendingUp class="h-5 w-5 text-primary" />
                                 Your Rankings
                             </CardTitle>
                         </CardHeader>
                         <CardContent class="space-y-3">
                             <div
                                 v-if="user.season_rank"
-                                class="flex items-center justify-between"
+                                class="flex items-center justify-between rounded-lg border border-border/50 bg-card/50 p-3"
                             >
                                 <div class="flex items-center gap-2">
+                                    <Award class="h-4 w-4 text-primary" />
                                     <Badge variant="outline" class="text-xs">
                                         {{ user.season_rank.season }}
                                         {{ user.season_rank.year }}
@@ -311,14 +200,19 @@ const goToRankings = () => {
                             </div>
                             <div
                                 v-if="user.year_rank"
-                                class="flex items-center justify-between"
+                                class="flex items-center justify-between rounded-lg border border-border/50 bg-card/50 p-3"
                             >
                                 <div class="flex items-center gap-2">
+                                    <Trophy
+                                        class="h-4 w-4 text-amber-600 dark:text-amber-500"
+                                    />
                                     <Badge variant="outline" class="text-xs">
                                         {{ user.year_rank.year }} Year
                                     </Badge>
                                 </div>
-                                <span class="text-2xl font-bold text-primary">
+                                <span
+                                    class="text-2xl font-bold text-amber-700 dark:text-amber-500"
+                                >
                                     #{{ user.year_rank.rank }}
                                 </span>
                             </div>

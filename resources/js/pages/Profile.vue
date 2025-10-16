@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import ActivityCalendarHeatmap from '@/components/ActivityCalendarHeatmap.vue';
-import IconPointCounter from '@/components/IconPointCounter.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -18,6 +17,7 @@ import {
     Award,
     CheckCircle,
     Edit,
+    Flame,
     Link as LinkIcon,
     Lock,
     Settings,
@@ -119,13 +119,6 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const { formatNumber } = useNumberFormat();
-
-const categoryColors: Record<string, string> = {
-    workout: 'bg-primary/10 text-primary border-primary/20',
-    nutrition: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20',
-    wellness: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
-    mindfulness: 'bg-purple-500/10 text-purple-600 border-purple-500/20',
-};
 
 const handleEditActivities = () => {
     router.visit('/settings/interests');
@@ -310,21 +303,19 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                                             {{ user.name }}
                                                         </h1>
 
-                                                        <!-- Points Display -->
+                                                        <!-- Streak Display -->
                                                         <div
                                                             class="flex items-center gap-2 rounded-full border border-secondary/30 bg-secondary px-3 py-1.5"
                                                         >
-                                                            <IconPointCounter
-                                                                class="h-4 w-4 text-secondary-foreground"
+                                                            <Flame
+                                                                class="h-4 w-4"
                                                             />
                                                             <span
                                                                 class="text-sm font-medium text-secondary-foreground"
                                                             >
                                                                 {{
-                                                                    formatNumber(
-                                                                        user.current_season_points ||
-                                                                            0,
-                                                                    )
+                                                                    user.current_streak ||
+                                                                    0
                                                                 }}
                                                             </span>
                                                         </div>
@@ -415,14 +406,7 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                     v-for="interest in interests"
                                     :key="interest.id"
                                     variant="outline"
-                                    :class="[
-                                        'px-3 py-1.5 text-sm',
-                                        interest.has_activity_today
-                                            ? 'border-primary/20 bg-primary/10 text-primary'
-                                            : categoryColors[
-                                                  interest.category
-                                              ] || 'bg-muted',
-                                    ]"
+                                    class="border-secondary/20 bg-secondary px-3 py-1.5 text-sm text-secondary-foreground"
                                 >
                                     <span class="mr-1.5">{{
                                         interest.icon
