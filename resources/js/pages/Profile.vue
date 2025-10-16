@@ -10,9 +10,10 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { useNumberFormat } from '@/composables/useNumberFormat';
+import { useLogActivity } from '@/composables/useLogActivity';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head, Link } from '@inertiajs/vue3';
-import { Activity, Edit, Link as LinkIcon, Lock } from 'lucide-vue-next';
+import { Head, Link, router } from '@inertiajs/vue3';
+import { Activity, CheckCircle, Edit, Link as LinkIcon, Lock, Plus, Settings } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 import { Badge } from '@/components/ui/badge';
 
@@ -51,6 +52,16 @@ interface CalendarDay {
     points: number;
 }
 
+interface Interest {
+    id: number;
+    name: string;
+    icon: string;
+    category: string;
+    activity_type_id: number;
+    base_points: number;
+    has_activity_today: boolean;
+}
+
 interface Props {
     user?: ProfileUser;
     recent_activities?: RecentActivity[];
@@ -66,6 +77,7 @@ interface Props {
         interests_count: number;
     };
     is_own_profile?: boolean;
+    interests?: Interest[];
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -83,9 +95,28 @@ const props = withDefaults(defineProps<Props>(), {
         interests_count: 0,
     }),
     is_own_profile: false,
+    interests: () => [],
 });
 
 const { formatNumber } = useNumberFormat();
+
+const categoryColors: Record<string, string> = {
+    workout: 'bg-primary/10 text-primary border-primary/20',
+    nutrition: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20',
+    wellness: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
+    mindfulness: 'bg-purple-500/10 text-purple-600 border-purple-500/20',
+};
+
+// Log Activity Modal
+const { showLogActivityModal, openLogActivityModal } = useLogActivity();
+
+const handleLogActivity = () => {
+    openLogActivityModal();
+};
+
+const handleEditActivities = () => {
+    router.visit('/settings/interests');
+};
 
 // Transform calendar data for heatmap
 const heatmapDays = computed(() => {
@@ -318,6 +349,76 @@ const formatDate = (dateString: string) => {
 
                 <!-- Main Content -->
                 <div class="space-y-8">
+                    <!-- My Activities (Only for own profile) -->
+                    <Card v-if="is_own_profile">
+                        <CardHeader>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <CardTitle>My Activities</CardTitle>
+                                    <CardDescription>
+                                        Activities you're tracking
+                                    </CardDescription>
+                                </div>
+                                <div class="flex gap-2">
+                                    <Button size="sm" variant="outline" @click="handleEditActivities">
+                                        <Settings class="h-4 w-4" />
+                                        Edit Activities
+                                    </Button>
+                                    <Button size="sm" @click="handleLogActivity">
+                                        <Plus class="h-4 w-4" />
+                                        Log Activity
+                                    </Button>
+                                </div>
+                            </div>
+                        </CardHeader>
+                        <CardContent>
+                            <div
+                                v-if="interests && interests.length > 0"
+                                class="flex flex-wrap gap-2"
+                            >
+                                <Badge
+                                    v-for="interest in interests"
+                                    :key="interest.id"
+                                    variant="outline"
+                                    :class="[
+                                        'px-3 py-1.5 text-sm',
+                                        interest.has_activity_today
+                                            ? 'border-primary/20 bg-primary/10 text-primary'
+                                            : categoryColors[
+                                                  interest.category
+                                              ] || 'bg-muted',
+                                    ]"
+                                >
+                                    <span class="mr-1.5">{{
+                                        interest.icon
+                                    }}</span>
+                                    {{ interest.name }}
+                                    <CheckCircle
+                                        v-if="interest.has_activity_today"
+                                        class="ml-1.5 h-3 w-3"
+                                    />
+                                </Badge>
+                            </div>
+                            <div
+                                v-else
+                                class="py-8 text-center text-muted-foreground"
+                            >
+                                <Activity
+                                    class="mx-auto mb-3 h-12 w-12 opacity-50"
+                                />
+                                <p>No interests selected yet</p>
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    class="mt-3"
+                                    @click="handleEditActivities"
+                                >
+                                    Select Activities
+                                </Button>
+                            </div>
+                        </CardContent>
+                    </Card>
+
                     <!-- Activity Streak -->
                     <Card>
                         <CardHeader>

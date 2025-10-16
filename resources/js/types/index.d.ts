@@ -1,8 +1,18 @@
 import { InertiaLinkProps } from '@inertiajs/vue3';
 import type { LucideIcon } from 'lucide-vue-next';
 
+export interface Interest {
+    id: number;
+    name: string;
+    icon: string;
+    activity_type_id: number;
+    base_points: number;
+    category: string;
+}
+
 export interface Auth {
     user: User;
+    interests: Interest[];
 }
 
 export interface BreadcrumbItem {

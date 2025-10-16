@@ -268,3 +268,104 @@ test('multiple activities in same quarter accumulate points', function () {
     expect($user->fresh()->lifetime_points)->toBe(225);
 });
 
+test('season rank is calculated correctly for multiple users', function () {
+    $currentYear = now()->year;
+    $currentSeason = ceil(now()->month / 3);
+    
+    $user1 = User::factory()->create();
+    $user2 = User::factory()->create();
+    $user3 = User::factory()->create();
+    
+    // User 1: 300 points
+    Season::create([
+        'user_id' => $user1->id,
+        'name' => $currentSeason,
+        'points' => 300,
+        'season_year_points' => 300,
+        'year' => $currentYear,
+    ]);
+    
+    // User 2: 200 points
+    Season::create([
+        'user_id' => $user2->id,
+        'name' => $currentSeason,
+        'points' => 200,
+        'season_year_points' => 200,
+        'year' => $currentYear,
+    ]);
+    
+    // User 3: 200 points (tie with user 2)
+    Season::create([
+        'user_id' => $user3->id,
+        'name' => $currentSeason,
+        'points' => 200,
+        'season_year_points' => 200,
+        'year' => $currentYear,
+    ]);
+    
+    $season1 = Season::where('user_id', $user1->id)->where('name', $currentSeason)->first();
+    $season2 = Season::where('user_id', $user2->id)->where('name', $currentSeason)->first();
+    $season3 = Season::where('user_id', $user3->id)->where('name', $currentSeason)->first();
+    
+    expect($season1->season_rank)->toBe(1); // User 1 is rank 1
+    expect($season2->season_rank)->toBe(2); // User 2 and 3 are tied at rank 2
+    expect($season3->season_rank)->toBe(2);
+});
+
+test('year rank is calculated correctly for multiple users with multiple seasons', function () {
+    $currentYear = now()->year;
+    
+    $user1 = User::factory()->create();
+    $user2 = User::factory()->create();
+    $user3 = User::factory()->create();
+    
+    // User 1: Q1 with 500 total year points
+    Season::create([
+        'user_id' => $user1->id,
+        'name' => 1,
+        'points' => 200,
+        'season_year_points' => 500,
+        'year' => $currentYear,
+    ]);
+    Season::create([
+        'user_id' => $user1->id,
+        'name' => 2,
+        'points' => 300,
+        'season_year_points' => 500,
+        'year' => $currentYear,
+    ]);
+    
+    // User 2: Q1 with 400 total year points
+    Season::create([
+        'user_id' => $user2->id,
+        'name' => 1,
+        'points' => 150,
+        'season_year_points' => 400,
+        'year' => $currentYear,
+    ]);
+    Season::create([
+        'user_id' => $user2->id,
+        'name' => 2,
+        'points' => 250,
+        'season_year_points' => 400,
+        'year' => $currentYear,
+    ]);
+    
+    // User 3: Q1 with 400 total year points (tie with user 2)
+    Season::create([
+        'user_id' => $user3->id,
+        'name' => 1,
+        'points' => 400,
+        'season_year_points' => 400,
+        'year' => $currentYear,
+    ]);
+    
+    $user1Season = Season::where('user_id', $user1->id)->where('year', $currentYear)->first();
+    $user2Season = Season::where('user_id', $user2->id)->where('year', $currentYear)->first();
+    $user3Season = Season::where('user_id', $user3->id)->where('year', $currentYear)->first();
+    
+    expect($user1Season->year_rank)->toBe(1); // User 1 is rank 1 with 500 points
+    expect($user2Season->year_rank)->toBe(2); // User 2 and 3 are tied at rank 2 with 400 points
+    expect($user3Season->year_rank)->toBe(2);
+});
+

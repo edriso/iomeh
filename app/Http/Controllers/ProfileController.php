@@ -25,12 +25,15 @@ class ProfileController extends Controller
             ]);
         }
         
+        $isOwnProfile = Auth::id() === $user->id;
+        
         return Inertia::render('Profile', [
             'user' => $this->formatUserData($user),
-            'is_own_profile' => Auth::id() === $user->id,
+            'is_own_profile' => $isOwnProfile,
             'recent_activities' => $this->getRecentActivities($user),
             'calendar_data' => $this->getCalendarData($user),
             'stats' => $this->getUserStats($user),
+            'interests' => $isOwnProfile ? $this->getUserInterests($user) : [],
         ]);
     }
 
@@ -151,5 +154,28 @@ class ProfileController extends Controller
             'active_days' => $activeDays,
             'interests_count' => $user->interests()->count(),
         ];
+    }
+
+    /**
+     * Get user's interests
+     */
+    private function getUserInterests(User $user): array
+    {
+        return $user->interests()
+            ->with('activityType')
+            ->orderBy('display_order')
+            ->get()
+            ->map(function ($interest) {
+                return [
+                    'id' => $interest->id,
+                    'name' => $interest->custom_name,
+                    'icon' => $interest->activityType->icon,
+                    'category' => $interest->activityType->category->value,
+                    'activity_type_id' => $interest->activity_type_id,
+                    'base_points' => $interest->activityType->base_points,
+                    'has_activity_today' => $interest->hasActivityToday(),
+                ];
+            })
+            ->toArray();
     }
 }

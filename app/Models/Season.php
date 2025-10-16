@@ -61,6 +61,8 @@ class Season extends Model
      */
     public function getSeasonRankAttribute()
     {
+        // Count how many users have more points in the same season
+        // Due to unique constraint (user_id, name, year), each record represents a unique user
         return self::where('year', $this->year)
             ->where('name', $this->name)
             ->where('points', '>', $this->points)
@@ -72,10 +74,15 @@ class Season extends Model
      */
     public function getYearRankAttribute()
     {
-        return self::where('year', $this->year)
+        // Count distinct users with higher season_year_points
+        // We need to count unique users, not season records
+        $usersWithMorePoints = self::where('year', $this->year)
             ->where('season_year_points', '>', $this->season_year_points)
-            ->distinct('user_id')
-            ->count('user_id') + 1;
+            ->distinct()
+            ->pluck('user_id')
+            ->count();
+        
+        return $usersWithMorePoints + 1;
     }
 
     /**

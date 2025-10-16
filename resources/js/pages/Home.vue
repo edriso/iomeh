@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import LogActivityModal from '@/components/LogActivityModal.vue';
 import SEO from '@/components/SEO.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -14,10 +13,8 @@ import { seoConfigs } from '@/config/seo';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { router } from '@inertiajs/vue3';
 import {
-    Activity,
     Award,
     Calendar,
-    CheckCircle,
     Flame,
     Plus,
     TrendingUp,
@@ -25,6 +22,7 @@ import {
     Zap,
 } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
+import { useLogActivity } from '@/composables/useLogActivity';
 
 interface Interest {
     id: number;
@@ -89,19 +87,12 @@ const todayPoints = computed(() => {
     );
 });
 
-const categoryColors: Record<string, string> = {
-    workout: 'bg-primary/10 text-primary border-primary/20',
-    nutrition: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20',
-    wellness: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
-    mindfulness: 'bg-purple-500/10 text-purple-600 border-purple-500/20',
-};
-
 // State
-const showLogActivityModal = ref(false);
+const { showLogActivityModal, openLogActivityModal } = useLogActivity();
 
 // Methods
 const handleLogActivity = () => {
-    showLogActivityModal.value = true;
+    openLogActivityModal();
 };
 
 const goToRankings = () => {
@@ -213,71 +204,8 @@ const goToRankings = () => {
             </div>
 
             <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
-                <!-- Left Column: Interests & Today's Activities -->
+                <!-- Left Column: Today's Activities -->
                 <div class="space-y-6 lg:col-span-2">
-                    <!-- My Activities -->
-                    <Card>
-                        <CardHeader>
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <CardTitle>My Activities</CardTitle>
-                                    <CardDescription>
-                                        Activities you're tracking
-                                    </CardDescription>
-                                </div>
-                                <Button size="sm" @click="handleLogActivity">
-                                    <Plus class="h-4 w-4" />
-                                    Log Activity
-                                </Button>
-                            </div>
-                        </CardHeader>
-                        <CardContent>
-                            <div
-                                v-if="interests.length > 0"
-                                class="flex flex-wrap gap-2"
-                            >
-                                <Badge
-                                    v-for="interest in interests"
-                                    :key="interest.id"
-                                    variant="outline"
-                                    :class="[
-                                        'px-3 py-1.5 text-sm',
-                                        interest.has_activity_today
-                                            ? 'border-primary/20 bg-primary/10 text-primary'
-                                            : categoryColors[
-                                                  interest.category
-                                              ] || 'bg-muted',
-                                    ]"
-                                >
-                                    <span class="mr-1.5">{{
-                                        interest.icon
-                                    }}</span>
-                                    {{ interest.name }}
-                                    <CheckCircle
-                                        v-if="interest.has_activity_today"
-                                        class="ml-1.5 h-3 w-3"
-                                    />
-                                </Badge>
-                            </div>
-                            <div
-                                v-else
-                                class="py-8 text-center text-muted-foreground"
-                            >
-                                <Activity
-                                    class="mx-auto mb-3 h-12 w-12 opacity-50"
-                                />
-                                <p>No interests selected yet</p>
-                                <Button
-                                    size="sm"
-                                    variant="outline"
-                                    class="mt-3"
-                                >
-                                    Select Activities
-                                </Button>
-                            </div>
-                        </CardContent>
-                    </Card>
-
                     <!-- Today's Activities -->
                     <Card>
                         <CardHeader>
@@ -289,6 +217,10 @@ const goToRankings = () => {
                                         • {{ todayPoints }} points
                                     </CardDescription>
                                 </div>
+                                <Button size="sm" @click="handleLogActivity">
+                                    <Plus class="h-4 w-4" />
+                                    Log Activity
+                                </Button>
                             </div>
                         </CardHeader>
                         <CardContent>
@@ -460,11 +392,5 @@ const goToRankings = () => {
                 </div>
             </div>
         </div>
-
-        <!-- Log Activity Modal -->
-        <LogActivityModal
-            v-model:open="showLogActivityModal"
-            :interests="interests"
-        />
     </AppLayout>
 </template>

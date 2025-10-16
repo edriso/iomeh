@@ -44,6 +44,21 @@ class HandleInertiaRequests extends Middleware
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
                 'user' => $request->user(),
+                'interests' => $request->user() 
+                    ? $request->user()->interests()
+                        ->with('activityType:id,name,icon,category,base_points')
+                        ->get()
+                        ->map(function ($interest) {
+                            return [
+                                'id' => $interest->id,
+                                'name' => $interest->activityType->name,
+                                'icon' => $interest->activityType->icon,
+                                'activity_type_id' => $interest->activity_type_id,
+                                'base_points' => $interest->activityType->base_points,
+                                'category' => $interest->activityType->category,
+                            ];
+                        })
+                    : [],
             ],
             'session' => [
                 'expires_at' => $request->session()->get('login_web_' . sha1('web')) 
