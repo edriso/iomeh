@@ -9,6 +9,12 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { useNumberFormat } from '@/composables/useNumberFormat';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
@@ -213,6 +219,7 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
     <Head :title="user ? `${user.name} (@${user.username})` : 'Profile'" />
 
     <AppLayout>
+        <TooltipProvider>
         <div
             class="min-h-screen bg-gradient-to-br from-background via-muted/10 to-background"
         >
@@ -318,22 +325,45 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                                             {{ user.name }}
                                                         </h1>
 
-                                                        <!-- Streak Display -->
-                                                        <div
-                                                            class="flex items-center gap-2 rounded-full border border-secondary/30 bg-secondary px-3 py-1.5"
-                                                        >
-                                                            <Flame
-                                                                class="h-4 w-4"
-                                                            />
-                                                            <span
-                                                                class="text-sm font-medium text-secondary-foreground"
+                                                        <!-- Longest Streak Display -->
+                                                        <Tooltip>
+                                                            <TooltipTrigger as-child>
+                                                                <div
+                                                                    class="flex items-center gap-2 rounded-full text-secondary-foreground border border-secondary/30 bg-secondary px-3 py-1.5 transition-colors hover:bg-secondary/80"
+                                                                >
+                                                                    <Flame
+                                                                        class="h-4 w-4"
+                                                                    />
+                                                                    <span
+                                                                        class="text-sm font-medium"
+                                                                    >
+                                                                        {{
+                                                                            user.longest_streak ||
+                                                                            0
+                                                                        }}
+                                                                    </span>
+                                                                </div>
+                                                            </TooltipTrigger>
+                                                            <TooltipContent 
+                                                                side="bottom" 
+                                                                align="center"
+                                                                :side-offset="8"
+                                                                class="max-w-xs border border-border/50 bg-popover text-popover-foreground shadow-lg rounded-lg px-3 py-2"
                                                             >
-                                                                {{
-                                                                    user.current_streak ||
-                                                                    0
-                                                                }}
-                                                            </span>
-                                                        </div>
+                                                                <div class="space-y-2">
+                                                                    <div class="flex items-center gap-2">
+                                                                        <Flame class="h-3 w-3 text-amber-500" />
+                                                                        <span class="font-semibold text-sm text-foreground">Longest Streak</span>
+                                                                    </div>
+                                                                    <p class="text-xs text-muted-foreground">
+                                                                        Your best consecutive day record: 
+                                                                        <span class="font-medium text-foreground">
+                                                                            {{ user.longest_streak || 0 }} days
+                                                                        </span>
+                                                                    </p>
+                                                                </div>
+                                                            </TooltipContent>
+                                                        </Tooltip>
                                                     </div>
                                                 </div>
 
@@ -568,5 +598,6 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                 </div>
             </div>
         </div>
+        </TooltipProvider>
     </AppLayout>
 </template>
