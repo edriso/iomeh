@@ -494,13 +494,6 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                     >
                                         {{ formatDate(selectedDate) }}
                                     </h4>
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        @click="selectedDate = null"
-                                    >
-                                        Close
-                                    </Button>
                                 </div>
 
                                 <!-- Loading State -->
