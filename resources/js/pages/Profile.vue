@@ -220,377 +220,426 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
 
     <AppLayout>
         <TooltipProvider>
-        <div
-            class="min-h-screen bg-gradient-to-br from-background via-muted/10 to-background"
-        >
             <div
-                v-if="!user"
-                class="flex min-h-[50vh] items-center justify-center"
+                class="min-h-screen bg-gradient-to-br from-background via-muted/10 to-background"
             >
-                <Card class="w-full max-w-md">
-                    <CardContent class="p-8 text-center">
-                        <div
-                            class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted"
+                <div
+                    v-if="!user"
+                    class="flex min-h-[50vh] items-center justify-center"
+                >
+                    <Card class="w-full max-w-md">
+                        <CardContent class="p-8 text-center">
+                            <div
+                                class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted"
+                            >
+                                <Lock class="h-8 w-8 text-muted-foreground" />
+                            </div>
+                            <h2
+                                class="mb-2 text-xl font-medium text-foreground"
+                            >
+                                User Not Found
+                            </h2>
+                            <p class="text-muted-foreground">
+                                The profile you're looking for doesn't exist.
+                            </p>
+                        </CardContent>
+                    </Card>
+                </div>
+
+                <div v-else class="space-y-8">
+                    <!-- Profile Header -->
+                    <div class="mb-8">
+                        <!-- Hero Section with Gradient Background -->
+                        <Card
+                            class="overflow-hidden border-primary/20 bg-gradient-to-br from-primary/5 via-background to-secondary/5"
                         >
-                            <Lock class="h-8 w-8 text-muted-foreground" />
-                        </div>
-                        <h2 class="mb-2 text-xl font-medium text-foreground">
-                            User Not Found
-                        </h2>
-                        <p class="text-muted-foreground">
-                            The profile you're looking for doesn't exist.
-                        </p>
-                    </CardContent>
-                </Card>
-            </div>
-
-            <div v-else class="space-y-8">
-                <!-- Profile Header -->
-                <div class="mb-8">
-                    <!-- Hero Section with Gradient Background -->
-                    <Card
-                        class="overflow-hidden border-primary/20 bg-gradient-to-br from-primary/5 via-background to-secondary/5"
-                    >
-                        <CardContent class="p-0">
-                            <!-- Background Pattern -->
-                            <div class="relative">
-                                <div
-                                    class="bg-grid-white/[0.02] absolute inset-0 bg-[size:60px_60px]"
-                                ></div>
-
-                                <!-- Edit Profile Button (Top Right) -->
-                                <div
-                                    v-if="is_own_profile"
-                                    class="absolute top-6 right-6 z-10"
-                                >
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        as-child
-                                        class="bg-white/80 backdrop-blur-sm hover:bg-primary hover:text-primary-foreground dark:bg-black/50 dark:hover:bg-primary dark:hover:text-primary-foreground"
-                                    >
-                                        <Link href="/settings/profile">
-                                            <Edit class="mr-2 h-4 w-4" />
-                                            Edit Profile
-                                        </Link>
-                                    </Button>
-                                </div>
-
-                                <div class="relative p-8">
+                            <CardContent class="p-0">
+                                <!-- Background Pattern -->
+                                <div class="relative">
                                     <div
-                                        class="flex flex-col gap-8 lg:flex-row lg:items-center"
+                                        class="bg-grid-white/[0.02] absolute inset-0 bg-[size:60px_60px]"
+                                    ></div>
+
+                                    <!-- Edit Profile Button (Top Right) -->
+                                    <div
+                                        v-if="is_own_profile"
+                                        class="absolute top-6 right-6 z-10"
                                     >
-                                        <!-- Profile Picture -->
-                                        <div class="flex-shrink-0">
-                                            <div class="relative">
-                                                <div
-                                                    class="flex h-28 w-28 items-center justify-center rounded-full border-2 border-primary/20 bg-background shadow-md transition-transform duration-200 hover:scale-105"
-                                                >
-                                                    <img
-                                                        v-if="user.avatar"
-                                                        :src="user.avatar"
-                                                        :alt="user.name"
-                                                        class="h-28 w-28 rounded-full object-cover"
-                                                    />
-                                                    <span
-                                                        v-else
-                                                        class="text-3xl font-medium text-primary"
-                                                    >
-                                                        {{
-                                                            user.name
-                                                                ?.charAt(0)
-                                                                .toUpperCase() ||
-                                                            user.username
-                                                                .charAt(0)
-                                                                .toUpperCase()
-                                                        }}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Profile Info -->
-                                        <div
-                                            class="flex-1 space-y-6 overflow-hidden"
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            as-child
+                                            class="bg-white/80 backdrop-blur-sm hover:bg-primary hover:text-primary-foreground dark:bg-black/50 dark:hover:bg-primary dark:hover:text-primary-foreground"
                                         >
-                                            <!-- Name and Details -->
-                                            <div class="space-y-3">
-                                                <div class="space-y-2">
+                                            <Link href="/settings/profile">
+                                                <Edit class="mr-2 h-4 w-4" />
+                                                Edit Profile
+                                            </Link>
+                                        </Button>
+                                    </div>
+
+                                    <div class="relative p-8">
+                                        <div
+                                            class="flex flex-col gap-8 lg:flex-row lg:items-center"
+                                        >
+                                            <!-- Profile Picture -->
+                                            <div class="flex-shrink-0">
+                                                <div class="relative">
                                                     <div
-                                                        class="flex max-w-full min-w-0 items-center gap-4"
+                                                        class="flex h-28 w-28 items-center justify-center rounded-full border-2 border-primary/20 bg-background shadow-md transition-transform duration-200 hover:scale-105"
                                                     >
-                                                        <h1
-                                                            class="truncate text-4xl tracking-tight text-foreground"
-                                                        >
-                                                            {{ user.name }}
-                                                        </h1>
-
-                                                        <!-- Longest Streak Display -->
-                                                        <Tooltip>
-                                                            <TooltipTrigger as-child>
-                                                                <div
-                                                                    class="flex items-center gap-2 rounded-full text-secondary-foreground border border-secondary/30 bg-secondary px-3 py-1.5 transition-colors hover:bg-secondary/80"
-                                                                >
-                                                                    <Flame
-                                                                        class="h-4 w-4"
-                                                                    />
-                                                                    <span
-                                                                        class="text-sm font-medium"
-                                                                    >
-                                                                        {{
-                                                                            user.longest_streak ||
-                                                                            0
-                                                                        }}
-                                                                    </span>
-                                                                </div>
-                                                            </TooltipTrigger>
-                                                            <TooltipContent 
-                                                                side="bottom" 
-                                                                align="center"
-                                                                :side-offset="8"
-                                                                class="max-w-xs border border-border/50 bg-popover text-popover-foreground shadow-lg rounded-lg px-3 py-2"
-                                                            >
-                                                                <div class="space-y-2">
-                                                                    <div class="flex items-center gap-2">
-                                                                        <Flame class="h-3 w-3 text-amber-500" />
-                                                                        <span class="font-semibold text-sm text-foreground">Longest Streak</span>
-                                                                    </div>
-                                                                    <p class="text-xs text-muted-foreground">
-                                                                        Your best consecutive day record: 
-                                                                        <span class="font-medium text-foreground">
-                                                                            {{ user.longest_streak || 0 }} days
-                                                                        </span>
-                                                                    </p>
-                                                                </div>
-                                                            </TooltipContent>
-                                                        </Tooltip>
-                                                    </div>
-                                                </div>
-
-                                                <p
-                                                    v-if="user.bio"
-                                                    class="max-w-2xl leading-relaxed text-foreground/80"
-                                                >
-                                                    {{ user.bio }}
-                                                </p>
-                                            </div>
-
-                                            <!-- Website Link -->
-                                            <div
-                                                v-if="user.website_url"
-                                                class="flex items-center"
-                                            >
-                                                <Button
-                                                    variant="outline"
-                                                    size="sm"
-                                                    as-child
-                                                    class="border-border/50 bg-white/50 backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-primary hover:text-primary-foreground dark:bg-black/20 dark:hover:bg-primary dark:hover:text-primary-foreground"
-                                                >
-                                                    <a
-                                                        :href="user.website_url"
-                                                        target="_blank"
-                                                        class="flex items-center gap-2 text-sm"
-                                                    >
-                                                        <LinkIcon
-                                                            class="h-4 w-4"
+                                                        <img
+                                                            v-if="user.avatar"
+                                                            :src="user.avatar"
+                                                            :alt="user.name"
+                                                            class="h-28 w-28 rounded-full object-cover"
                                                         />
                                                         <span
-                                                            class="max-w-[250px] truncate"
-                                                            >{{
-                                                                user.website_url
-                                                            }}</span
+                                                            v-else
+                                                            class="text-3xl font-medium text-primary"
                                                         >
-                                                    </a>
-                                                </Button>
+                                                            {{
+                                                                user.name
+                                                                    ?.charAt(0)
+                                                                    .toUpperCase() ||
+                                                                user.username
+                                                                    .charAt(0)
+                                                                    .toUpperCase()
+                                                            }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Profile Info -->
+                                            <div
+                                                class="flex-1 space-y-6 overflow-hidden"
+                                            >
+                                                <!-- Name and Details -->
+                                                <div class="space-y-3">
+                                                    <div class="space-y-2">
+                                                        <div
+                                                            class="flex max-w-full min-w-0 items-center gap-4"
+                                                        >
+                                                            <h1
+                                                                class="truncate text-4xl tracking-tight text-foreground"
+                                                            >
+                                                                {{ user.name }}
+                                                            </h1>
+
+                                                            <!-- Longest Streak Display -->
+                                                            <Tooltip>
+                                                                <TooltipTrigger
+                                                                    as-child
+                                                                >
+                                                                    <div
+                                                                        class="flex items-center gap-2 rounded-full border border-secondary/30 bg-secondary px-3 py-1.5 text-secondary-foreground transition-colors hover:bg-secondary/80"
+                                                                    >
+                                                                        <Flame
+                                                                            class="h-4 w-4"
+                                                                        />
+                                                                        <span
+                                                                            class="text-sm font-medium"
+                                                                        >
+                                                                            {{
+                                                                                user.longest_streak ||
+                                                                                0
+                                                                            }}
+                                                                        </span>
+                                                                    </div>
+                                                                </TooltipTrigger>
+                                                                <TooltipContent
+                                                                    side="bottom"
+                                                                    align="center"
+                                                                    :side-offset="
+                                                                        8
+                                                                    "
+                                                                    class="max-w-xs rounded-lg border border-border/50 bg-popover px-3 py-2 text-popover-foreground shadow-lg"
+                                                                >
+                                                                    <div
+                                                                        class="space-y-2"
+                                                                    >
+                                                                        <div
+                                                                            class="flex items-center gap-2"
+                                                                        >
+                                                                            <Flame
+                                                                                class="h-3 w-3 text-amber-500"
+                                                                            />
+                                                                            <span
+                                                                                class="text-sm font-semibold text-foreground"
+                                                                                >Longest
+                                                                                Streak</span
+                                                                            >
+                                                                        </div>
+                                                                        <p
+                                                                            class="text-xs text-muted-foreground"
+                                                                        >
+                                                                            Your
+                                                                            best
+                                                                            consecutive
+                                                                            day
+                                                                            record:
+                                                                            <span
+                                                                                class="font-medium text-foreground"
+                                                                            >
+                                                                                {{
+                                                                                    user.longest_streak ||
+                                                                                    0
+                                                                                }}
+                                                                                days
+                                                                            </span>
+                                                                        </p>
+                                                                    </div>
+                                                                </TooltipContent>
+                                                            </Tooltip>
+                                                        </div>
+                                                    </div>
+
+                                                    <p
+                                                        v-if="user.bio"
+                                                        class="max-w-2xl leading-relaxed text-foreground/80"
+                                                    >
+                                                        {{ user.bio }}
+                                                    </p>
+                                                </div>
+
+                                                <!-- Website Link -->
+                                                <div
+                                                    v-if="user.website_url"
+                                                    class="flex items-center"
+                                                >
+                                                    <Button
+                                                        variant="outline"
+                                                        size="sm"
+                                                        as-child
+                                                        class="border-border/50 bg-white/50 backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-primary hover:text-primary-foreground dark:bg-black/20 dark:hover:bg-primary dark:hover:text-primary-foreground"
+                                                    >
+                                                        <a
+                                                            :href="
+                                                                user.website_url
+                                                            "
+                                                            target="_blank"
+                                                            class="flex items-center gap-2 text-sm"
+                                                        >
+                                                            <LinkIcon
+                                                                class="h-4 w-4"
+                                                            />
+                                                            <span
+                                                                class="max-w-[250px] truncate"
+                                                                >{{
+                                                                    user.website_url
+                                                                }}</span
+                                                            >
+                                                        </a>
+                                                    </Button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
 
-                <!-- Main Content -->
-                <div class="space-y-8">
-                    <!-- Ranking Badges Section -->
-                    <Card
-                        v-if="ranking_histories && ranking_histories.length > 0"
-                    >
-                        <CardHeader>
-                            <CardTitle>Ranking Badges</CardTitle>
-                            <CardDescription>
-                                {{
-                                    is_own_profile
-                                        ? 'Your achievements across seasons'
-                                        : 'Achievements across seasons'
-                                }}
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div class="space-y-4">
-                                <div
-                                    class="flex cursor-default flex-wrap gap-2"
-                                >
-                                    <template
-                                        v-for="history in ranking_histories.slice(
-                                            0,
-                                            8,
-                                        )"
-                                        :key="history.id"
+                    <!-- Main Content -->
+                    <div class="space-y-8">
+                        <!-- Ranking Badges Section -->
+                        <Card
+                            v-if="
+                                ranking_histories &&
+                                ranking_histories.length > 0
+                            "
+                        >
+                            <CardHeader>
+                                <CardTitle>Ranking Badges</CardTitle>
+                                <CardDescription>
+                                    {{
+                                        is_own_profile
+                                            ? 'Your achievements across seasons'
+                                            : 'Achievements across seasons'
+                                    }}
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <div class="space-y-4">
+                                    <div
+                                        class="flex cursor-default flex-wrap gap-2"
                                     >
-                                        <div
-                                            :title="`${history.display_name} - ${formatNumber(history.points)} points`"
-                                            :class="
-                                                getRankingBadgeStyle(history)
-                                                    .class
-                                            "
+                                        <template
+                                            v-for="history in ranking_histories.slice(
+                                                0,
+                                                8,
+                                            )"
+                                            :key="history.id"
                                         >
-                                            <Trophy
-                                                v-if="history.season === null"
-                                                class="h-3 w-3"
-                                            />
-                                            <Award v-else class="h-3 w-3" />
-                                            <span
-                                                class="max-w-[200px] truncate"
+                                            <div
+                                                :title="`${history.display_name} - ${formatNumber(history.points)} points`"
+                                                :class="
+                                                    getRankingBadgeStyle(
+                                                        history,
+                                                    ).class
+                                                "
                                             >
-                                                {{ history.display_name }}
-                                            </span>
-                                        </div>
-                                    </template>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    <!-- Activity Streak -->
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Activity Streak</CardTitle>
-                            <CardDescription v-if="is_own_profile">
-                                Your health journey - every day counts!
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <ActivityCalendarHeatmap
-                                :days="heatmapDays"
-                                :week_starts_on="user.week_starts_on"
-                                :enable-lazy-loading="true"
-                                :username="user.username"
-                                :user-created-at="user.created_at"
-                                @day-click="handleDayClick"
-                            />
-
-                            <!-- Selected Date Activities (Only for own profile) -->
-                            <div
-                                v-if="is_own_profile && selectedDate"
-                                class="mt-6 space-y-4"
-                            >
-                                <div
-                                    class="flex items-center justify-between border-t border-border pt-4"
-                                >
-                                    <h4
-                                        class="text-lg font-semibold text-foreground"
-                                    >
-                                        {{ formatDate(selectedDate) }}
-                                    </h4>
-                                </div>
-
-                                <!-- Loading State -->
-                                <div
-                                    v-if="loadingActivities"
-                                    class="flex items-center justify-center py-8"
-                                >
-                                    <div class="text-sm text-muted-foreground">
-                                        Loading activities...
+                                                <Trophy
+                                                    v-if="
+                                                        history.season === null
+                                                    "
+                                                    class="h-3 w-3"
+                                                />
+                                                <Award v-else class="h-3 w-3" />
+                                                <span
+                                                    class="max-w-[200px] truncate"
+                                                >
+                                                    {{ history.display_name }}
+                                                </span>
+                                            </div>
+                                        </template>
                                     </div>
                                 </div>
+                            </CardContent>
+                        </Card>
 
-                                <!-- Activities List -->
+                        <!-- Activity Streak -->
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Activity Streak</CardTitle>
+                                <CardDescription v-if="is_own_profile">
+                                    Your health journey - every day counts!
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <ActivityCalendarHeatmap
+                                    :days="heatmapDays"
+                                    :week_starts_on="user.week_starts_on"
+                                    :enable-lazy-loading="true"
+                                    :username="user.username"
+                                    :user-created-at="user.created_at"
+                                    @day-click="handleDayClick"
+                                />
+
+                                <!-- Selected Date Activities (Only for own profile) -->
                                 <div
-                                    v-else-if="
-                                        selectedDateActivities.length > 0
-                                    "
-                                    class="space-y-3"
+                                    v-if="is_own_profile && selectedDate"
+                                    class="mt-6 space-y-4"
                                 >
                                     <div
-                                        v-for="activity in selectedDateActivities"
-                                        :key="activity.id"
-                                        class="flex items-center justify-between rounded-lg border border-border/50 bg-card/50 p-4 transition-colors hover:bg-card"
+                                        class="flex items-center justify-between border-t border-border pt-4"
                                     >
-                                        <div class="flex items-center gap-3">
-                                            <span class="text-2xl">{{
-                                                activity.activity_type_icon
-                                            }}</span>
-                                            <div class="flex-1">
-                                                <p
-                                                    class="font-medium text-foreground"
-                                                >
-                                                    {{ activity.custom_name }}
-                                                </p>
-                                                <p
-                                                    class="text-sm text-muted-foreground"
-                                                >
-                                                    {{
-                                                        activity.activity_type_name
-                                                    }}
-                                                </p>
-                                                <p
-                                                    v-if="activity.notes"
-                                                    class="mt-1 text-xs text-muted-foreground italic"
-                                                >
-                                                    "{{ activity.notes }}"
-                                                </p>
-                                                <Button
-                                                    v-if="activity.memory_url"
-                                                    variant="outline"
-                                                    size="sm"
-                                                    as-child
-                                                    class="mt-2 h-7 border-border/50 bg-white/50 backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-primary hover:text-primary-foreground dark:bg-black/20 dark:hover:bg-primary dark:hover:text-primary-foreground"
-                                                >
-                                                    <a
-                                                        :href="
+                                        <h4
+                                            class="text-lg font-semibold text-foreground"
+                                        >
+                                            {{ formatDate(selectedDate) }}
+                                        </h4>
+                                    </div>
+
+                                    <!-- Loading State -->
+                                    <div
+                                        v-if="loadingActivities"
+                                        class="flex items-center justify-center py-8"
+                                    >
+                                        <div
+                                            class="text-sm text-muted-foreground"
+                                        >
+                                            Loading activities...
+                                        </div>
+                                    </div>
+
+                                    <!-- Activities List -->
+                                    <div
+                                        v-else-if="
+                                            selectedDateActivities.length > 0
+                                        "
+                                        class="space-y-3"
+                                    >
+                                        <div
+                                            v-for="activity in selectedDateActivities"
+                                            :key="activity.id"
+                                            class="flex items-center justify-between rounded-lg border border-border/50 bg-card/50 p-4 transition-colors hover:bg-card"
+                                        >
+                                            <div
+                                                class="flex items-center gap-3"
+                                            >
+                                                <span class="text-2xl">{{
+                                                    activity.activity_type_icon
+                                                }}</span>
+                                                <div class="flex-1">
+                                                    <p
+                                                        class="font-medium text-foreground"
+                                                    >
+                                                        {{
+                                                            activity.custom_name
+                                                        }}
+                                                    </p>
+                                                    <p
+                                                        class="text-sm text-muted-foreground"
+                                                    >
+                                                        {{
+                                                            activity.activity_type_name
+                                                        }}
+                                                    </p>
+                                                    <p
+                                                        v-if="activity.notes"
+                                                        class="mt-1 text-xs text-muted-foreground italic"
+                                                    >
+                                                        "{{ activity.notes }}"
+                                                    </p>
+                                                    <Button
+                                                        v-if="
                                                             activity.memory_url
                                                         "
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        class="flex items-center gap-1.5 text-xs"
+                                                        variant="outline"
+                                                        size="sm"
+                                                        as-child
+                                                        class="mt-2 h-7 border-border/50 bg-white/50 backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-primary hover:text-primary-foreground dark:bg-black/20 dark:hover:bg-primary dark:hover:text-primary-foreground"
                                                     >
-                                                        <LinkIcon
-                                                            class="h-3 w-3"
-                                                        />
-                                                        View proof
-                                                    </a>
-                                                </Button>
+                                                        <a
+                                                            :href="
+                                                                activity.memory_url
+                                                            "
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            class="flex items-center gap-1.5 text-xs"
+                                                        >
+                                                            <LinkIcon
+                                                                class="h-3 w-3"
+                                                            />
+                                                            View proof
+                                                        </a>
+                                                    </Button>
+                                                </div>
                                             </div>
+                                            <Badge
+                                                variant="secondary"
+                                                class="ml-2 flex-shrink-0"
+                                            >
+                                                +{{
+                                                    activity.points_earned
+                                                }}
+                                                pts
+                                            </Badge>
                                         </div>
-                                        <Badge
-                                            variant="secondary"
-                                            class="ml-2 flex-shrink-0"
+                                    </div>
+
+                                    <!-- Empty State -->
+                                    <div
+                                        v-else
+                                        class="flex flex-col items-center justify-center rounded-lg border border-dashed border-border py-8 text-center"
+                                    >
+                                        <Activity
+                                            class="mb-2 h-8 w-8 text-muted-foreground opacity-50"
+                                        />
+                                        <p
+                                            class="text-sm text-muted-foreground"
                                         >
-                                            +{{ activity.points_earned }} pts
-                                        </Badge>
+                                            No activities logged on this day
+                                        </p>
                                     </div>
                                 </div>
-
-                                <!-- Empty State -->
-                                <div
-                                    v-else
-                                    class="flex flex-col items-center justify-center rounded-lg border border-dashed border-border py-8 text-center"
-                                >
-                                    <Activity
-                                        class="mb-2 h-8 w-8 text-muted-foreground opacity-50"
-                                    />
-                                    <p class="text-sm text-muted-foreground">
-                                        No activities logged on this day
-                                    </p>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
+                            </CardContent>
+                        </Card>
+                    </div>
                 </div>
             </div>
-        </div>
         </TooltipProvider>
     </AppLayout>
 </template>

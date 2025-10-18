@@ -573,8 +573,8 @@ const seoData = {
                         Compete on Global Rankings
                     </h2>
                     <p class="mx-auto max-w-2xl text-lg text-muted-foreground">
-                        Like a sports foundation, but for health. See where
-                        you rank today, this season, and all-time.
+                        Like a sports foundation, but for health. See where you
+                        rank today, this season, and all-time.
                     </p>
                 </div>
 

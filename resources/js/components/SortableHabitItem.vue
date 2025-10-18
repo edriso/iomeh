@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 import InputError from '@/components/InputError.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -8,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { GripVertical, Trash2 } from 'lucide-vue-next';
+import { computed } from 'vue';
 
 interface ActivityType {
     id: number;
@@ -46,14 +46,14 @@ const customName = computed({
     get: () => props.habit.custom_name,
     set: (value: string) => {
         emit('update:habit', { ...props.habit, custom_name: value });
-    }
+    },
 });
 
 const notes = computed({
     get: () => props.habit.notes ?? '',
     set: (value: string) => {
         emit('update:habit', { ...props.habit, notes: value || null });
-    }
+    },
 });
 
 // Helper function to get error message

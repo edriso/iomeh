@@ -232,7 +232,8 @@ function getCategoryColor(category: string): string {
                 <Alert>
                     <Info class="h-4 w-4" />
                     <AlertDescription>
-                        Add the activities that matter most to your health journey.
+                        Add the activities that matter most to your health
+                        journey.
                     </AlertDescription>
                 </Alert>
 
@@ -248,7 +249,10 @@ function getCategoryColor(category: string): string {
                                 :errors="errors"
                                 :on-remove="removeHabit"
                                 :get-category-color="getCategoryColor"
-                                @update:habit="(updatedHabit) => localHabits[index] = updatedHabit"
+                                @update:habit="
+                                    (updatedHabit) =>
+                                        (localHabits[index] = updatedHabit)
+                                "
                             />
                         </div>
                     </div>
