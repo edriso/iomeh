@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Head, router } from '@inertiajs/vue3';
-import { computed, nextTick, onMounted, ref } from 'vue';
 import Sortable from 'sortablejs';
+import { computed, nextTick, onMounted, ref } from 'vue';
 
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import InputError from '@/components/InputError.vue';

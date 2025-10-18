@@ -90,11 +90,8 @@ const handleSubmit = (event: Event) => {
                 ) as HTMLInputElement
             )?.value || '',
         name:
-            (
-                document.querySelector(
-                    'input[name="name"]',
-                ) as HTMLInputElement
-            )?.value || '',
+            (document.querySelector('input[name="name"]') as HTMLInputElement)
+                ?.value || '',
         email:
             (document.querySelector('input[name="email"]') as HTMLInputElement)
                 ?.value || '',
@@ -197,9 +194,7 @@ onMounted(() => {
                         placeholder="Enter your name"
                         maxlength="100"
                     />
-                    <InputError
-                        :message="clientErrors.name || errors.name"
-                    />
+                    <InputError :message="clientErrors.name || errors.name" />
                 </div>
 
                 <div class="grid gap-2">
