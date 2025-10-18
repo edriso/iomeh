@@ -19,6 +19,12 @@ import {
 import { useLogActivity } from '@/composables/useLogActivity';
 import { seoConfigs } from '@/config/seo';
 import AppLayout from '@/layouts/AppLayout.vue';
+import { 
+    getCurrentTier, 
+    getTierProgress, 
+    getNextTierMessage, 
+    getStreakDisplayText 
+} from '@/utils/streakTiers';
 import { router } from '@inertiajs/vue3';
 import {
     Activity,
@@ -33,6 +39,7 @@ import {
 } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 
+// Types
 interface TodayActivity {
     id: number;
     habit_name: string;
@@ -61,62 +68,60 @@ interface Habit {
     notes?: string | null;
 }
 
-interface Props {
-    user: {
-        id: number;
-        username: string;
+interface User {
+    id: number;
+    username: string;
+    name: string;
+    avatar?: string;
+    current_streak: number;
+    longest_streak: number;
+    streak_tier: {
         name: string;
-        avatar?: string;
-        current_streak: number;
-        longest_streak: number;
-        streak_tier: {
-            name: string;
-            multiplier: number;
-            icon: string;
-        };
-        season_rank?: {
-            rank: number;
-            season: string;
-            year: number;
-        };
-        year_rank?: {
-            rank: number;
-            year: number;
-        };
+        multiplier: number;
+        icon: string;
     };
+    season_rank?: {
+        rank: number;
+        season: string;
+        year: number;
+    };
+    year_rank?: {
+        rank: number;
+        year: number;
+    };
+}
+
+interface Props {
+    user: User;
     habits: Habit[];
     today_activities: TodayActivity[];
     recent_activities: RecentActivity[];
 }
 
+// Props
 const props = defineProps<Props>();
 
-// Computed
-const todayPoints = computed(() => {
-    return props.today_activities.reduce(
-        (sum, activity) => sum + activity.points_earned,
-        0,
-    );
-});
+// Composables
+const { openLogActivityModal } = useLogActivity();
 
 // State
-const { openLogActivityModal } = useLogActivity();
 const selectedHabit = ref<Habit | null>(null);
 const showHabitModal = ref(false);
 
-// Methods
-const handleLogActivity = () => {
-    openLogActivityModal();
-};
+// Computed Properties
+const todayPoints = computed(() => 
+    props.today_activities.reduce((sum, activity) => sum + activity.points_earned, 0)
+);
 
-const goToRankings = () => {
-    router.visit('/rankings');
-};
+// Computed Properties
+const streakProgress = computed(() => getTierProgress(props.user.current_streak));
+const streakMessage = computed(() => getNextTierMessage(props.user.current_streak));
 
-const handleEditActivity = () => {
-    router.visit('/settings/habits');
-};
+// Navigation Methods
+const navigateToRankings = () => router.visit('/rankings');
+const navigateToHabits = () => router.visit('/settings/habits');
 
+// Modal Methods
 const openHabitModal = (habit: Habit) => {
     selectedHabit.value = habit;
     showHabitModal.value = true;
@@ -127,15 +132,15 @@ const closeHabitModal = () => {
     selectedHabit.value = null;
 };
 
-const getNextTierInfo = (currentStreak: number): string => {
-    if (currentStreak < 3) return '3 days for Beginner';
-    if (currentStreak < 7) return '7 days for Regular';
-    if (currentStreak < 14) return '14 days for Committed';
-    if (currentStreak < 30) return '30 days for Dedicated';
-    if (currentStreak < 60) return '60 days for Expert';
-    if (currentStreak < 100) return '100 days for Master';
-    if (currentStreak < 200) return '200 days for Legend';
-    return 'Legend achieved!';
+// Activity Methods
+const handleLogActivity = () => openLogActivityModal();
+
+// Helper Methods
+const formatActivityTime = (createdAt: string) => {
+    return new Date(createdAt).toLocaleTimeString([], { 
+        hour: '2-digit', 
+        minute: '2-digit' 
+    });
 };
 </script>
 
@@ -171,7 +176,7 @@ const getNextTierInfo = (currentStreak: number): string => {
                                     <Button
                                         size="sm"
                                         variant="outline"
-                                        @click="handleEditActivity"
+                                        @click="navigateToHabits"
                                     >
                                         Edit
                                     </Button>
@@ -199,11 +204,7 @@ const getNextTierInfo = (currentStreak: number): string => {
                                         'cursor-pointer': habit.notes,
                                         'cursor-default': !habit.notes,
                                     }"
-                                    @click="
-                                        habit.notes
-                                            ? openHabitModal(habit)
-                                            : null
-                                    "
+                                    @click="habit.notes ? openHabitModal(habit) : null"
                                 >
                                     <span class="mr-1.5">{{ habit.icon }}</span>
                                     {{ habit.name }}
@@ -229,7 +230,7 @@ const getNextTierInfo = (currentStreak: number): string => {
                                     size="sm"
                                     variant="outline"
                                     class="mt-3"
-                                    @click="handleEditActivity"
+                                    @click="navigateToHabits"
                                 >
                                     Select Activities
                                 </Button>
@@ -257,12 +258,8 @@ const getNextTierInfo = (currentStreak: number): string => {
                                     class="flex items-start justify-between gap-3 rounded-lg border border-border/50 bg-card/50 p-4 transition-colors hover:border-primary/30"
                                 >
                                     <div class="flex-1">
-                                        <div
-                                            class="mb-1 flex items-center gap-2"
-                                        >
-                                            <span
-                                                class="font-medium text-foreground"
-                                            >
+                                        <div class="mb-1 flex items-center gap-2">
+                                            <span class="font-medium text-foreground">
                                                 {{ activity.habit_name }}
                                             </span>
                                             <Badge
@@ -279,10 +276,8 @@ const getNextTierInfo = (currentStreak: number): string => {
                                         >
                                             {{ activity.notes }}
                                         </p>
-                                        <p
-                                            class="mt-1 text-xs text-muted-foreground"
-                                        >
-                                            {{ activity.created_at }}
+                                        <p class="mt-1 text-xs text-muted-foreground">
+                                            {{ formatActivityTime(activity.created_at) }}
                                         </p>
                                     </div>
                                 </div>
@@ -298,7 +293,7 @@ const getNextTierInfo = (currentStreak: number): string => {
                                 <p class="mb-4 text-sm">
                                     Start tracking your health!
                                 </p>
-                                <Button size="sm" @click="handleEditActivity">
+                                <Button size="sm" @click="navigateToHabits">
                                     Edit Activities
                                 </Button>
                             </div>
@@ -308,136 +303,52 @@ const getNextTierInfo = (currentStreak: number): string => {
 
                 <!-- Right Column: Recent Activities & Quick Actions -->
                 <div class="space-y-6">
-                    <!-- Enhanced Streak Display -->
-                    <div class="space-y-3">
-                        <!-- Main Streak Card -->
-                        <div
-                            class="group relative overflow-hidden rounded-2xl border border-orange-500/20 bg-gradient-to-br from-orange-500/10 via-orange-500/5 to-red-500/5 p-4 transition-all hover:border-orange-500/30 hover:shadow-lg"
-                        >
-                            <!-- Background Pattern -->
-                            <div class="absolute inset-0 opacity-5">
-                                <div
-                                    class="absolute inset-0 bg-gradient-to-br from-orange-400 to-red-500"
-                                ></div>
-                            </div>
-
-                            <div class="relative">
-                                <!-- Header -->
-                                <div
-                                    class="mb-3 flex items-center justify-between"
-                                >
-                                    <div class="flex items-center gap-2">
-                                        <Flame
-                                            class="h-5 w-5 text-orange-500"
-                                        />
-                                        <span
-                                            class="text-sm font-medium text-orange-700 dark:text-orange-400"
-                                        >
-                                            Current Streak
-                                        </span>
-                                    </div>
-                                    <div class="text-xs text-muted-foreground">
-                                        {{
-                                            user.longest_streak >
-                                            user.current_streak
-                                                ? `Best: ${user.longest_streak}`
-                                                : 'New Best!'
-                                        }}
-                                    </div>
-                                </div>
-
-                                <!-- Streak Number -->
-                                <div class="mb-2">
-                                    <div
-                                        class="text-3xl font-bold text-orange-600 lg:text-4xl dark:text-orange-500"
-                                    >
+                    <!-- Streak Display -->
+                    <Card>
+                        <CardHeader>
+                            <CardTitle class="flex items-center gap-2">
+                                <Flame class="h-5 w-5 text-orange-500" />
+                                Your Streak
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent class="space-y-4">
+                            <!-- Current Streak -->
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <div class="text-2xl font-bold text-orange-600 dark:text-orange-500">
                                         {{ user.current_streak }}
                                     </div>
                                     <div class="text-sm text-muted-foreground">
-                                        {{
-                                            user.current_streak === 1
-                                                ? 'day'
-                                                : 'days'
-                                        }}
-                                        in a row
+                                        {{ getStreakDisplayText(user.current_streak) }} in a row
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-
-                        <!-- Streak Tier Card -->
-                        <div
-                            class="group relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 via-primary/5 to-primary/5 p-4 transition-all hover:border-primary/30 hover:shadow-lg"
-                        >
-                            <div class="relative">
-                                <!-- Header -->
-                                <div
-                                    class="mb-3 flex items-center justify-between"
-                                >
-                                    <div class="flex items-center gap-2">
-                                        <span class="text-2xl">{{
-                                            user.streak_tier.icon
-                                        }}</span>
-                                        <span
-                                            class="text-sm font-medium text-primary"
-                                        >
-                                            Tier Status
-                                        </span>
+                                <div class="text-right">
+                                    <div class="text-sm font-medium text-primary">
+                                        {{ user.streak_tier.icon }} {{ user.streak_tier.name }}
                                     </div>
                                     <div class="text-xs text-muted-foreground">
-                                        {{ user.streak_tier.multiplier }}×
-                                        multiplier
+                                        {{ user.streak_tier.multiplier }}× multiplier
                                     </div>
-                                </div>
-
-                                <!-- Tier Info -->
-                                <div class="mb-3">
-                                    <div
-                                        class="text-xl font-bold text-primary lg:text-2xl"
-                                    >
-                                        {{ user.streak_tier.name }}
-                                    </div>
-                                    <div class="text-sm text-muted-foreground">
-                                        {{ user.streak_tier.multiplier }}× point
-                                        bonus
-                                    </div>
-                                </div>
-
-                                <!-- Next Tier Progress -->
-                                <div
-                                    v-if="user.current_streak < 200"
-                                    class="text-xs text-muted-foreground"
-                                >
-                                    <div class="mb-1">Next tier progress:</div>
-                                    <div class="flex items-center gap-2">
-                                        <div
-                                            class="h-1.5 flex-1 rounded-full bg-primary/20"
-                                        >
-                                            <div
-                                                class="h-1.5 rounded-full bg-primary transition-all duration-500"
-                                                :style="{
-                                                    width: `${Math.min(((user.current_streak % 30) / 30) * 100, 100)}%`,
-                                                }"
-                                            ></div>
-                                        </div>
-                                        <span class="text-[10px]">
-                                            {{
-                                                getNextTierInfo(
-                                                    user.current_streak,
-                                                )
-                                            }}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div
-                                    v-else
-                                    class="text-xs text-muted-foreground"
-                                >
-                                    🏆 Legend status achieved!
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                            
+                            <!-- Progress Bar -->
+                            <div class="space-y-2">
+                                <div class="h-2 w-full rounded-full bg-orange-200/50 dark:bg-orange-800/30">
+                                    <div 
+                                        class="h-2 rounded-full bg-gradient-to-r from-orange-500 to-red-500 transition-all duration-500"
+                                        :style="{ width: `${streakProgress}%` }"
+                                    ></div>
+                                </div>
+                                <div class="flex justify-between text-xs text-muted-foreground">
+                                    <span>{{ streakMessage }}</span>
+                                    <span v-if="user.longest_streak > user.current_streak">
+                                        Best: {{ user.longest_streak }}
+                                    </span>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
 
                     <!-- Rankings Quick View -->
                     <Card>
@@ -484,7 +395,7 @@ const getNextTierInfo = (currentStreak: number): string => {
                             <Button
                                 class="mt-4 w-full"
                                 variant="outline"
-                                @click="goToRankings"
+                                @click="navigateToRankings"
                             >
                                 <TrendingUp class="h-4 w-4" />
                                 View All Rankings
@@ -504,28 +415,19 @@ const getNextTierInfo = (currentStreak: number): string => {
                                 class="space-y-3"
                             >
                                 <div
-                                    v-for="activity in recent_activities.slice(
-                                        0,
-                                        5,
-                                    )"
+                                    v-for="activity in recent_activities.slice(0, 5)"
                                     :key="activity.id"
                                     class="flex items-center justify-between text-sm"
                                 >
-                                    <div
-                                        class="flex min-w-0 flex-1 items-center gap-2"
-                                    >
+                                    <div class="flex min-w-0 flex-1 items-center gap-2">
                                         <span class="flex-shrink-0 text-lg">{{
                                             activity.icon
                                         }}</span>
                                         <div class="min-w-0 flex-1">
-                                            <p
-                                                class="truncate font-medium text-foreground"
-                                            >
+                                            <p class="truncate font-medium text-foreground">
                                                 {{ activity.habit_name }}
                                             </p>
-                                            <p
-                                                class="text-xs text-muted-foreground"
-                                            >
+                                            <p class="text-xs text-muted-foreground">
                                                 {{ activity.date }}
                                             </p>
                                         </div>
@@ -564,9 +466,7 @@ const getNextTierInfo = (currentStreak: number): string => {
                 </DialogHeader>
                 <div class="mt-4">
                     <div class="rounded-lg bg-muted/50 p-4">
-                        <p
-                            class="text-sm leading-relaxed text-muted-foreground"
-                        >
+                        <p class="text-sm leading-relaxed text-muted-foreground">
                             {{ selectedHabit?.notes }}
                         </p>
                     </div>

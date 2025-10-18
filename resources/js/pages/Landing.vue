@@ -2,6 +2,7 @@
 import AppLogo from '@/components/AppLogo.vue';
 import SEO from '@/components/SEO.vue';
 import { Button } from '@/components/ui/button';
+import { STREAK_TIERS } from '@/utils/streakTiers';
 import { Link } from '@inertiajs/vue3';
 import {
     Activity,
@@ -302,7 +303,7 @@ const seoData = {
                     </h2>
                     <p class="mx-auto max-w-2xl text-lg text-muted-foreground">
                         Consistency is key. Build daily streaks and multiply
-                        your points with progressive rewards up to 5×.
+                        your points with progressive rewards up to {{ STREAK_TIERS[STREAK_TIERS.length - 1].multiplier.toFixed(1) }}×.
                     </p>
                 </div>
 
@@ -396,7 +397,7 @@ const seoData = {
                         <div
                             class="rounded-full bg-amber-500/10 px-2 py-1 text-xs font-bold text-amber-600 dark:text-amber-500"
                         >
-                            2.5×
+                            {{ STREAK_TIERS.find(tier => tier.name === 'Dedicated')?.multiplier }}×
                         </div>
                     </div>
 
@@ -492,7 +493,7 @@ const seoData = {
                             </h4>
                             <p class="text-sm text-muted-foreground">
                                 Your streak tier multiplies all activity points.
-                                30-day streak = 2.5× points!
+                                {{ STREAK_TIERS.find(tier => tier.name === 'Dedicated')?.min }}-day streak = {{ STREAK_TIERS.find(tier => tier.name === 'Dedicated')?.multiplier }}× points!
                             </p>
                         </div>
                         <div class="text-center">
@@ -538,7 +539,7 @@ const seoData = {
                             <p
                                 class="text-2xl font-bold text-amber-600 dark:text-amber-500"
                             >
-                                2.5× Multiplier
+                                {{ STREAK_TIERS.find(tier => tier.name === 'Dedicated')?.multiplier }}× Multiplier
                             </p>
                         </div>
                         <div class="text-2xl text-muted-foreground">+</div>
