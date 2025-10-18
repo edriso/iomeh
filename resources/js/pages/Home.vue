@@ -25,6 +25,7 @@ import {
     Award,
     Calendar,
     CheckCircle,
+    Flame,
     Info,
     Plus,
     TrendingUp,
@@ -66,6 +67,13 @@ interface Props {
         username: string;
         name: string;
         avatar?: string;
+        current_streak: number;
+        longest_streak: number;
+        streak_tier: {
+            name: string;
+            multiplier: number;
+            icon: string;
+        };
         season_rank?: {
             rank: number;
             season: string;
@@ -118,6 +126,17 @@ const closeHabitModal = () => {
     showHabitModal.value = false;
     selectedHabit.value = null;
 };
+
+const getNextTierInfo = (currentStreak: number): string => {
+    if (currentStreak < 3) return '3 days for Beginner';
+    if (currentStreak < 7) return '7 days for Regular';
+    if (currentStreak < 14) return '14 days for Committed';
+    if (currentStreak < 30) return '30 days for Dedicated';
+    if (currentStreak < 60) return '60 days for Expert';
+    if (currentStreak < 100) return '100 days for Master';
+    if (currentStreak < 200) return '200 days for Legend';
+    return 'Legend achieved!';
+};
 </script>
 
 <template>
@@ -127,10 +146,10 @@ const closeHabitModal = () => {
         <div class="container mx-auto px-4 py-8">
             <!-- Welcome Header -->
             <div class="mb-8">
-                <h1 class="mb-2 text-3xl font-bold text-foreground">
+                <h1 class="mb-2 text-3xl font-bold text-foreground lg:text-4xl">
                     Welcome back, {{ user.name }}! 👋
                 </h1>
-                <p class="text-muted-foreground">
+                <p class="text-muted-foreground lg:text-lg">
                     Track your health, earn points, and climb the rankings
                 </p>
             </div>
@@ -289,6 +308,137 @@ const closeHabitModal = () => {
 
                 <!-- Right Column: Recent Activities & Quick Actions -->
                 <div class="space-y-6">
+                    <!-- Enhanced Streak Display -->
+                    <div class="space-y-3">
+                        <!-- Main Streak Card -->
+                        <div
+                            class="group relative overflow-hidden rounded-2xl border border-orange-500/20 bg-gradient-to-br from-orange-500/10 via-orange-500/5 to-red-500/5 p-4 transition-all hover:border-orange-500/30 hover:shadow-lg"
+                        >
+                            <!-- Background Pattern -->
+                            <div class="absolute inset-0 opacity-5">
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-br from-orange-400 to-red-500"
+                                ></div>
+                            </div>
+
+                            <div class="relative">
+                                <!-- Header -->
+                                <div
+                                    class="mb-3 flex items-center justify-between"
+                                >
+                                    <div class="flex items-center gap-2">
+                                        <Flame
+                                            class="h-5 w-5 text-orange-500"
+                                        />
+                                        <span
+                                            class="text-sm font-medium text-orange-700 dark:text-orange-400"
+                                        >
+                                            Current Streak
+                                        </span>
+                                    </div>
+                                    <div class="text-xs text-muted-foreground">
+                                        {{
+                                            user.longest_streak >
+                                            user.current_streak
+                                                ? `Best: ${user.longest_streak}`
+                                                : 'New Best!'
+                                        }}
+                                    </div>
+                                </div>
+
+                                <!-- Streak Number -->
+                                <div class="mb-2">
+                                    <div
+                                        class="text-3xl font-bold text-orange-600 lg:text-4xl dark:text-orange-500"
+                                    >
+                                        {{ user.current_streak }}
+                                    </div>
+                                    <div class="text-sm text-muted-foreground">
+                                        {{
+                                            user.current_streak === 1
+                                                ? 'day'
+                                                : 'days'
+                                        }}
+                                        in a row
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Streak Tier Card -->
+                        <div
+                            class="group relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 via-primary/5 to-primary/5 p-4 transition-all hover:border-primary/30 hover:shadow-lg"
+                        >
+                            <div class="relative">
+                                <!-- Header -->
+                                <div
+                                    class="mb-3 flex items-center justify-between"
+                                >
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-2xl">{{
+                                            user.streak_tier.icon
+                                        }}</span>
+                                        <span
+                                            class="text-sm font-medium text-primary"
+                                        >
+                                            Tier Status
+                                        </span>
+                                    </div>
+                                    <div class="text-xs text-muted-foreground">
+                                        {{ user.streak_tier.multiplier }}×
+                                        multiplier
+                                    </div>
+                                </div>
+
+                                <!-- Tier Info -->
+                                <div class="mb-3">
+                                    <div
+                                        class="text-xl font-bold text-primary lg:text-2xl"
+                                    >
+                                        {{ user.streak_tier.name }}
+                                    </div>
+                                    <div class="text-sm text-muted-foreground">
+                                        {{ user.streak_tier.multiplier }}× point
+                                        bonus
+                                    </div>
+                                </div>
+
+                                <!-- Next Tier Progress -->
+                                <div
+                                    v-if="user.current_streak < 200"
+                                    class="text-xs text-muted-foreground"
+                                >
+                                    <div class="mb-1">Next tier progress:</div>
+                                    <div class="flex items-center gap-2">
+                                        <div
+                                            class="h-1.5 flex-1 rounded-full bg-primary/20"
+                                        >
+                                            <div
+                                                class="h-1.5 rounded-full bg-primary transition-all duration-500"
+                                                :style="{
+                                                    width: `${Math.min(((user.current_streak % 30) / 30) * 100, 100)}%`,
+                                                }"
+                                            ></div>
+                                        </div>
+                                        <span class="text-[10px]">
+                                            {{
+                                                getNextTierInfo(
+                                                    user.current_streak,
+                                                )
+                                            }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div
+                                    v-else
+                                    class="text-xs text-muted-foreground"
+                                >
+                                    🏆 Legend status achieved!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Rankings Quick View -->
                     <Card>
                         <CardHeader>

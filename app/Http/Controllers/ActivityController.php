@@ -6,6 +6,7 @@ use App\Models\Activity;
 use App\Models\Habit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class ActivityController extends Controller
 {
@@ -81,6 +82,9 @@ class ActivityController extends Controller
             'memory_url' => $validated['memory_url'] ?? null,
         ]);
 
+        // Invalidate home page cache for this user
+        Cache::forget("home_data_user_{$user->id}");
+
         // Build success message
         $message = 'Activity logged successfully!';
         if ($milestoneBonus > 0) {
@@ -108,6 +112,9 @@ class ActivityController extends Controller
 
         $activity->update($validated);
 
+        // Invalidate home page cache for this user
+        Cache::forget("home_data_user_{$activity->user_id}");
+
         return back()->with('success', 'Activity updated successfully!');
     }
 
@@ -121,7 +128,11 @@ class ActivityController extends Controller
             abort(403);
         }
 
+        $userId = $activity->user_id;
         $activity->delete();
+
+        // Invalidate home page cache for this user
+        Cache::forget("home_data_user_{$userId}");
 
         return back()->with('success', 'Activity deleted successfully!');
     }

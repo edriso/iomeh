@@ -7,6 +7,7 @@ use App\Models\Activity;
 use App\Models\Habit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 
 class HomeController extends Controller
@@ -53,6 +54,22 @@ class HomeController extends Controller
     {
         $user = $request->user();
         
+        // Cache key for user-specific data
+        $cacheKey = "home_data_user_{$user->id}";
+        
+        // Get cached data or compute fresh data
+        $homeData = Cache::remember($cacheKey, 300, function () use ($user) { // 5 minutes cache
+            return $this->getHomeData($user);
+        });
+
+        return Inertia::render('Home', $homeData);
+    }
+
+    /**
+     * Get home page data with caching
+     */
+    private function getHomeData(User $user): array
+    {
         // Get user's habits with activity types
         $habits = $user->habits()
             ->with('activityType')
@@ -114,7 +131,10 @@ class HomeController extends Controller
                 ];
             });
 
-        return Inertia::render('Home', [
+        // Get streak tier information
+        $streakTier = $user->getStreakTier();
+
+        return [
             'user' => [
                 'id' => $user->id,
                 'username' => $user->username,
@@ -125,6 +145,11 @@ class HomeController extends Controller
                 'lifetime_points' => $user->lifetime_points,
                 'current_streak' => $user->current_streak,
                 'longest_streak' => $user->longest_streak,
+                'streak_tier' => [
+                    'name' => $streakTier['name'],
+                    'multiplier' => $streakTier['multiplier'],
+                    'icon' => $streakTier['icon'],
+                ],
                 'season_rank' => $userSeason ? [
                     'rank' => $userSeason->season_rank,
                     'season' => 'Q' . $currentSeasonName,
@@ -138,7 +163,7 @@ class HomeController extends Controller
             'habits' => $habits,
             'today_activities' => $todayActivities,
             'recent_activities' => $recentActivities,
-        ]);
+        ];
     }
 
     /**
