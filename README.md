@@ -2,44 +2,54 @@
 
 > **Your Global Wellness Rank — Shaped by Your Daily Habits.**
 
-A global wellness tracking and ranking platform that gamifies your wellness journey. Track workouts, nutrition, sleep, and mindfulness activities while competing on global leaderboards.
+A global wellness tracking and ranking platform that gamifies your wellness journey. Track workouts, nutrition, sleep, and mindfulness activities while competing on seasonal leaderboards. Think of it as a sports organization, but for your wellness.
 
-## ✨ Features
+---
 
-- 🏋️ **Multi-Dimensional Tracking** — 45+ activities across workout, nutrition, wellness, and mindfulness
-- 🏆 **Global Rankings** — Real-time daily, seasonal (Q1-Q4), and annual leaderboards
-- 🎮 **Points System** — Earn 10-50 points per activity based on MET values and health impact
-- 🔥 **Streak Bonus System** — Progressive multipliers (1.0× to 5.0×) reward daily consistency
-- 💎 **Milestone Bonuses** — Extra rewards at 7, 30, 100, 365+ day streaks
-- 📊 **Historical Stats** — View your rank progression: "2025 Q1 #11, 2024 #156"
+## ✨ Key Features
 
-## 🪙 Activity Categories
+- 🏋️ **45+ Activities** — Track across 4 categories: Workout, Nutrition, Wellness, Mindfulness
+- 🏆 **Global Rankings** — Compete on daily, seasonal (Q1-Q4), and annual leaderboards
+- 🎮 **Smart Points** — Earn 10-50 points per activity based on MET values and health impact
+- 🔥 **Streak Multipliers** — Build daily streaks to multiply points up to 5.0×
+- 💎 **Milestone Rewards** — Get bonus points at 7, 30, 100, 365+ day streaks
+- 🗓️ **Season Validation** — Fair competition with quarterly boundaries (NEW)
+- 📊 **Progress Tracking** — View your rank history and activity calendar
+- 🔐 **Secure Auth** — Standard registration + OAuth (Google)
 
-| Category | Activities | Points |
-|----------|------------|--------|
-| 💪 **Workout** | Running, HIIT, Gym, Swimming, Yoga, Cycling, Sports... (20 types) | 10-50 pts |
-| 🥗 **Nutrition** | Healthy Meals, Meal Prep, Hydration, Supplements... (9 types) | 10-25 pts |
-| 🌟 **Wellness** | Quality Sleep, Sunlight, Nature Time, Cold Shower... (8 types) | 15-30 pts |
-| 🧘 **Mindfulness** | Meditation, Journaling, Reading, Learning... (8 types) | 15-25 pts |
+---
 
-## 🔥 Streak Bonus System
+## 🎯 How It Works
 
-Build consistency and multiply your rewards with 8 progressive tiers:
+### 1. Track Your Activities
 
-| Tier | Days | Multiplier | Icon | Description |
-|------|------|------------|------|-------------|
-| **Newcomer** | 1-2 | 1.0× | 🌱 | Just starting out |
-| **Beginner** | 3-6 | 1.2× | 🔥 | Building momentum |
-| **Regular** | 7-13 | 1.5× | ⚡ | Week+ streak |
-| **Committed** | 14-29 | 2.0× | 💪 | Two weeks strong |
-| **Dedicated** | 30-59 | 2.5× | 🚀 | Month+ dedication |
-| **Expert** | 60-99 | 3.0× | ⭐ | 2 months mastery |
-| **Master** | 100-199 | 4.0× | 👑 | 100 day champion |
-| **Legend** | 200+ | 5.0× | 🏆 | Ultimate dedication |
+Choose from 45+ activities across 4 categories:
 
-### Milestone Bonuses
+| Category | Examples | Points Range |
+|----------|----------|--------------|
+| 💪 **Workout** | Running, HIIT, Gym, Swimming, Yoga, Cycling, Sports | 10-50 pts |
+| 🥗 **Nutrition** | Healthy Meals, Meal Prep, Hydration, Supplements | 10-25 pts |
+| 🌟 **Wellness** | Quality Sleep, Sunlight, Nature Time, Cold Shower | 15-30 pts |
+| 🧘 **Mindfulness** | Meditation, Journaling, Reading, Learning | 15-25 pts |
 
-Reach these milestones for one-time bonus points:
+### 2. Build Your Streak
+
+Maintain daily consistency to unlock progressive multipliers:
+
+| Days | Tier | Multiplier | Icon |
+|------|------|------------|------|
+| 1-2 | Newcomer | 1.0× | 🌱 |
+| 3-6 | Beginner | 1.2× | 🔥 |
+| 7-13 | Regular | 1.5× | ⚡ |
+| 14-29 | Committed | 2.0× | 💪 |
+| 30-59 | Dedicated | 2.5× | 🚀 |
+| 60-99 | Expert | 3.0× | ⭐ |
+| 100-199 | Master | 4.0× | 👑 |
+| 200+ | Legend | 5.0× | 🏆 |
+
+### 3. Unlock Milestone Bonuses
+
+Reach major milestones for one-time point rewards:
 
 - **7 days** → +50 pts 🎉
 - **30 days** → +200 pts 🎊
@@ -47,127 +57,369 @@ Reach these milestones for one-time bonus points:
 - **100 days** → +1,000 pts 💎
 - **365 days** → +5,000 pts 🏆
 
-**Example:** Log a 20-point activity with a 30-day streak:
-- Base Points: 20
-- Multiplier (Dedicated): 2.5×
-- Milestone Bonus: +200 pts
-- **Total: 250 points!**
+**Example Calculation:**
+```
+Activity: Morning Run (20 base points)
+Current Streak: 30 days (Dedicated tier)
+Milestone: Just hit 30 days!
 
-See [STREAK_SYSTEM.md](STREAK_SYSTEM.md) for implementation details.
+= 20 pts × 2.5× + 200 bonus
+= 250 points! 🎉
+```
 
-## 🏗️ Tech Stack
+### 4. Compete by Season
 
-- **Backend:** Laravel 12 • PHP 8.2+ • MySQL/SQLite
-- **Frontend:** Vue 3 • TypeScript • Tailwind CSS • Inertia.js
-- **Testing:** Pest • 57 passing tests
-- **Auth:** Laravel Fortify • OAuth (Google, GitHub)
+Activities are validated to current season for fair competition:
+
+| Season | Months | Period |
+|--------|--------|--------|
+| 🌸 **Q1** | Jan-Mar | January 1 - March 31 |
+| ☀️ **Q2** | Apr-Jun | April 1 - June 30 |
+| 🍂 **Q3** | Jul-Sep | July 1 - September 30 |
+| ❄️ **Q4** | Oct-Dec | October 1 - December 31 |
+
+**Why Season Boundaries?**
+- ✅ Fair competition — No backdating to previous seasons
+- ✅ Fresh starts — New rankings every quarter
+- ✅ Better comparisons — Compete with current active users
+- ✅ Data integrity — Clean, organized activity history
+
+**How It Works:**
+- Date picker automatically restricts to current season
+- Backend validation ensures no cheating
+- Clear UI shows valid date range
+- Helpful error messages if you try invalid dates
+
+---
 
 ## 🚀 Quick Start
 
+### Prerequisites
+
+- PHP 8.2+
+- Composer
+- Node.js & NPM
+- MySQL or SQLite
+
+### Installation
+
 ```bash
-# Setup
-git clone git@github.com:edriso/iomew.git && cd iomew
-composer install && npm install
+# Clone and enter directory
+git clone git@github.com:edriso/iomew.git
+cd iomew
+
+# Install dependencies
+composer install
+npm install
+
+# Environment setup
 cp .env.example .env
 php artisan key:generate
 
-# Database
+# Database setup (development)
 php artisan migrate:fresh --seed
 
-# Run
-php artisan serve
-npm run dev  # New terminal
+# Start servers
+php artisan serve          # Terminal 1
+npm run dev                # Terminal 2
 ```
 
 Visit `http://localhost:8000`
 
-**Test Login:** `test@example.com` / `password`
+**Test Account:** `test@example.com` / `password`
+
+---
 
 ## 🧪 Testing
 
 ```bash
-php artisan test              # Backend tests
-npm run test:frontend         # Frontend tests
+# Run all backend tests
+php artisan test
+
+# Run frontend tests
+npm run test:frontend
+
+# Test season validation feature
+./vendor/bin/pest tests/Feature/ActivitySeasonValidationTest.php
+
+# Run season validation demo
+php test_season_validation_demo.php
 ```
 
-## 📊 Database Architecture
+**Test Coverage:** 61+ passing tests
 
-**Core Tables:**
-- `users` — Streaks and current season reference
-- `activity_types` — 45 predefined activities with points
-- `activities` — Daily activity logs with optional proof
-- `habits` — User's customized activity selections
+---
 
-**Ranking System:**
-- `seasons` — Current year quarterly records (Q1-Q4)
-  - Stores season points and year aggregates
-  - Ranks calculated dynamically
-- `ranking_history` — Historical performance records
-  - Immutable past season/year rankings
-  - Used for profile badges
+## 🏗️ Tech Stack
+
+### Backend
+- **Framework:** Laravel 12
+- **Language:** PHP 8.2+
+- **Database:** MySQL / SQLite
+- **Testing:** Pest PHP
+- **Auth:** Laravel Fortify + Socialite
+
+### Frontend
+- **Framework:** Vue 3 + TypeScript
+- **Styling:** Tailwind CSS
+- **Components:** Shadcn/ui
+- **SSR:** Inertia.js
+- **Testing:** Vitest
+
+### Infrastructure
+- **Queue:** Database driver (configurable)
+- **Cache:** File/Redis (configurable)
+- **Storage:** Local/S3 (configurable)
+- **No cron jobs required** — All updates happen on activity creation
+
+---
+
+## 📊 Database Design
+
+### Core Tables
+
+```
+users
+├─ id, username, email, name
+├─ current_streak, longest_streak
+├─ last_activity_date
+└─ current_season_id (FK)
+
+activity_types
+├─ name, category, icon
+├─ base_points, met_value
+└─ description
+
+habits
+├─ user_id (FK)
+├─ activity_type_id (FK)
+├─ custom_name, notes
+└─ display_order
+
+activities
+├─ user_id (FK)
+├─ habit_id (FK)
+├─ date, points_earned
+└─ notes, memory_url
+```
+
+### Ranking System
+
+```
+seasons (current year only)
+├─ user_id (FK)
+├─ name (1-4 for Q1-Q4), year
+├─ points (season total)
+└─ season_year_points (year cumulative)
+
+ranking_history (immutable)
+├─ user_id (FK)
+├─ ranking_type (season/year)
+├─ rank, points
+└─ season_name, year
+```
 
 **Key Features:**
-- ✅ No cron jobs required — updates automatically on activity log
-- ✅ Dynamic rank calculation for current seasons
-- ✅ Date-aware processing — backdate activities to correct season
-- ✅ Automatic year/quarter transitions
+- ✅ Dynamic rank calculation (no stored ranks for current data)
+- ✅ Date-aware point allocation to correct season
+- ✅ Automatic quarter transitions
+- ✅ Historical rank preservation
+- ✅ Season-based activity validation
+
+---
 
 ## 🚀 Production Deployment
 
+### Build & Deploy
+
 ```bash
-# Install
+# 1. Install production dependencies
 composer install --optimize-autoloader --no-dev
 npm run build
 
-# Configure
-cp .env.example .env  # Edit with production settings
+# 2. Configure environment
+cp .env.example .env
+# Edit .env with your production settings:
+# - Set APP_ENV=production
+# - Configure database
+# - Set APP_URL
+# - Add OAuth credentials (optional)
+
 php artisan key:generate
 
-# Database
+# 3. Setup database
 php artisan migrate --force
-php artisan db:seed --class=ActivityTypeSeeder  # REQUIRED
+php artisan db:seed --class=ActivityTypeSeeder  # REQUIRED!
 
-# Optimize
+# 4. Optimize
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 php artisan storage:link
+
+# 5. Set permissions
+chmod -R 755 storage bootstrap/cache
 ```
 
-### ⚠️ Production Seeder Rules
+### ⚠️ Important: Seeder Rules
 
-**ONLY RUN:**
-- ✅ `ActivityTypeSeeder` — Creates the 45 required activity types
+**✅ ALWAYS RUN:**
+- `ActivityTypeSeeder` — Creates the 45 required activity types
 
-**NEVER RUN:**
-- ❌ `php artisan migrate:fresh --seed` — Deletes all data
-- ❌ `UserSeeder`, `HabitSeeder`, `ActivitySeeder` — Creates fake data
+**❌ NEVER RUN IN PRODUCTION:**
+- `php artisan migrate:fresh` — Destroys all data
+- `php artisan db:seed` — Creates fake test data
+- `UserSeeder`, `HabitSeeder`, `ActivitySeeder` — Development only
 
-See [PRODUCTION_DEPLOYMENT.md](PRODUCTION_DEPLOYMENT.md) for detailed guide.
+### Environment Variables
 
-## 🎯 Example User Journey
+```env
+# Essential
+APP_NAME="IOMeW"
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://yourdomain.com
 
-1. **Sign Up** → Create account
-2. **Select Habits** → Choose 5-10 activities to track
-3. **Log Activities** → Record daily workouts, meals, sleep
-4. **Earn Points** → Get 10-50 points based on difficulty
-5. **Build Streaks** → Maintain daily consistency, unlock multipliers (up to 5×)
-6. **Hit Milestones** → Receive bonus points at 7, 30, 100+ day streaks
-7. **Climb Rankings** → Compete on daily, seasonal, yearly leaderboards
-8. **Track Progress** → See rank improvements and streak tier badges over time
+# Database
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_DATABASE=iomew
+DB_USERNAME=your_user
+DB_PASSWORD=your_password
+
+# OAuth (Optional)
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+```
+
+---
+
+## 🎮 User Journey
+
+### Getting Started
+1. **Sign Up** → Create account or use OAuth
+2. **Pick Activities** → Select 5-10 habits to track
+3. **Log Daily** → Record activities (within current season)
+4. **Earn Points** → Get base points + streak multiplier
+
+### Building Consistency
+5. **Grow Streak** → Log daily to increase multiplier (1.0× → 5.0×)
+6. **Hit Milestones** → Unlock bonus points at key streak days
+7. **Watch Rank** → See your position improve on leaderboards
+
+### Long-term Competition
+8. **Track History** → View past season rankings and badges
+9. **New Quarter** → Fresh competition every 3 months
+10. **Annual Glory** → Compete for top annual ranking
+
+---
+
+## 💡 Tips for Success
+
+### Maximize Points
+- Build a daily streak — multipliers make a huge difference
+- Diversify activities — high-point activities matter
+- Hit milestones — bonus points add up quickly
+- Log consistently — even on busy days, log something small
+
+### Season Strategy
+- Start strong at beginning of quarter
+- Maintain consistency throughout
+- Activities must be logged in current season (no backdating)
+- Each season is a fresh chance to improve your rank
+
+### Streak Maintenance
+- Set daily reminders
+- Have backup activities for busy days
+- Missing a day resets your streak to 1
+- Same-day activities don't break streaks
+
+---
+
+## 🛠️ Development
+
+### Project Structure
+
+```
+iomew/
+├── app/
+│   ├── Http/Controllers/     # Request handlers
+│   ├── Models/               # Eloquent models
+│   └── Rules/                # Custom validations (e.g., CurrentSeasonDate)
+├── database/
+│   ├── migrations/           # Database schema
+│   └── seeders/              # Data seeders
+├── resources/
+│   ├── js/
+│   │   ├── components/       # Vue components
+│   │   ├── pages/            # Inertia pages
+│   │   └── layouts/          # Page layouts
+│   └── css/                  # Tailwind styles
+├── routes/
+│   ├── web.php               # Web routes
+│   └── auth.php              # Auth routes
+└── tests/
+    ├── Feature/              # Integration tests
+    └── Unit/                 # Unit tests
+```
+
+### Adding New Activity Types
+
+Activity types are seeded from `database/seeders/ActivityTypeSeeder.php`. To add new types:
+
+1. Edit the seeder file
+2. Add to appropriate category array
+3. Run: `php artisan db:seed --class=ActivityTypeSeeder`
+
+### Customizing Point Values
+
+Points are based on MET (Metabolic Equivalent of Task) values and health impact. Modify in `ActivityTypeSeeder.php`.
+
+---
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create feature branch: `git checkout -b feature/name`
-3. Make changes and add tests
-4. Run tests: `php artisan test`
-5. Submit pull request
+We welcome contributions! Here's how:
 
-## 📄 License
+1. **Fork** the repository
+2. **Create** a feature branch: `git checkout -b feature/amazing-feature`
+3. **Make** your changes
+4. **Add tests** for new features
+5. **Run tests**: `php artisan test`
+6. **Commit**: `git commit -m 'Add amazing feature'`
+7. **Push**: `git push origin feature/amazing-feature`
+8. **Open** a Pull Request
 
-MIT License
+### Contribution Guidelines
+- Write tests for new features
+- Follow existing code style
+- Update README if needed
+- Keep commits focused and descriptive
+
+---
+
+## 📝 License
+
+MIT License - see LICENSE file for details
+
+---
+
+## 🙏 Acknowledgments
+
+- Built with [Laravel](https://laravel.com)
+- UI powered by [Tailwind CSS](https://tailwindcss.com)
+- Components from [Shadcn/ui](https://ui.shadcn.com)
+- Icons from [Lucide](https://lucide.dev)
+
+---
+
+## 📧 Support
+
+- **Issues:** Open an issue on GitHub
+- **Questions:** Check existing issues or start a discussion
 
 ---
 
 **Your Global Wellness Rank — Shaped by Your Daily Habits.** 💪🏆
+
+*Track. Compete. Thrive.*

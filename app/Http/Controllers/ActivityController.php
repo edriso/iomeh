@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Activity;
 use App\Models\Habit;
+use App\Rules\CurrentSeasonDate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
 
 class ActivityController extends Controller
 {
@@ -17,7 +17,7 @@ class ActivityController extends Controller
     {
         $validated = $request->validate([
             'habit_id' => ['required', 'exists:habits,id'],
-            'date' => ['required', 'date', 'before_or_equal:today'],
+            'date' => ['required', 'date', 'before_or_equal:today', new CurrentSeasonDate()],
             'notes' => ['nullable', 'string', 'max:2000'],
             'memory_url' => ['nullable', 'url', 'max:255'],
         ]);
@@ -40,6 +40,7 @@ class ActivityController extends Controller
             ]);
         }
 
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         
         // Get base points from activity type

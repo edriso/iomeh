@@ -176,5 +176,88 @@ class Season extends Model
         
         return $seasons;
     }
+
+    /**
+     * Get the current season number (1-4) based on the current month.
+     * Q1 = Jan-Mar (1), Q2 = Apr-Jun (2), Q3 = Jul-Sep (3), Q4 = Oct-Dec (4)
+     */
+    public static function getCurrentSeasonNumber(): int
+    {
+        return (int) ceil(now()->month / 3);
+    }
+
+    /**
+     * Get the start date of a specific season.
+     * 
+     * @param int $seasonNumber Season number (1-4)
+     * @param int|null $year Year (defaults to current year)
+     * @return \Carbon\Carbon
+     */
+    public static function getSeasonStartDate(int $seasonNumber, ?int $year = null): \Carbon\Carbon
+    {
+        $year = $year ?? now()->year;
+        
+        $startMonths = [
+            1 => 1,  // Q1: January
+            2 => 4,  // Q2: April
+            3 => 7,  // Q3: July
+            4 => 10, // Q4: October
+        ];
+        
+        return \Carbon\Carbon::create($year, $startMonths[$seasonNumber], 1)->startOfDay();
+    }
+
+    /**
+     * Get the end date of a specific season.
+     * 
+     * @param int $seasonNumber Season number (1-4)
+     * @param int|null $year Year (defaults to current year)
+     * @return \Carbon\Carbon
+     */
+    public static function getSeasonEndDate(int $seasonNumber, ?int $year = null): \Carbon\Carbon
+    {
+        $year = $year ?? now()->year;
+        
+        $endMonths = [
+            1 => 3,  // Q1: March
+            2 => 6,  // Q2: June
+            3 => 9,  // Q3: September
+            4 => 12, // Q4: December
+        ];
+        
+        return \Carbon\Carbon::create($year, $endMonths[$seasonNumber], 1)->endOfMonth()->endOfDay();
+    }
+
+    /**
+     * Get the start and end dates of the current season.
+     * 
+     * @return array{start: \Carbon\Carbon, end: \Carbon\Carbon, season: int, year: int}
+     */
+    public static function getCurrentSeasonDates(): array
+    {
+        $seasonNumber = self::getCurrentSeasonNumber();
+        $year = now()->year;
+        
+        return [
+            'start' => self::getSeasonStartDate($seasonNumber, $year),
+            'end' => self::getSeasonEndDate($seasonNumber, $year),
+            'season' => $seasonNumber,
+            'year' => $year,
+        ];
+    }
+
+    /**
+     * Check if a given date falls within the current season.
+     * 
+     * @param string|\Carbon\Carbon $date
+     * @return bool
+     */
+    public static function isDateInCurrentSeason($date): bool
+    {
+        $date = \Carbon\Carbon::parse($date);
+        $seasonDates = self::getCurrentSeasonDates();
+        
+        return $date->between($seasonDates['start'], $seasonDates['end']);
+    }
 }
 
