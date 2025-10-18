@@ -14,7 +14,7 @@
     </div>
 
     <div class="highlight-box">
-        <h2 style="margin-top: 0; color: #c4e456;">You're All Set!</h2>
+        <h2 style="margin-top: 0; color: #bbd0dc;">You're All Set!</h2>
         <p style="margin-bottom: 25px;">Your account is ready to go. No email verification needed - you're signed in with {{ $provider }} and ready to start tracking your health!</p>
         
         <div style="text-align: center;">
@@ -24,7 +24,7 @@
 
     @if(!empty($passwordResetUrl))
         <div class="highlight-box" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #334155;">
-            <h2 style="margin-top: 0; color: #c4e456;">Optional: Set Up Backup Password</h2>
+            <h2 style="margin-top: 0; color: #bbd0dc;">Optional: Set Up Backup Password</h2>
             <p style="color: #ffffff;">While you can always sign in with {{ $provider }}, you might want to set up a password as a backup login method.</p>
             
             <div style="text-align: center; margin: 25px 0;">

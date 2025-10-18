@@ -14,7 +14,7 @@
     </div>
 
     <div class="highlight-box">
-        <h2 style="margin-top: 0; color: #c4e456;">Reset Your Password</h2>
+        <h2 style="margin-top: 0; color: #bbd0dc;">Reset Your Password</h2>
         <p style="margin-bottom: 25px;">Click the button below to create a new password and get back to your health journey!</p>
         
         <div style="text-align: center;">

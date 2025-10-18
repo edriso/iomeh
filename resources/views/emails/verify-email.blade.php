@@ -14,7 +14,7 @@
     </div>
 
     <div class="highlight-box">
-        <h2 style="margin-top: 0; color: #c4e456;">Verify Your Email Address</h2>
+        <h2 style="margin-top: 0; color: #bbd0dc;">Verify Your Email Address</h2>
         <p style="margin-bottom: 25px;">Click the button below to verify your email and unlock your health potential. Your first points are waiting!</p>
         
         <div style="text-align: center;">
