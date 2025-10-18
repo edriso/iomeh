@@ -137,14 +137,32 @@ const selectedDate = ref<string | null>(null);
 const selectedDateActivities = ref<RecentActivity[]>([]);
 const loadingActivities = ref(false);
 
+// Cache for fetched activities by date
+const activitiesCache = ref<Record<string, RecentActivity[]>>({});
+
 const handleDayClick = async (date: string) => {
     if (!props.is_own_profile) return; // Only for own profile
 
+    // If clicking the same date, toggle it (close the panel)
+    if (selectedDate.value === date) {
+        selectedDate.value = null;
+        selectedDateActivities.value = [];
+        return;
+    }
+
+    // Set the selected date
     selectedDate.value = date;
+
+    // Check if we have cached activities for this date
+    if (activitiesCache.value[date]) {
+        selectedDateActivities.value = activitiesCache.value[date];
+        return;
+    }
+
+    // Fetch activities for the selected date
     loadingActivities.value = true;
 
     try {
-        // Fetch activities for the selected date
         const response = await fetch(`/api/activities/date/${date}`, {
             headers: {
                 Accept: 'application/json',
@@ -154,7 +172,11 @@ const handleDayClick = async (date: string) => {
 
         if (response.ok) {
             const data = await response.json();
-            selectedDateActivities.value = data.activities || [];
+            const activities = data.activities || [];
+            
+            // Cache the activities
+            activitiesCache.value[date] = activities;
+            selectedDateActivities.value = activities;
         }
     } catch (error) {
         console.error('Error fetching activities:', error);
