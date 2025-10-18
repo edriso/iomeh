@@ -67,6 +67,7 @@ class HomeController extends Controller
                     'activity_type_id' => $habit->activity_type_id,
                     'base_points' => $habit->activityType->base_points,
                     'has_activity_today' => $habit->hasActivityToday(),
+                    'notes' => $habit->notes,
                 ];
             });
 

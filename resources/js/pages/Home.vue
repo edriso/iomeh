@@ -9,6 +9,13 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 import { useLogActivity } from '@/composables/useLogActivity';
 import { seoConfigs } from '@/config/seo';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -18,11 +25,12 @@ import {
     Award,
     Calendar,
     CheckCircle,
+    Info,
     Plus,
     TrendingUp,
     Trophy,
 } from 'lucide-vue-next';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 interface TodayActivity {
     id: number;
@@ -49,6 +57,7 @@ interface Habit {
     activity_type_id: number;
     base_points: number;
     has_activity_today: boolean;
+    notes?: string | null;
 }
 
 interface Props {
@@ -84,6 +93,8 @@ const todayPoints = computed(() => {
 
 // State
 const { openLogActivityModal } = useLogActivity();
+const selectedHabit = ref<Habit | null>(null);
+const showHabitModal = ref(false);
 
 // Methods
 const handleLogActivity = () => {
@@ -96,6 +107,16 @@ const goToRankings = () => {
 
 const handleEditActivity = () => {
     router.visit('/settings/habits');
+};
+
+const openHabitModal = (habit: Habit) => {
+    selectedHabit.value = habit;
+    showHabitModal.value = true;
+};
+
+const closeHabitModal = () => {
+    showHabitModal.value = false;
+    selectedHabit.value = null;
 };
 </script>
 
@@ -154,12 +175,21 @@ const handleEditActivity = () => {
                                     v-for="habit in habits"
                                     :key="habit.id"
                                     variant="outline"
-                                    class="border-secondary/20 bg-secondary px-3 py-1.5 text-sm text-secondary-foreground"
+                                    class="border-secondary/20 bg-secondary px-3 py-1.5 text-sm text-secondary-foreground hover:border-primary/30 transition-colors"
+                                    :class="{
+                                        'cursor-pointer': habit.notes,
+                                        'cursor-default': !habit.notes
+                                    }"
+                                    @click="habit.notes ? openHabitModal(habit) : null"
                                 >
                                     <span class="mr-1.5">{{ habit.icon }}</span>
                                     {{ habit.name }}
                                     <CheckCircle
                                         v-if="habit.has_activity_today"
+                                        class="ml-1.5 h-3 w-3"
+                                    />
+                                    <Info
+                                        v-if="habit.notes"
                                         class="ml-1.5 h-3 w-3"
                                     />
                                 </Badge>
@@ -365,5 +395,27 @@ const handleEditActivity = () => {
                 </div>
             </div>
         </div>
+
+        <!-- Habit Notes Modal -->
+        <Dialog v-model:open="showHabitModal" @update:open="closeHabitModal">
+            <DialogContent class="max-w-md">
+                <DialogHeader>
+                    <DialogTitle class="flex items-center gap-2">
+                        <span class="text-2xl">{{ selectedHabit?.icon }}</span>
+                        {{ selectedHabit?.name }}
+                    </DialogTitle>
+                    <DialogDescription>
+                        Personal notes for this activity
+                    </DialogDescription>
+                </DialogHeader>
+                <div class="mt-4">
+                    <div class="rounded-lg bg-muted/50 p-4">
+                        <p class="text-sm text-muted-foreground leading-relaxed">
+                            {{ selectedHabit?.notes }}
+                        </p>
+                    </div>
+                </div>
+            </DialogContent>
+        </Dialog>
     </AppLayout>
 </template>

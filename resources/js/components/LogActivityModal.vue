@@ -54,7 +54,6 @@ const userStreak = computed(() => {
 
 const form = useForm({
     habit_id: '',
-    date: new Date().toISOString().split('T')[0], // Always today
     notes: '',
     memory_url: '',
 });
