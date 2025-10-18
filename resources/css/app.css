@@ -120,60 +120,60 @@
 
 :root {
     /* Base */
-    --background: #f9f9f9;
-    --foreground: #0a0a0a;
-    --card: #f9f9f9;
-    --card-foreground: #0a0a0a;
-    --popover: #f9f9f9;
-    --popover-foreground: #0a0a0a;
+    --background: #FFFDF5;
+    --foreground: #2c3e50;
+    --card: #FFFDF5;
+    --card-foreground: #2c3e50;
+    --popover: #FFFDF5;
+    --popover-foreground: #2c3e50;
 
     /* Primary */
-    --primary: #c4e456;
-    --primary-foreground: #0a0a0a;
+    --primary: #BBD0DC;
+    --primary-foreground: #2c3e50;
 
     /* Secondary */
-    --secondary: #c1bffa;
-    --secondary-foreground: #0a0a0a;
+    --secondary: #AFC0D4;
+    --secondary-foreground: #2c3e50;
 
     /* Muted */
-    --muted: #ececec;
-    --muted-foreground: #62666f;
+    --muted: #DAE0DD;
+    --muted-foreground: #5a6c7d;
 
     /* Destructive */
-    --destructive: #ef4444;
-    --destructive-foreground: #f9f9f9;
+    --destructive: #e74c3c;
+    --destructive-foreground: #FFFDF5;
 
     /* Borders */
-    --border: #e5e7eb;
+    --border: #C5D4DD;
 
     --radius: 0.5rem;
 }
 
 .dark {
     /* Base */
-    --background: #0a0a0a;
-    --foreground: #fafafa;
-    --card: #111111;
-    --card-foreground: #fafafa;
-    --popover: #111111;
-    --popover-foreground: #fafafa;
+    --background: #1a1f2e;
+    --foreground: #e8f4f8;
+    --card: #2a3441;
+    --card-foreground: #e8f4f8;
+    --popover: #2a3441;
+    --popover-foreground: #e8f4f8;
 
     /* Primary */
-    --primary: #c4e456;
-    --primary-foreground: #0a0a0a;
+    --primary: #AFC0D4;
+    --primary-foreground: #1a1f2e;
 
     /* Secondary */
-    --secondary: #c1bffa;
-    --secondary-foreground: #0a0a0a;
+    --secondary: #BBD0DC;
+    --secondary-foreground: #1a1f2e;
 
     /* Muted */
-    --muted: #1a1a1a;
-    --muted-foreground: #a1a1aa;
+    --muted: #3a4552;
+    --muted-foreground: #9ca3af;
 
     /* Destructive */
-    --destructive: #dc2626;
-    --destructive-foreground: #f9f9f9;
+    --destructive: #ef4444;
+    --destructive-foreground: #e8f4f8;
 
     /* Borders */
-    --border: #374151;
+    --border: #4a5568;
 }
