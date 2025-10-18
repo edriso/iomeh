@@ -612,9 +612,7 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                                 variant="secondary"
                                                 class="ml-2 flex-shrink-0"
                                             >
-                                                +{{
-                                                    activity.points_earned
-                                                }}
+                                                +{{ activity.points_earned }}
                                                 pts
                                             </Badge>
                                         </div>
