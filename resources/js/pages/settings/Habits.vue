@@ -234,8 +234,7 @@ function getCategoryColor(category: string): string {
                 <Alert>
                     <Info class="h-4 w-4" />
                     <AlertDescription>
-                        Your habits determine which activities you can log. Add
-                        the activities that matter most to your health journey.
+                        Add the activities that matter most to your health journey.
                     </AlertDescription>
                 </Alert>
 
@@ -307,7 +306,7 @@ function getCategoryColor(category: string): string {
                         </Button>
                         <span
                             v-if="recentlySuccessful"
-                            class="text-sm text-green-600"
+                            class="text-sm text-muted-foreground"
                         >
                             Saved successfully!
                         </span>
