@@ -7,6 +7,7 @@ use App\Models\Activity;
 use App\Models\Season;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 
 class RankingsController extends Controller
@@ -17,28 +18,35 @@ class RankingsController extends Controller
     public function index(Request $request)
     {
         $currentUser = $request->user();
+        
+        // Cache rankings for 5 minutes to improve performance
+        $cacheKey = 'rankings_page_' . $currentUser->id;
+        
+        $data = Cache::remember($cacheKey, 300, function () use ($currentUser) {
+            return [
+                'rankings' => [
+                    'today' => $this->getTodayRankings(20),
+                    'yesterday' => $this->getYesterdayRankings(20),
+                    'season' => $this->getCurrentSeasonRankings(20),
+                    'year' => $this->getCurrentYearRankings(20),
+                ],
+                'current_user_rank' => [
+                    'today' => $this->getCurrentUserRankToday($currentUser),
+                    'yesterday' => $this->getCurrentUserRankYesterday($currentUser),
+                    'season' => $this->getCurrentUserRankSeason($currentUser),
+                    'year' => $this->getCurrentUserRankYear($currentUser),
+                ],
+                'user' => [
+                    'id' => $currentUser->id,
+                    'name' => $currentUser->name ?: $currentUser->username,
+                    'username' => $currentUser->username,
+                ],
+                'current_season' => 'Q' . ceil(now()->month / 3),
+                'current_year' => now()->year,
+            ];
+        });
 
-        return Inertia::render('Rankings', [
-            'rankings' => [
-                'today' => $this->getTodayRankings(20),
-                'yesterday' => $this->getYesterdayRankings(20),
-                'season' => $this->getCurrentSeasonRankings(20),
-                'year' => $this->getCurrentYearRankings(20),
-            ],
-            'current_user_rank' => [
-                'today' => $this->getCurrentUserRankToday($currentUser),
-                'yesterday' => $this->getCurrentUserRankYesterday($currentUser),
-                'season' => $this->getCurrentUserRankSeason($currentUser),
-                'year' => $this->getCurrentUserRankYear($currentUser),
-            ],
-            'user' => [
-                'id' => $currentUser->id,
-                'name' => $currentUser->name ?: $currentUser->username,
-                'username' => $currentUser->username,
-            ],
-            'current_season' => 'Q' . ceil(now()->month / 3),
-            'current_year' => now()->year,
-        ]);
+        return Inertia::render('Rankings', $data);
     }
 
     /**

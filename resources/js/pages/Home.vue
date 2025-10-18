@@ -19,11 +19,10 @@ import {
 import { useLogActivity } from '@/composables/useLogActivity';
 import { seoConfigs } from '@/config/seo';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { 
-    getCurrentTier, 
-    getTierProgress, 
-    getNextTierMessage, 
-    getStreakDisplayText 
+import {
+    getNextTierMessage,
+    getStreakDisplayText,
+    getTierProgress,
 } from '@/utils/streakTiers';
 import { router } from '@inertiajs/vue3';
 import {
@@ -109,13 +108,20 @@ const selectedHabit = ref<Habit | null>(null);
 const showHabitModal = ref(false);
 
 // Computed Properties
-const todayPoints = computed(() => 
-    props.today_activities.reduce((sum, activity) => sum + activity.points_earned, 0)
+const todayPoints = computed(() =>
+    props.today_activities.reduce(
+        (sum, activity) => sum + activity.points_earned,
+        0,
+    ),
 );
 
 // Computed Properties
-const streakProgress = computed(() => getTierProgress(props.user.current_streak));
-const streakMessage = computed(() => getNextTierMessage(props.user.current_streak));
+const streakProgress = computed(() =>
+    getTierProgress(props.user.current_streak),
+);
+const streakMessage = computed(() =>
+    getNextTierMessage(props.user.current_streak),
+);
 
 // Navigation Methods
 const navigateToRankings = () => router.visit('/rankings');
@@ -137,9 +143,9 @@ const handleLogActivity = () => openLogActivityModal();
 
 // Helper Methods
 const formatActivityTime = (createdAt: string) => {
-    return new Date(createdAt).toLocaleTimeString([], { 
-        hour: '2-digit', 
-        minute: '2-digit' 
+    return new Date(createdAt).toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
     });
 };
 </script>
@@ -204,7 +210,11 @@ const formatActivityTime = (createdAt: string) => {
                                         'cursor-pointer': habit.notes,
                                         'cursor-default': !habit.notes,
                                     }"
-                                    @click="habit.notes ? openHabitModal(habit) : null"
+                                    @click="
+                                        habit.notes
+                                            ? openHabitModal(habit)
+                                            : null
+                                    "
                                 >
                                     <span class="mr-1.5">{{ habit.icon }}</span>
                                     {{ habit.name }}
@@ -258,8 +268,12 @@ const formatActivityTime = (createdAt: string) => {
                                     class="flex items-start justify-between gap-3 rounded-lg border border-border/50 bg-card/50 p-4 transition-colors hover:border-primary/30"
                                 >
                                     <div class="flex-1">
-                                        <div class="mb-1 flex items-center gap-2">
-                                            <span class="font-medium text-foreground">
+                                        <div
+                                            class="mb-1 flex items-center gap-2"
+                                        >
+                                            <span
+                                                class="font-medium text-foreground"
+                                            >
                                                 {{ activity.habit_name }}
                                             </span>
                                             <Badge
@@ -276,8 +290,14 @@ const formatActivityTime = (createdAt: string) => {
                                         >
                                             {{ activity.notes }}
                                         </p>
-                                        <p class="mt-1 text-xs text-muted-foreground">
-                                            {{ formatActivityTime(activity.created_at) }}
+                                        <p
+                                            class="mt-1 text-xs text-muted-foreground"
+                                        >
+                                            {{
+                                                formatActivityTime(
+                                                    activity.created_at,
+                                                )
+                                            }}
                                         </p>
                                     </div>
                                 </div>
@@ -315,34 +335,54 @@ const formatActivityTime = (createdAt: string) => {
                             <!-- Current Streak -->
                             <div class="flex items-center justify-between">
                                 <div>
-                                    <div class="text-2xl font-bold text-orange-600 dark:text-orange-500">
+                                    <div
+                                        class="text-2xl font-bold text-orange-600 dark:text-orange-500"
+                                    >
                                         {{ user.current_streak }}
                                     </div>
                                     <div class="text-sm text-muted-foreground">
-                                        {{ getStreakDisplayText(user.current_streak) }} in a row
+                                        {{
+                                            getStreakDisplayText(
+                                                user.current_streak,
+                                            )
+                                        }}
+                                        in a row
                                     </div>
                                 </div>
                                 <div class="text-right">
-                                    <div class="text-sm font-medium text-primary">
-                                        {{ user.streak_tier.icon }} {{ user.streak_tier.name }}
+                                    <div
+                                        class="text-sm font-medium text-primary"
+                                    >
+                                        {{ user.streak_tier.icon }}
+                                        {{ user.streak_tier.name }}
                                     </div>
                                     <div class="text-xs text-muted-foreground">
-                                        {{ user.streak_tier.multiplier }}× multiplier
+                                        {{ user.streak_tier.multiplier }}×
+                                        multiplier
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <!-- Progress Bar -->
                             <div class="space-y-2">
-                                <div class="h-2 w-full rounded-full bg-orange-200/50 dark:bg-orange-800/30">
-                                    <div 
+                                <div
+                                    class="h-2 w-full rounded-full bg-orange-200/50 dark:bg-orange-800/30"
+                                >
+                                    <div
                                         class="h-2 rounded-full bg-gradient-to-r from-orange-500 to-red-500 transition-all duration-500"
                                         :style="{ width: `${streakProgress}%` }"
                                     ></div>
                                 </div>
-                                <div class="flex justify-between text-xs text-muted-foreground">
+                                <div
+                                    class="flex justify-between text-xs text-muted-foreground"
+                                >
                                     <span>{{ streakMessage }}</span>
-                                    <span v-if="user.longest_streak > user.current_streak">
+                                    <span
+                                        v-if="
+                                            user.longest_streak >
+                                            user.current_streak
+                                        "
+                                    >
                                         Best: {{ user.longest_streak }}
                                     </span>
                                 </div>
@@ -415,19 +455,28 @@ const formatActivityTime = (createdAt: string) => {
                                 class="space-y-3"
                             >
                                 <div
-                                    v-for="activity in recent_activities.slice(0, 5)"
+                                    v-for="activity in recent_activities.slice(
+                                        0,
+                                        5,
+                                    )"
                                     :key="activity.id"
                                     class="flex items-center justify-between text-sm"
                                 >
-                                    <div class="flex min-w-0 flex-1 items-center gap-2">
+                                    <div
+                                        class="flex min-w-0 flex-1 items-center gap-2"
+                                    >
                                         <span class="flex-shrink-0 text-lg">{{
                                             activity.icon
                                         }}</span>
                                         <div class="min-w-0 flex-1">
-                                            <p class="truncate font-medium text-foreground">
+                                            <p
+                                                class="truncate font-medium text-foreground"
+                                            >
                                                 {{ activity.habit_name }}
                                             </p>
-                                            <p class="text-xs text-muted-foreground">
+                                            <p
+                                                class="text-xs text-muted-foreground"
+                                            >
                                                 {{ activity.date }}
                                             </p>
                                         </div>
@@ -466,7 +515,9 @@ const formatActivityTime = (createdAt: string) => {
                 </DialogHeader>
                 <div class="mt-4">
                     <div class="rounded-lg bg-muted/50 p-4">
-                        <p class="text-sm leading-relaxed text-muted-foreground">
+                        <p
+                            class="text-sm leading-relaxed text-muted-foreground"
+                        >
                             {{ selectedHabit?.notes }}
                         </p>
                     </div>

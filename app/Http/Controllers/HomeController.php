@@ -70,9 +70,14 @@ class HomeController extends Controller
      */
     private function getHomeData(User $user): array
     {
-        // Get user's habits with activity types
+        // Get today's date for activity checking
+        $today = now()->toDateString();
+        
+        // Get user's habits with activity types and today's activities
         $habits = $user->habits()
-            ->with('activityType')
+            ->with(['activityType', 'activities' => function ($query) use ($today) {
+                $query->whereDate('date', $today);
+            }])
             ->orderBy('display_order')
             ->get()
             ->map(function ($habit) {
@@ -83,7 +88,7 @@ class HomeController extends Controller
                     'category' => $habit->activityType->category->value,
                     'activity_type_id' => $habit->activity_type_id,
                     'base_points' => $habit->activityType->base_points,
-                    'has_activity_today' => $habit->hasActivityToday(),
+                    'has_activity_today' => $habit->activities->isNotEmpty(),
                     'notes' => $habit->notes,
                 ];
             });

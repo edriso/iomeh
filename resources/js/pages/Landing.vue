@@ -303,7 +303,12 @@ const seoData = {
                     </h2>
                     <p class="mx-auto max-w-2xl text-lg text-muted-foreground">
                         Consistency is key. Build daily streaks and multiply
-                        your points with progressive rewards up to {{ STREAK_TIERS[STREAK_TIERS.length - 1].multiplier.toFixed(1) }}×.
+                        your points with progressive rewards up to
+                        {{
+                            STREAK_TIERS[
+                                STREAK_TIERS.length - 1
+                            ].multiplier.toFixed(1)
+                        }}×.
                     </p>
                 </div>
 
@@ -397,7 +402,11 @@ const seoData = {
                         <div
                             class="rounded-full bg-amber-500/10 px-2 py-1 text-xs font-bold text-amber-600 dark:text-amber-500"
                         >
-                            {{ STREAK_TIERS.find(tier => tier.name === 'Dedicated')?.multiplier }}×
+                            {{
+                                STREAK_TIERS.find(
+                                    (tier) => tier.name === 'Dedicated',
+                                )?.multiplier
+                            }}×
                         </div>
                     </div>
 
@@ -493,7 +502,16 @@ const seoData = {
                             </h4>
                             <p class="text-sm text-muted-foreground">
                                 Your streak tier multiplies all activity points.
-                                {{ STREAK_TIERS.find(tier => tier.name === 'Dedicated')?.min }}-day streak = {{ STREAK_TIERS.find(tier => tier.name === 'Dedicated')?.multiplier }}× points!
+                                {{
+                                    STREAK_TIERS.find(
+                                        (tier) => tier.name === 'Dedicated',
+                                    )?.min
+                                }}-day streak =
+                                {{
+                                    STREAK_TIERS.find(
+                                        (tier) => tier.name === 'Dedicated',
+                                    )?.multiplier
+                                }}× points!
                             </p>
                         </div>
                         <div class="text-center">
@@ -539,7 +557,11 @@ const seoData = {
                             <p
                                 class="text-2xl font-bold text-amber-600 dark:text-amber-500"
                             >
-                                {{ STREAK_TIERS.find(tier => tier.name === 'Dedicated')?.multiplier }}× Multiplier
+                                {{
+                                    STREAK_TIERS.find(
+                                        (tier) => tier.name === 'Dedicated',
+                                    )?.multiplier
+                                }}× Multiplier
                             </p>
                         </div>
                         <div class="text-2xl text-muted-foreground">+</div>

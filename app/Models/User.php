@@ -168,6 +168,7 @@ class User extends Authenticatable implements MustVerifyEmail
             ->exists();
     }
 
+
     /**
      * Update user's streak based on activity
      */
