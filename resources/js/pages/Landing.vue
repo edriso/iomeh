@@ -185,7 +185,7 @@ const seoData = {
                             <div class="flex items-center gap-2">
                                 <Award class="h-5 w-5 text-primary" />
                                 <span class="font-bold text-foreground"
-                                    >2025 Q1 #11</span
+                                    >2025 Q4 #7</span
                                 >
                             </div>
                         </div>
@@ -199,7 +199,7 @@ const seoData = {
                                     class="h-5 w-5 text-amber-600 dark:text-amber-500"
                                 />
                                 <span class="font-bold text-foreground"
-                                    >2024 #156</span
+                                    >2025 #15</span
                                 >
                             </div>
                         </div>
