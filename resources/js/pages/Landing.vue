@@ -608,7 +608,7 @@ const seoData = {
                         class="rounded-xl border border-border/50 bg-card/50 p-6 text-center"
                     >
                         <div class="mb-2 flex justify-center">
-                            <Footprints class="h-8 w-8 text-yellow-500" />
+                            <Footprints class="h-8 w-8 text-primary" />
                         </div>
                         <h3 class="mb-1 font-bold text-foreground">Today</h3>
                         <p class="text-sm text-muted-foreground">
@@ -620,7 +620,9 @@ const seoData = {
                         class="rounded-xl border border-border/50 bg-card/50 p-6 text-center"
                     >
                         <div class="mb-2 flex justify-center">
-                            <CalendarCheck class="h-8 w-8 text-blue-500" />
+                            <CalendarCheck
+                                class="h-8 w-8 text-muted-foreground"
+                            />
                         </div>
                         <h3 class="mb-1 font-bold text-foreground">
                             Yesterday
@@ -634,7 +636,7 @@ const seoData = {
                         class="rounded-xl border border-border/50 bg-card/50 p-6 text-center"
                     >
                         <div class="mb-2 flex justify-center">
-                            <Award class="h-8 w-8 text-primary" />
+                            <Award class="h-8 w-8 text-amber-500" />
                         </div>
                         <h3 class="mb-1 font-bold text-foreground">
                             Season (Q1-Q4)
