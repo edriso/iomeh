@@ -65,6 +65,7 @@ class HandleInertiaRequests extends Middleware
                                 'activity_type_id' => $habit->activity_type_id,
                                 'base_points' => $habit->activityType->base_points,
                                 'category' => $habit->activityType->category,
+                                'has_activity_today' => $habit->hasActivityToday(),
                             ];
                         })
                     : [],

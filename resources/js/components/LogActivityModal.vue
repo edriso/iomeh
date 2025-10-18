@@ -27,6 +27,7 @@ interface Habit {
     icon?: string;
     activity_type_id: number;
     base_points: number;
+    has_activity_today?: boolean;
 }
 
 interface Props {
@@ -56,6 +57,11 @@ const form = useForm({
     habit_id: '',
     notes: '',
     memory_url: '',
+});
+
+// Filter out habits that already have activities today
+const availableHabits = computed(() => {
+    return props.habits.filter((habit) => !habit.has_activity_today);
 });
 
 const selectedHabit = computed(() => {
@@ -124,7 +130,7 @@ const handleClose = () => {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem
-                                v-for="habit in habits"
+                                v-for="habit in availableHabits"
                                 :key="habit.id"
                                 :value="String(habit.id)"
                             >
@@ -138,6 +144,17 @@ const handleClose = () => {
                         </SelectContent>
                     </Select>
                     <InputError :message="form.errors.habit_id" />
+
+                    <!-- No available activities message -->
+                    <div
+                        v-if="availableHabits.length === 0"
+                        class="rounded-lg bg-muted/50 p-4 text-center"
+                    >
+                        <p class="text-sm text-muted-foreground">
+                            🎉 Great job! You've already logged all your
+                            activities for today.
+                        </p>
+                    </div>
                 </div>
 
                 <!-- Today's Date Info -->
@@ -276,7 +293,11 @@ const handleClose = () => {
                     </Button>
                     <Button
                         type="submit"
-                        :disabled="form.processing || !form.habit_id"
+                        :disabled="
+                            form.processing ||
+                            !form.habit_id ||
+                            availableHabits.length === 0
+                        "
                     >
                         {{ form.processing ? 'Logging...' : 'Log Activity' }}
                     </Button>
