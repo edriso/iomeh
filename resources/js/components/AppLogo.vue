@@ -6,6 +6,6 @@ import IconAppLogo from '@/components/IconAppLogo.vue';
     <div
         class="flex aspect-square size-8 items-center justify-center rounded-md bg-primary text-primary-foreground"
     >
-        <IconAppLogo class="size-5 text-white dark:text-primary-foreground" />
+        <IconAppLogo class="size-5 text-primary-foreground" />
     </div>
 </template>
