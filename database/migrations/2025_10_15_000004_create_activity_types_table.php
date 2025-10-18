@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->enum('category', ActivityCategory::values());
             $table->unsignedSmallInteger('base_points')->default(0);
-            $table->decimal('met_value', 4, 1)->nullable()->comment('Metabolic Equivalent of Task');
             $table->string('icon', 50)->nullable();
             $table->unsignedTinyInteger('display_order')->default(0);
             $table->text('description')->nullable();

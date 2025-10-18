@@ -21,7 +21,6 @@ class ActivityTypeFactory extends Factory
             'name' => fake()->unique()->words(2, true),
             'category' => fake()->randomElement(\App\Enums\ActivityCategory::cases())->value,
             'base_points' => fake()->numberBetween(10, 50),
-            'met_value' => fake()->optional(0.6)->randomFloat(1, 2.0, 12.0),
             'icon' => fake()->randomElement(['💪', '🏃', '🧘', '🍎', '🥗', '💤', '🏋️', '🚴', '🏊']),
             'display_order' => fake()->numberBetween(0, 100),
             'description' => fake()->optional(0.7)->sentence(),
@@ -36,7 +35,6 @@ class ActivityTypeFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'category' => \App\Enums\ActivityCategory::WORKOUT->value,
-            'met_value' => fake()->randomFloat(1, 3.0, 12.0),
             'icon' => fake()->randomElement(['💪', '🏃', '🧘', '🏋️', '🚴', '🏊']),
         ]);
     }
@@ -48,7 +46,6 @@ class ActivityTypeFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'category' => \App\Enums\ActivityCategory::NUTRITION->value,
-            'met_value' => null,
             'icon' => fake()->randomElement(['🍎', '🥗', '🥑', '🍇', '🥤']),
         ]);
     }

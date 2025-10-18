@@ -187,8 +187,8 @@ users
 
 activity_types
 ├─ name, category, icon
-├─ base_points, met_value
-└─ description
+├─ base_points, description
+└─ display_order, is_active
 
 habits
 ├─ user_id (FK)

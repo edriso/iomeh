@@ -14,7 +14,6 @@ class ActivityType extends Model
         'name',
         'category',
         'base_points',
-        'met_value',
         'icon',
         'display_order',
         'description',
@@ -26,7 +25,6 @@ class ActivityType extends Model
         return [
             'category' => ActivityCategory::class,
             'base_points' => 'integer',
-            'met_value' => 'decimal:1',
             'display_order' => 'integer',
             'is_active' => 'boolean',
         ];

@@ -11,7 +11,6 @@ test('activity type can be created with all fields', function () {
         'name' => 'Morning Run',
         'category' => ActivityCategory::WORKOUT->value,
         'base_points' => 30,
-        'met_value' => 8.0,
         'description' => 'A morning jogging session',
         'icon' => '🏃',
         'is_active' => true,
@@ -20,7 +19,7 @@ test('activity type can be created with all fields', function () {
     expect($activityType->name)->toBe('Morning Run');
     expect($activityType->category)->toBe(ActivityCategory::WORKOUT);
     expect($activityType->base_points)->toBe(30);
-    expect((float)$activityType->met_value)->toBe(8.0);
+    expect($activityType->description)->toBe('A morning jogging session');
     expect($activityType->is_active)->toBeTrue();
 });
 
