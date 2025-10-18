@@ -1,14 +1,12 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+import InputError from '@/components/InputError.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardHeader,
-} from '@/components/ui/card';
+import { Card, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import InputError from '@/components/InputError.vue';
 import { GripVertical, Trash2 } from 'lucide-vue-next';
 
 interface ActivityType {
@@ -39,7 +37,29 @@ interface Props {
 
 const props = defineProps<Props>();
 
-// Vue draggable handles the drag functionality automatically
+const emit = defineEmits<{
+    'update:habit': [habit: Habit];
+}>();
+
+// Computed properties for better type safety
+const customName = computed({
+    get: () => props.habit.custom_name,
+    set: (value: string) => {
+        emit('update:habit', { ...props.habit, custom_name: value });
+    }
+});
+
+const notes = computed({
+    get: () => props.habit.notes ?? '',
+    set: (value: string) => {
+        emit('update:habit', { ...props.habit, notes: value || null });
+    }
+});
+
+// Helper function to get error message
+const getErrorMessage = (field: string): string | undefined => {
+    return props.errors[`habits.${props.index}.${field}`];
+};
 </script>
 
 <template>
@@ -51,7 +71,7 @@ const props = defineProps<Props>();
                         <Button
                             variant="ghost"
                             size="sm"
-                            class="h-8 w-8 p-0 cursor-grab active:cursor-grabbing"
+                            class="h-8 w-8 cursor-grab p-0 active:cursor-grabbing"
                         >
                             <GripVertical class="h-4 w-4" />
                         </Button>
@@ -66,7 +86,11 @@ const props = defineProps<Props>();
                             </span>
                             <Badge
                                 variant="outline"
-                                :class="getCategoryColor(habit.activity_type.category)"
+                                :class="
+                                    getCategoryColor(
+                                        habit.activity_type.category,
+                                    )
+                                "
                             >
                                 {{ habit.activity_type.category }}
                             </Badge>
@@ -81,13 +105,13 @@ const props = defineProps<Props>();
                                 </Label>
                                 <Input
                                     :id="`name-${habit.id}`"
-                                    v-model="habit.custom_name"
+                                    v-model="customName"
                                     type="text"
                                     placeholder="e.g., Morning Workout"
                                     class="mt-1"
                                 />
                                 <InputError
-                                    :message="errors[`habits.${index}.custom_name`]"
+                                    :message="getErrorMessage('custom_name')"
                                 />
                             </div>
                             <div>
@@ -96,13 +120,13 @@ const props = defineProps<Props>();
                                 </Label>
                                 <Textarea
                                     :id="`notes-${habit.id}`"
-                                    v-model="habit.notes"
+                                    v-model="notes"
                                     placeholder="Add any personal notes..."
                                     :rows="2"
                                     class="mt-1"
                                 />
                                 <InputError
-                                    :message="errors[`habits.${index}.notes`]"
+                                    :message="getErrorMessage('notes')"
                                 />
                             </div>
                         </div>

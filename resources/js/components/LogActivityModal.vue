@@ -141,9 +141,19 @@ const handleClose = () => {
                 </div>
 
                 <!-- Today's Date Info -->
-                <div class="rounded-lg border border-primary/20 bg-primary/5 p-3">
+                <div
+                    class="rounded-lg border border-primary/20 bg-primary/5 p-3"
+                >
                     <p class="text-sm text-muted-foreground">
-                        📅 Logging activity for <span class="font-semibold text-foreground">today</span> ({{ new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) }})
+                        📅 Logging activity for
+                        <span class="font-semibold text-foreground">today</span>
+                        ({{
+                            new Date().toLocaleDateString('en-US', {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric',
+                            })
+                        }})
                     </p>
                 </div>
 

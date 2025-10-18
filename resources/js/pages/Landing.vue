@@ -802,8 +802,9 @@ const seoData = {
                                 Log Today's Activities
                             </h3>
                             <p class="text-muted-foreground">
-                                Record today's activities in real-time—workouts, meals, 
-                                sleep, mindfulness. Add notes and optional proof.
+                                Record today's activities in real-time—workouts,
+                                meals, sleep, mindfulness. Add notes and
+                                optional proof.
                             </p>
                         </div>
                     </div>

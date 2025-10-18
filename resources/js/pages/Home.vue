@@ -175,12 +175,16 @@ const closeHabitModal = () => {
                                     v-for="habit in habits"
                                     :key="habit.id"
                                     variant="outline"
-                                    class="border-secondary/20 bg-secondary px-3 py-1.5 text-sm text-secondary-foreground hover:border-primary/30 transition-colors"
+                                    class="border-secondary/20 bg-secondary px-3 py-1.5 text-sm text-secondary-foreground transition-colors hover:border-primary/30"
                                     :class="{
                                         'cursor-pointer': habit.notes,
-                                        'cursor-default': !habit.notes
+                                        'cursor-default': !habit.notes,
                                     }"
-                                    @click="habit.notes ? openHabitModal(habit) : null"
+                                    @click="
+                                        habit.notes
+                                            ? openHabitModal(habit)
+                                            : null
+                                    "
                                 >
                                     <span class="mr-1.5">{{ habit.icon }}</span>
                                     {{ habit.name }}
@@ -410,7 +414,9 @@ const closeHabitModal = () => {
                 </DialogHeader>
                 <div class="mt-4">
                     <div class="rounded-lg bg-muted/50 p-4">
-                        <p class="text-sm text-muted-foreground leading-relaxed">
+                        <p
+                            class="text-sm leading-relaxed text-muted-foreground"
+                        >
                             {{ selectedHabit?.notes }}
                         </p>
                     </div>

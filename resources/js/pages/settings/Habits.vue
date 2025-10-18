@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Head, router } from '@inertiajs/vue3';
-import { computed, ref, onMounted, nextTick } from 'vue';
-// @ts-ignore
+import { computed, nextTick, onMounted, ref } from 'vue';
+// @ts-expect-error - SortableJS types are not fully compatible
 import Sortable from 'sortablejs';
 
 import HeadingSmall from '@/components/HeadingSmall.vue';
@@ -23,15 +23,12 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { edit, update } from '@/routes/habits';
 import { type BreadcrumbItem } from '@/types';
-import { GripVertical, Info, Plus, Save, Trash2 } from 'lucide-vue-next';
+import { Info, Plus, Save } from 'lucide-vue-next';
 
 interface ActivityType {
     id: number;
@@ -71,7 +68,6 @@ const showAddDialog = ref(false);
 const selectedCategory = ref<string | null>(null);
 
 // Drag and drop setup
-let sortableInstance: Sortable | null = null;
 const habitsContainer = ref<HTMLElement | null>(null);
 
 // Form validation errors
@@ -134,24 +130,28 @@ function removeHabit(index: number) {
 onMounted(() => {
     nextTick(() => {
         if (habitsContainer.value) {
-            sortableInstance = new Sortable(habitsContainer.value, {
+            new Sortable(habitsContainer.value, {
                 animation: 200,
                 ghostClass: 'opacity-50',
                 chosenClass: '',
                 dragClass: 'sortable-dragging',
                 onEnd: (evt: any) => {
                     const { oldIndex, newIndex } = evt;
-                    if (oldIndex !== undefined && newIndex !== undefined && oldIndex !== newIndex) {
+                    if (
+                        oldIndex !== undefined &&
+                        newIndex !== undefined &&
+                        oldIndex !== newIndex
+                    ) {
                         // Move item in array
                         const item = localHabits.value.splice(oldIndex, 1)[0];
                         localHabits.value.splice(newIndex, 0, item);
-                        
-        // Update display orders
-        localHabits.value.forEach((habit, idx) => {
-            habit.display_order = idx;
-        });
-    }
-}
+
+                        // Update display orders
+                        localHabits.value.forEach((habit, idx) => {
+                            habit.display_order = idx;
+                        });
+                    }
+                },
             });
         }
     });
@@ -218,7 +218,6 @@ function getCategoryColor(category: string): string {
     };
     return colors[category.toLowerCase()] || 'bg-gray-500/10 text-gray-500';
 }
-
 </script>
 
 <template>
@@ -252,6 +251,7 @@ function getCategoryColor(category: string): string {
                                 :errors="errors"
                                 :on-remove="removeHabit"
                                 :get-category-color="getCategoryColor"
+                                @update:habit="(updatedHabit) => localHabits[index] = updatedHabit"
                             />
                         </div>
                     </div>
@@ -421,4 +421,3 @@ function getCategoryColor(category: string): string {
     transform: rotate(1deg);
 }
 </style>
-
