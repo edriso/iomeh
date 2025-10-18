@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Activity;
 use App\Models\Habit;
-use App\Rules\CurrentSeasonDate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,10 +16,12 @@ class ActivityController extends Controller
     {
         $validated = $request->validate([
             'habit_id' => ['required', 'exists:habits,id'],
-            'date' => ['required', 'date', 'before_or_equal:today', new CurrentSeasonDate()],
             'notes' => ['nullable', 'string', 'max:2000'],
             'memory_url' => ['nullable', 'url', 'max:255'],
         ]);
+
+        // Always use today's date
+        $today = now()->toDateString();
 
         // Verify the habit belongs to the authenticated user and load activity type
         $habit = Habit::with('activityType')
@@ -28,15 +29,15 @@ class ActivityController extends Controller
             ->where('user_id', Auth::id())
             ->firstOrFail();
 
-        // Check if activity already exists for this date and habit
+        // Check if activity already exists for today and this habit
         $existingActivity = Activity::where('user_id', Auth::id())
             ->where('habit_id', $validated['habit_id'])
-            ->where('date', $validated['date'])
+            ->where('date', $today)
             ->first();
 
         if ($existingActivity) {
             return back()->withErrors([
-                'habit_id' => 'You have already logged this activity for this date.'
+                'habit_id' => 'You have already logged this activity for today.'
             ]);
         }
 
@@ -74,7 +75,7 @@ class ActivityController extends Controller
         $activity = Activity::create([
             'user_id' => Auth::id(),
             'habit_id' => $validated['habit_id'],
-            'date' => $validated['date'],
+            'date' => $today,
             'points_earned' => $pointsEarned,
             'notes' => $validated['notes'] ?? null,
             'memory_url' => $validated['memory_url'] ?? null,

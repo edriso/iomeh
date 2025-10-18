@@ -227,7 +227,6 @@ test('activity notes can be up to 2000 characters', function () {
         ->actingAs($user)
         ->post(route('activities.store'), [
             'habit_id' => $habit->id,
-            'date' => now()->toDateString(),
             'notes' => $notes,
         ]);
     
@@ -252,7 +251,6 @@ test('activity notes cannot exceed 2000 characters', function () {
         ->actingAs($user)
         ->post(route('activities.store'), [
             'habit_id' => $habit->id,
-            'date' => now()->toDateString(),
             'notes' => $notes,
         ]);
     

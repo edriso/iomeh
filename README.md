@@ -13,7 +13,7 @@ A global health tracking and ranking platform that gamifies your health journey.
 - 🎮 **Smart Points** — Earn 10-50 points per activity based on MET values and health impact
 - 🔥 **Streak Multipliers** — Build daily streaks to multiply points up to 5.0×
 - 💎 **Milestone Rewards** — Get bonus points at 7, 30, 100, 365+ day streaks
-- 🗓️ **Season Validation** — Fair competition with quarterly boundaries (NEW)
+- 📅 **Today-Only Logging** — Activities logged in real-time for accurate streaks
 - 📊 **Progress Tracking** — View your rank history and activity calendar
 - 🔐 **Secure Auth** — Standard registration + OAuth (Google)
 
@@ -21,9 +21,9 @@ A global health tracking and ranking platform that gamifies your health journey.
 
 ## 🎯 How It Works
 
-### 1. Track Your Activities
+### 1. Track Your Activities Daily
 
-Choose activities across 4 categories:
+Log activities for today only - ensuring accurate streak calculations:
 
 | Category | Examples | Points Range |
 |----------|----------|--------------|
@@ -31,6 +31,8 @@ Choose activities across 4 categories:
 | 🥗 **Nutrition** | Healthy Meals, Meal Prep, Hydration, Supplements | 10-25 pts |
 | 🌟 **Wellness** | Quality Sleep, Sunlight, Nature Time, Cold Shower | 15-30 pts |
 | 🧘 **Mindfulness** | Meditation, Journaling, Reading, Learning | 15-25 pts |
+
+**Important:** Activities can only be logged for today to maintain streak integrity and prevent backdating.
 
 ### 2. Build Your Streak
 
@@ -69,7 +71,7 @@ Milestone: Just hit 30 days!
 
 ### 4. Compete by Season
 
-Activities are validated to current season for fair competition:
+Rankings are organized quarterly for fair competition:
 
 | Season | Months | Period |
 |--------|--------|--------|
@@ -78,17 +80,17 @@ Activities are validated to current season for fair competition:
 | 🍂 **Q3** | Jul-Sep | July 1 - September 30 |
 | ❄️ **Q4** | Oct-Dec | October 1 - December 31 |
 
-**Why Season Boundaries?**
-- ✅ Fair competition — No backdating to previous seasons
-- ✅ Fresh starts — New rankings every quarter
-- ✅ Better comparisons — Compete with current active users
-- ✅ Data integrity — Clean, organized activity history
+**Why Today-Only Logging?**
+- ✅ Accurate streaks — Prevents backdating that would break streak calculations
+- ✅ Fair competition — Everyone logs in real-time
+- ✅ True accountability — Build genuine daily habits
+- ✅ Data integrity — Clean, honest activity history
 
 **How It Works:**
-- Date picker automatically restricts to current season
-- Backend validation ensures no cheating
-- Clear UI shows valid date range
-- Helpful error messages if you try invalid dates
+- Activities can only be logged for today's date
+- Backend validation prevents any date manipulation
+- Streaks are calculated accurately based on consecutive days
+- Your season points accumulate throughout the quarter
 
 ---
 
@@ -139,11 +141,8 @@ php artisan test
 # Run frontend tests
 npm run test:frontend
 
-# Test season validation feature
+# Test activity date validation feature
 ./vendor/bin/pest tests/Feature/ActivitySeasonValidationTest.php
-
-# Run season validation demo
-php test_season_validation_demo.php
 ```
 
 **Test Coverage:** 61+ passing tests
@@ -298,7 +297,7 @@ GOOGLE_CLIENT_SECRET=
 ### Getting Started
 1. **Sign Up** → Create account or use OAuth
 2. **Pick Activities** → Select 5-10 habits to track
-3. **Log Daily** → Record activities (within current season)
+3. **Log Daily** → Record today's activities in real-time
 4. **Earn Points** → Get base points + streak multiplier
 
 ### Building Consistency
@@ -324,7 +323,7 @@ GOOGLE_CLIENT_SECRET=
 ### Season Strategy
 - Start strong at beginning of quarter
 - Maintain consistency throughout
-- Activities must be logged in current season (no backdating)
+- Log activities daily - they can only be recorded for today
 - Each season is a fresh chance to improve your rank
 
 ### Streak Maintenance

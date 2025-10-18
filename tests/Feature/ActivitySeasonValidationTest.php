@@ -24,110 +24,67 @@ beforeEach(function () {
     ]);
 });
 
-test('it allows activity within current season', function () {
+test('it allows activity for today only', function () {
     $this->actingAs($this->user);
-
-    // Get a date within the current season
-    $seasonDates = Season::getCurrentSeasonDates();
-    $validDate = $seasonDates['start']->addDays(5)->format('Y-m-d');
 
     $response = $this->post('/activities', [
         'habit_id' => $this->habit->id,
-        'date' => $validDate,
         'notes' => 'Test activity',
     ]);
 
     $response->assertSessionHasNoErrors();
     
-    // Check that the activity was created
+    // Check that the activity was created with today's date
     $activity = \App\Models\Activity::where('user_id', $this->user->id)
         ->where('habit_id', $this->habit->id)
-        ->whereDate('date', $validDate)
+        ->whereDate('date', now()->toDateString())
         ->first();
     
     expect($activity)->not->toBeNull();
-    expect($activity->date->format('Y-m-d'))->toBe($validDate);
+    expect($activity->date->format('Y-m-d'))->toBe(now()->toDateString());
 });
 
-test('it rejects activity before current season', function () {
+test('it creates activity with today date when no date provided', function () {
     $this->actingAs($this->user);
-
-    // Get a date before the current season
-    $seasonDates = Season::getCurrentSeasonDates();
-    $invalidDate = $seasonDates['start']->subDays(1)->format('Y-m-d');
 
     $response = $this->post('/activities', [
         'habit_id' => $this->habit->id,
-        'date' => $invalidDate,
         'notes' => 'Test activity',
     ]);
 
-    $response->assertSessionHasErrors('date');
-    $this->assertDatabaseMissing('activities', [
-        'user_id' => $this->user->id,
-        'date' => $invalidDate,
-    ]);
+    $response->assertSessionHasNoErrors();
+    
+    // Check that the activity was created with today's date
+    $activity = \App\Models\Activity::where('user_id', $this->user->id)
+        ->where('habit_id', $this->habit->id)
+        ->whereDate('date', now()->toDateString())
+        ->first();
+    
+    expect($activity)->not->toBeNull();
+    expect($activity->date->format('Y-m-d'))->toBe(now()->toDateString());
 });
 
-test('it rejects activity after current season', function () {
+test('it ignores any date field sent from frontend', function () {
     $this->actingAs($this->user);
 
-    // Get a date after the current season (only if we're not at year end)
-    $seasonDates = Season::getCurrentSeasonDates();
-    
-    // Skip this test if we're in Q4, as there's no "after" in the same year
-    if ($seasonDates['season'] === 4) {
-        $this->markTestSkipped('Cannot test future season in Q4');
-    }
-
-    $invalidDate = $seasonDates['end']->addDays(1)->format('Y-m-d');
-
+    // Even if frontend sends a date, backend should ignore it and use today
     $response = $this->post('/activities', [
         'habit_id' => $this->habit->id,
-        'date' => $invalidDate,
+        'date' => '2020-01-01', // Old date that should be ignored
         'notes' => 'Test activity',
     ]);
 
-    $response->assertSessionHasErrors('date');
-    $this->assertDatabaseMissing('activities', [
-        'user_id' => $this->user->id,
-        'date' => $invalidDate,
-    ]);
-});
-
-test('it allows activity on season boundary dates', function () {
-    $this->actingAs($this->user);
-
-    $seasonDates = Season::getCurrentSeasonDates();
-
-    // Test start date
-    $startDate = $seasonDates['start']->format('Y-m-d');
+    $response->assertSessionHasNoErrors();
     
-    // Only test if start date is not in the future
-    if ($seasonDates['start']->lte(now())) {
-        $response = $this->post('/activities', [
-            'habit_id' => $this->habit->id,
-            'date' => $startDate,
-            'notes' => 'Start date test',
-        ]);
-
-        $response->assertSessionHasNoErrors('date');
-    }
-
-    // Test end date (only if it's not in the future)
-    $endDate = $seasonDates['end']->format('Y-m-d');
+    // Check that the activity was created with today's date, not the sent date
+    $activity = \App\Models\Activity::where('user_id', $this->user->id)
+        ->where('habit_id', $this->habit->id)
+        ->whereDate('date', now()->toDateString())
+        ->first();
     
-    if ($seasonDates['end']->lte(now())) {
-        $response = $this->post('/activities', [
-            'habit_id' => $this->habit->id,
-            'date' => $endDate,
-            'notes' => 'End date test',
-        ]);
-
-        $response->assertSessionHasNoErrors('date');
-    }
-
-    expect(true)->toBeTrue(); // Ensure test passes if no assertions run
+    expect($activity)->not->toBeNull();
+    expect($activity->date->format('Y-m-d'))->toBe(now()->toDateString());
+    expect($activity->date->format('Y-m-d'))->not->toBe('2020-01-01');
 });
 
 test('season helper methods work correctly', function () {

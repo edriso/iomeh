@@ -617,122 +617,6 @@ const seoData = {
             </div>
         </section>
 
-        <!-- Season-Based Competition Section -->
-        <section
-            class="bg-gradient-to-br from-primary/5 via-background to-emerald-500/5 py-20"
-        >
-            <div class="container mx-auto px-4">
-                <div class="mx-auto max-w-5xl">
-                    <div class="mb-16 text-center">
-                        <h2
-                            class="mb-4 text-3xl font-bold text-foreground md:text-4xl"
-                        >
-                            🗓️ Season-Based Competition
-                        </h2>
-                        <p
-                            class="mx-auto max-w-2xl text-lg text-muted-foreground"
-                        >
-                            Fair quarterly competitions with strict boundaries.
-                            Activities can only be logged within the current
-                            season—no backdating allowed.
-                        </p>
-                    </div>
-
-                    <!-- Season Quarters Grid -->
-                    <div class="mb-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                        <!-- Q1 -->
-                        <div
-                            class="rounded-xl border border-border/50 bg-card/50 p-6 text-center transition-all hover:scale-105 hover:border-primary/50 hover:shadow-lg"
-                        >
-                            <div class="mb-3 text-4xl">🌸</div>
-                            <h3 class="mb-2 text-xl font-bold text-foreground">
-                                Q1
-                            </h3>
-                            <p class="mb-2 text-sm font-medium text-primary">
-                                Jan - Mar
-                            </p>
-                            <p class="text-xs text-muted-foreground">
-                                January 1 - March 31
-                            </p>
-                        </div>
-
-                        <!-- Q2 -->
-                        <div
-                            class="rounded-xl border border-border/50 bg-card/50 p-6 text-center transition-all hover:scale-105 hover:border-primary/50 hover:shadow-lg"
-                        >
-                            <div class="mb-3 text-4xl">☀️</div>
-                            <h3 class="mb-2 text-xl font-bold text-foreground">
-                                Q2
-                            </h3>
-                            <p class="mb-2 text-sm font-medium text-primary">
-                                Apr - Jun
-                            </p>
-                            <p class="text-xs text-muted-foreground">
-                                April 1 - June 30
-                            </p>
-                        </div>
-
-                        <!-- Q3 -->
-                        <div
-                            class="rounded-xl border border-border/50 bg-card/50 p-6 text-center transition-all hover:scale-105 hover:border-primary/50 hover:shadow-lg"
-                        >
-                            <div class="mb-3 text-4xl">🍂</div>
-                            <h3 class="mb-2 text-xl font-bold text-foreground">
-                                Q3
-                            </h3>
-                            <p class="mb-2 text-sm font-medium text-primary">
-                                Jul - Sep
-                            </p>
-                            <p class="text-xs text-muted-foreground">
-                                July 1 - September 30
-                            </p>
-                        </div>
-
-                        <!-- Q4 -->
-                        <div
-                            class="rounded-xl border border-border/50 bg-card/50 p-6 text-center transition-all hover:scale-105 hover:border-primary/50 hover:shadow-lg"
-                        >
-                            <div class="mb-3 text-4xl">❄️</div>
-                            <h3 class="mb-2 text-xl font-bold text-foreground">
-                                Q4
-                            </h3>
-                            <p class="mb-2 text-sm font-medium text-primary">
-                                Oct - Dec
-                            </p>
-                            <p class="text-xs text-muted-foreground">
-                                October 1 - December 31
-                            </p>
-                        </div>
-                    </div>
-
-                    <div
-                        class="rounded-2xl border border-primary/20 bg-gradient-to-br from-card/80 to-card/50 p-8 backdrop-blur-sm"
-                    >
-                        <div
-                            class="rounded-lg border-l-4 border-primary bg-primary/5 p-8"
-                        >
-                            <div class="flex gap-3">
-                                <div class="text-2xl">⚠️</div>
-                                <div>
-                                    <p class="mb-1 font-bold text-foreground">
-                                        Important: Current Season Only
-                                    </p>
-                                    <p class="text-sm text-muted-foreground">
-                                        You can only log activities within the
-                                        current season dates. The system
-                                        prevents logging activities from past or
-                                        future seasons. This ensures fair
-                                        competition and accurate seasonal
-                                        rankings.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- Rankings Section -->
         <section class="container mx-auto px-4 py-20">
             <div class="mx-auto max-w-5xl">
@@ -915,11 +799,11 @@ const seoData = {
                         </div>
                         <div>
                             <h3 class="mb-2 font-bold text-foreground">
-                                Log Your Activities
+                                Log Today's Activities
                             </h3>
                             <p class="text-muted-foreground">
-                                Record daily activities—workouts, meals, sleep,
-                                mindfulness. Add notes and optional proof.
+                                Record today's activities in real-time—workouts, meals, 
+                                sleep, mindfulness. Add notes and optional proof.
                             </p>
                         </div>
                     </div>

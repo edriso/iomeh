@@ -21,30 +21,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { useForm, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
-/**
- * Calculate current season dates
- * Q1 = Jan-Mar, Q2 = Apr-Jun, Q3 = Jul-Sep, Q4 = Oct-Dec
- */
-function getCurrentSeasonDates() {
-    const now = new Date();
-    const currentMonth = now.getMonth() + 1; // 1-12
-    const currentYear = now.getFullYear();
-    const seasonNumber = Math.ceil(currentMonth / 3); // 1-4
-
-    const startMonths = { 1: 0, 2: 3, 3: 6, 4: 9 }; // 0-indexed
-    const endMonths = { 1: 2, 2: 5, 3: 8, 4: 11 }; // 0-indexed
-
-    const startDate = new Date(currentYear, startMonths[seasonNumber], 1);
-    const endDate = new Date(currentYear, endMonths[seasonNumber] + 1, 0); // Last day of month
-
-    return {
-        start: startDate,
-        end: endDate,
-        seasonNumber,
-        seasonName: `Q${seasonNumber}`,
-    };
-}
-
 interface Habit {
     id: number;
     name: string;
@@ -78,7 +54,7 @@ const userStreak = computed(() => {
 
 const form = useForm({
     habit_id: '',
-    date: new Date().toISOString().split('T')[0],
+    date: new Date().toISOString().split('T')[0], // Always today
     notes: '',
     memory_url: '',
 });
@@ -100,37 +76,6 @@ const calculatedPoints = computed(() => {
         final: finalPoints,
         hasBonus: multiplier > 1.0,
     };
-});
-
-// Get current season date boundaries
-const currentSeason = computed(() => getCurrentSeasonDates());
-
-// Min date for activity logging (start of current season)
-const minDate = computed(() => {
-    return currentSeason.value.start.toISOString().split('T')[0];
-});
-
-// Max date for activity logging (today or end of season, whichever is earlier)
-const maxDate = computed(() => {
-    const today = new Date();
-    const seasonEnd = currentSeason.value.end;
-    const maxAllowedDate = today < seasonEnd ? today : seasonEnd;
-    return maxAllowedDate.toISOString().split('T')[0];
-});
-
-// Helper text for date restrictions
-const dateHelperText = computed(() => {
-    const season = currentSeason.value;
-    const startFormatted = season.start.toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-    });
-    const endFormatted = season.end.toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-    });
-    return `Activities can only be logged for ${season.seasonName} (${startFormatted} - ${endFormatted})`;
 });
 
 const handleSubmit = () => {
@@ -156,7 +101,7 @@ const handleClose = () => {
             <DialogHeader>
                 <DialogTitle>Log Activity</DialogTitle>
                 <DialogDescription>
-                    Track your health activities and earn points
+                    Track today's health activities and earn points
                 </DialogDescription>
             </DialogHeader>
 
@@ -196,21 +141,11 @@ const handleClose = () => {
                     <InputError :message="form.errors.habit_id" />
                 </div>
 
-                <!-- Date -->
-                <div class="space-y-2">
-                    <Label for="date">Date</Label>
-                    <Input
-                        id="date"
-                        v-model="form.date"
-                        type="date"
-                        :min="minDate"
-                        :max="maxDate"
-                        required
-                    />
-                    <p class="text-xs text-muted-foreground">
-                        {{ dateHelperText }}
+                <!-- Today's Date Info -->
+                <div class="rounded-lg border border-primary/20 bg-primary/5 p-3">
+                    <p class="text-sm text-muted-foreground">
+                        📅 Logging activity for <span class="font-semibold text-foreground">today</span> ({{ new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) }})
                     </p>
-                    <InputError :message="form.errors.date" />
                 </div>
 
                 <!-- Points Display (Read-only) -->
