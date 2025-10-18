@@ -69,7 +69,7 @@ class ProfileController extends Controller
             'longest_streak' => $user->longest_streak,
             'last_activity_date' => $user->last_activity_date?->format('Y-m-d'),
             'created_at' => $user->created_at->toISOString(),
-            'week_starts_on' => $user->week_starts_on ?? 0,
+            'week_starts_on' => $user->week_starts_on ?? 6,
         ];
     }
 

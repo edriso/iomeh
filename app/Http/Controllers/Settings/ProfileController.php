@@ -27,6 +27,7 @@ class ProfileController extends Controller
                 'website_url' => $user->website_url,
                 'avatar' => $user->avatar,
                 'lifetime_points' => $user->lifetime_points,
+                'week_starts_on' => $user->week_starts_on ?? 6,
             ],
         ]);
     }

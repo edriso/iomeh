@@ -1,13 +1,19 @@
 <script setup lang="ts">
 import { edit } from '@/routes/profile';
 import { Head, router } from '@inertiajs/vue3';
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
@@ -21,6 +27,7 @@ interface Props {
         website_url: string | null;
         avatar: string | null;
         lifetime_points: number;
+        week_starts_on: number;
     };
 }
 
@@ -39,6 +46,17 @@ const name = ref(props.user.name || '');
 const bio = ref(props.user.bio || '');
 const websiteUrl = ref(props.user.website_url || '');
 const avatar = ref(props.user.avatar || '');
+const weekStartsOn = ref(props.user.week_starts_on || 6);
+
+// Computed property to show the selected day name
+const selectedDayName = computed(() => {
+    const dayNames: Record<number, string> = {
+        0: 'Sunday',
+        1: 'Monday',
+        6: 'Saturday',
+    };
+    return dayNames[weekStartsOn.value] || 'Sunday';
+});
 
 // Bio character counter
 const bioCharCount = ref(bio.value.length);
@@ -114,6 +132,7 @@ const handleSubmit = (event: Event) => {
         bio: bio.value,
         website_url: websiteUrl.value,
         avatar: avatar.value,
+        week_starts_on: weekStartsOn.value,
     };
 
     // Validate form data
@@ -229,6 +248,29 @@ const handleSubmit = (event: Event) => {
                         <InputError
                             class="mt-2"
                             :message="clientErrors.website_url"
+                        />
+                    </div>
+
+                    <!-- Week Start Setting -->
+                    <div class="grid gap-2">
+                        <Label for="week_starts_on">Week Start Day</Label>
+                        <Select v-model="weekStartsOn">
+                            <SelectTrigger>
+                                <span>{{ selectedDayName }}</span>
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem :value="6">Saturday</SelectItem>
+                                <SelectItem :value="0">Sunday</SelectItem>
+                                <SelectItem :value="1">Monday</SelectItem>
+                            </SelectContent>
+                        </Select>
+                        <p class="text-xs text-muted-foreground">
+                            This affects how your activity heatmap displays
+                            weeks
+                        </p>
+                        <InputError
+                            class="mt-2"
+                            :message="clientErrors.week_starts_on"
                         />
                     </div>
 

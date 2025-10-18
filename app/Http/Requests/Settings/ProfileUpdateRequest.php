@@ -21,6 +21,7 @@ class ProfileUpdateRequest extends FormRequest
             'avatar' => ['nullable', 'string', 'max:255'],
             'bio' => ['nullable', 'string', 'max:255'],
             'website_url' => ['nullable', 'url', 'max:255'],
+            'week_starts_on' => ['nullable', 'integer', 'in:0,1,6'],
         ];
     }
 }

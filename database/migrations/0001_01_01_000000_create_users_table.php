@@ -20,11 +20,12 @@ return new class extends Migration
             $table->string('bio')->nullable();
             $table->string('website_url')->nullable();
             $table->string('password')->nullable();
+            $table->unsignedTinyInteger('week_starts_on')->default(6); // 0=Sunday, 1=Monday, 6=Saturday
             $table->unsignedSmallInteger('current_streak')->default(0);
             $table->unsignedSmallInteger('longest_streak')->default(0);
             $table->date('last_activity_date')->nullable();
-            $table->boolean('is_active')->default(true);
             $table->timestamp('email_verified_at')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->rememberToken();
             $table->timestamps();
         });
