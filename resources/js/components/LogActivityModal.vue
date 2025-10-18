@@ -30,13 +30,13 @@ function getCurrentSeasonDates() {
     const currentMonth = now.getMonth() + 1; // 1-12
     const currentYear = now.getFullYear();
     const seasonNumber = Math.ceil(currentMonth / 3); // 1-4
-    
+
     const startMonths = { 1: 0, 2: 3, 3: 6, 4: 9 }; // 0-indexed
-    const endMonths = { 1: 2, 2: 5, 3: 8, 4: 11 };   // 0-indexed
-    
+    const endMonths = { 1: 2, 2: 5, 3: 8, 4: 11 }; // 0-indexed
+
     const startDate = new Date(currentYear, startMonths[seasonNumber], 1);
     const endDate = new Date(currentYear, endMonths[seasonNumber] + 1, 0); // Last day of month
-    
+
     return {
         start: startDate,
         end: endDate,
@@ -121,14 +121,14 @@ const maxDate = computed(() => {
 // Helper text for date restrictions
 const dateHelperText = computed(() => {
     const season = currentSeason.value;
-    const startFormatted = season.start.toLocaleDateString('en-US', { 
-        month: 'short', 
-        day: 'numeric' 
-    });
-    const endFormatted = season.end.toLocaleDateString('en-US', { 
-        month: 'short', 
+    const startFormatted = season.start.toLocaleDateString('en-US', {
+        month: 'short',
         day: 'numeric',
-        year: 'numeric'
+    });
+    const endFormatted = season.end.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
     });
     return `Activities can only be logged for ${season.seasonName} (${startFormatted} - ${endFormatted})`;
 });

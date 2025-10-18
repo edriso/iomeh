@@ -135,7 +135,10 @@ const handleEditActivity = () => {
                                     >
                                         Edit
                                     </Button>
-                                    <Button size="sm" @click="handleLogActivity">
+                                    <Button
+                                        size="sm"
+                                        @click="handleLogActivity"
+                                    >
                                         <Plus class="h-4 w-4" />
                                         Log Activity
                                     </Button>
@@ -186,8 +189,8 @@ const handleEditActivity = () => {
                         <CardHeader>
                             <CardTitle>Today's Activities</CardTitle>
                             <CardDescription>
-                                {{ today_activities.length }} activities
-                                • {{ todayPoints }} points
+                                {{ today_activities.length }} activities •
+                                {{ todayPoints }} points
                             </CardDescription>
                         </CardHeader>
                         <CardContent>

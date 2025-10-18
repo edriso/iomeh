@@ -230,8 +230,8 @@ const seoData = {
                         Track All Dimensions of Wellness
                     </h2>
                     <p class="mx-auto max-w-2xl text-lg text-muted-foreground">
-                        True health is multi-dimensional. IOMeH tracks all
-                        four pillars with many activities to choose from.
+                        True health is multi-dimensional. IOMeH tracks all four
+                        pillars with many activities to choose from.
                     </p>
                 </div>
 
@@ -618,7 +618,9 @@ const seoData = {
         </section>
 
         <!-- Season-Based Competition Section -->
-        <section class="bg-gradient-to-br from-primary/5 via-background to-emerald-500/5 py-20">
+        <section
+            class="bg-gradient-to-br from-primary/5 via-background to-emerald-500/5 py-20"
+        >
             <div class="container mx-auto px-4">
                 <div class="mx-auto max-w-5xl">
                     <div class="mb-16 text-center">
@@ -627,15 +629,17 @@ const seoData = {
                         >
                             🗓️ Season-Based Competition
                         </h2>
-                        <p class="mx-auto max-w-2xl text-lg text-muted-foreground">
-                            Fair quarterly competitions with strict boundaries. Activities can only be logged within the current season—no backdating allowed.
+                        <p
+                            class="mx-auto max-w-2xl text-lg text-muted-foreground"
+                        >
+                            Fair quarterly competitions with strict boundaries.
+                            Activities can only be logged within the current
+                            season—no backdating allowed.
                         </p>
                     </div>
 
                     <!-- Season Quarters Grid -->
-                    <div
-                        class="mb-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
-                    >
+                    <div class="mb-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                         <!-- Q1 -->
                         <div
                             class="rounded-xl border border-border/50 bg-card/50 p-6 text-center transition-all hover:scale-105 hover:border-primary/50 hover:shadow-lg"
@@ -701,8 +705,12 @@ const seoData = {
                         </div>
                     </div>
 
-                    <div class="rounded-2xl border border-primary/20 bg-gradient-to-br from-card/80 to-card/50 p-8 backdrop-blur-sm">
-                        <div class="rounded-lg border-l-4 border-primary bg-primary/5 p-8">
+                    <div
+                        class="rounded-2xl border border-primary/20 bg-gradient-to-br from-card/80 to-card/50 p-8 backdrop-blur-sm"
+                    >
+                        <div
+                            class="rounded-lg border-l-4 border-primary bg-primary/5 p-8"
+                        >
                             <div class="flex gap-3">
                                 <div class="text-2xl">⚠️</div>
                                 <div>
@@ -710,7 +718,12 @@ const seoData = {
                                         Important: Current Season Only
                                     </p>
                                     <p class="text-sm text-muted-foreground">
-                                        You can only log activities within the current season dates. The system prevents logging activities from past or future seasons. This ensures fair competition and accurate seasonal rankings.
+                                        You can only log activities within the
+                                        current season dates. The system
+                                        prevents logging activities from past or
+                                        future seasons. This ensures fair
+                                        competition and accurate seasonal
+                                        rankings.
                                     </p>
                                 </div>
                             </div>
@@ -888,7 +901,8 @@ const seoData = {
                                 Sign Up & Select Activities
                             </h3>
                             <p class="text-muted-foreground">
-                                Choose 5-10 activities you want to track from many options across all health categories.
+                                Choose 5-10 activities you want to track from
+                                many options across all health categories.
                             </p>
                         </div>
                     </div>
@@ -938,8 +952,8 @@ const seoData = {
                                 Climb the Rankings
                             </h3>
                             <p class="text-muted-foreground">
-                                Compete on daily, seasonal, and yearly
-                                ran. Track your rank: "2025 Q1 #11".
+                                Compete on daily, seasonal, and yearly ran.
+                                Track your rank: "2025 Q1 #11".
                             </p>
                         </div>
                     </div>
@@ -1004,9 +1018,8 @@ const seoData = {
                     Ready to Compete in Wellness?
                 </h2>
                 <p class="mb-8 text-lg text-muted-foreground">
-                    Join IOMeH today and turn "I should prioritize health"
-                    into "I compete in health." Track, compete, and earn your
-                    rank.
+                    Join IOMeH today and turn "I should prioritize health" into
+                    "I compete in health." Track, compete, and earn your rank.
                 </p>
                 <Link href="/register">
                     <Button size="lg" class="px-8 py-4 text-lg">

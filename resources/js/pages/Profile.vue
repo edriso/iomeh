@@ -11,11 +11,10 @@ import {
 } from '@/components/ui/card';
 import { useNumberFormat } from '@/composables/useNumberFormat';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import {
     Activity,
     Award,
-    CheckCircle,
     Edit,
     Flame,
     Link as LinkIcon,
@@ -118,10 +117,6 @@ const props = withDefaults(defineProps<Props>(), {
 
 const { formatNumber } = useNumberFormat();
 
-const handleEditActivities = () => {
-    router.visit('/settings/habits');
-};
-
 // Transform calendar data for heatmap
 const heatmapDays = computed(() => {
     return (
@@ -173,7 +168,7 @@ const handleDayClick = async (date: string) => {
         if (response.ok) {
             const data = await response.json();
             const activities = data.activities || [];
-            
+
             // Cache the activities
             activitiesCache.value[date] = activities;
             selectedDateActivities.value = activities;
