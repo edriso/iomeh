@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { Head, router } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted, nextTick } from 'vue';
+// @ts-ignore
+import Sortable from 'sortablejs';
 
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import InputError from '@/components/InputError.vue';
+import SortableHabitItem from '@/components/SortableHabitItem.vue';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -67,6 +70,10 @@ const localHabits = ref<Habit[]>(JSON.parse(JSON.stringify(props.habits)));
 const showAddDialog = ref(false);
 const selectedCategory = ref<string | null>(null);
 
+// Drag and drop setup
+let sortableInstance: Sortable | null = null;
+const habitsContainer = ref<HTMLElement | null>(null);
+
 // Form validation errors
 const errors = ref<Record<string, string>>({});
 const recentlySuccessful = ref(false);
@@ -123,17 +130,32 @@ function removeHabit(index: number) {
     });
 }
 
-function moveUp(index: number) {
-    if (index > 0) {
-        const temp = localHabits.value[index];
-        localHabits.value[index] = localHabits.value[index - 1];
-        localHabits.value[index - 1] = temp;
+// Initialize sortable after component mounts
+onMounted(() => {
+    nextTick(() => {
+        if (habitsContainer.value) {
+            sortableInstance = new Sortable(habitsContainer.value, {
+                animation: 200,
+                ghostClass: 'opacity-50',
+                chosenClass: '',
+                dragClass: 'sortable-dragging',
+                onEnd: (evt: any) => {
+                    const { oldIndex, newIndex } = evt;
+                    if (oldIndex !== undefined && newIndex !== undefined && oldIndex !== newIndex) {
+                        // Move item in array
+                        const item = localHabits.value.splice(oldIndex, 1)[0];
+                        localHabits.value.splice(newIndex, 0, item);
+                        
         // Update display orders
         localHabits.value.forEach((habit, idx) => {
             habit.display_order = idx;
         });
     }
 }
+            });
+        }
+    });
+});
 
 function validateForm() {
     errors.value = {};
@@ -196,6 +218,7 @@ function getCategoryColor(category: string): string {
     };
     return colors[category.toLowerCase()] || 'bg-gray-500/10 text-gray-500';
 }
+
 </script>
 
 <template>
@@ -220,126 +243,17 @@ function getCategoryColor(category: string): string {
                 <div class="space-y-4">
                     <!-- Current Habits -->
                     <div v-if="localHabits.length > 0" class="space-y-3">
-                        <Card
-                            v-for="(habit, index) in localHabits"
-                            :key="habit.id"
-                            class="relative"
-                        >
-                            <CardHeader class="pb-3">
-                                <div
-                                    class="flex items-start justify-between gap-4"
-                                >
-                                    <div class="flex flex-1 items-center gap-3">
-                                        <div class="flex items-center gap-1">
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                class="h-8 w-8 p-0"
-                                                :disabled="index === 0"
-                                                @click="moveUp(index)"
-                                            >
-                                                <GripVertical class="h-4 w-4" />
-                                            </Button>
-                                        </div>
-                                        <div class="flex-1">
-                                            <div
-                                                class="mb-2 flex items-center gap-2"
-                                            >
-                                                <span
-                                                    v-if="
-                                                        habit.activity_type.icon
-                                                    "
-                                                    class="text-2xl"
-                                                >
-                                                    {{
-                                                        habit.activity_type.icon
-                                                    }}
-                                                </span>
-                                                <Badge
-                                                    variant="outline"
-                                                    :class="
-                                                        getCategoryColor(
-                                                            habit.activity_type
-                                                                .category,
-                                                        )
-                                                    "
-                                                >
-                                                    {{
-                                                        habit.activity_type
-                                                            .category
-                                                    }}
-                                                </Badge>
-                                                <span
-                                                    class="text-xs text-muted-foreground"
-                                                >
-                                                    {{
-                                                        habit.activity_type
-                                                            .base_points
-                                                    }}
-                                                    pts
-                                                </span>
-                                            </div>
-                                            <div class="space-y-3">
-                                                <div>
-                                                    <Label
-                                                        :for="`name-${habit.id}`"
-                                                    >
-                                                        Custom Name
-                                                    </Label>
-                                                    <Input
-                                                        :id="`name-${habit.id}`"
-                                                        v-model="
-                                                            habit.custom_name
-                                                        "
-                                                        type="text"
-                                                        placeholder="e.g., Morning Workout"
-                                                        class="mt-1"
-                                                    />
-                                                    <InputError
-                                                        :message="
-                                                            errors[
-                                                                `habits.${index}.custom_name`
-                                                            ]
-                                                        "
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <Label
-                                                        :for="`notes-${habit.id}`"
-                                                    >
-                                                        Notes (optional)
-                                                    </Label>
-                                                    <Textarea
-                                                        :id="`notes-${habit.id}`"
-                                                        v-model="habit.notes"
-                                                        placeholder="Add any personal notes..."
-                                                        :rows="2"
-                                                        class="mt-1"
-                                                    />
-                                                    <InputError
-                                                        :message="
-                                                            errors[
-                                                                `habits.${index}.notes`
-                                                            ]
-                                                        "
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex flex-col gap-1">
-                                        <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            class="h-8 w-8 p-0 text-destructive hover:text-destructive"
-                                            @click="removeHabit(index)"
-                                        >
-                                            <Trash2 class="h-4 w-4" />
-                                        </Button>
-                                    </div>
-                                </div>
-                            </CardHeader>
-                        </Card>
+                        <div ref="habitsContainer" class="space-y-3">
+                            <SortableHabitItem
+                                v-for="(habit, index) in localHabits"
+                                :key="habit.id"
+                                :habit="habit"
+                                :index="index"
+                                :errors="errors"
+                                :on-remove="removeHabit"
+                                :get-category-color="getCategoryColor"
+                            />
+                        </div>
                     </div>
 
                     <div
@@ -500,3 +414,11 @@ function getCategoryColor(category: string): string {
         </Dialog>
     </AppLayout>
 </template>
+
+<style>
+.sortable-dragging {
+    opacity: 0.8;
+    transform: rotate(1deg);
+}
+</style>
+
