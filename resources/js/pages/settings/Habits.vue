@@ -346,6 +346,7 @@ function getCategoryColor(category: string): string {
                             :key="category"
                             variant="outline"
                             size="sm"
+                            class="capitalize"
                             :class="{
                                 'bg-primary text-primary-foreground':
                                     selectedCategory === category,

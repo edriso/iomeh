@@ -107,7 +107,7 @@ const seoData = {
 
                     <div class="flex items-center gap-3">
                         <Link href="/login">
-                            <Button variant="ghost" size="sm">Log in</Button>
+                            <Button variant="ghost" size="sm">Sign in</Button>
                         </Link>
                         <Link href="/register">
                             <Button size="sm">Join Now</Button>
@@ -163,7 +163,7 @@ const seoData = {
                             size="lg"
                             class="px-8 py-4 text-lg"
                         >
-                            Log In
+                            Sign in
                         </Button>
                     </Link>
                 </div>
@@ -257,7 +257,7 @@ const seoData = {
                             </div>
                         </div>
                         <p class="text-muted-foreground">
-                            Running, gym, HIIT, yoga, swimming, cycling, sports,
+                            Running, gym, HIIT, swimming, cycling, sports,
                             martial arts, and more. Points based on intensity
                             and duration.
                         </p>

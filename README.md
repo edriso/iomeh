@@ -27,7 +27,7 @@ Log activities for today only - ensuring accurate streak calculations:
 
 | Category | Examples | Points Range |
 |----------|----------|--------------|
-| 💪 **Workout** | Running, HIIT, Gym, Swimming, Yoga, Cycling, Sports | 10-60 pts |
+| 💪 **Workout** | Running, HIIT, Gym, Swimming, Cycling, Sports | 10-60 pts |
 | 🥗 **Nutrition** | Healthy Meals, Vegetables, Fruits, Hydration, Supplements | 10-30 pts |
 
 **Important:** Activities can only be logged for today to maintain streak integrity and prevent backdating.
