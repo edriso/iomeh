@@ -13,7 +13,15 @@ import { useLogActivity } from '@/composables/useLogActivity';
 import { seoConfigs } from '@/config/seo';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { router } from '@inertiajs/vue3';
-import { Award, Calendar, Plus, TrendingUp, Trophy } from 'lucide-vue-next';
+import {
+    Activity,
+    Award,
+    Calendar,
+    CheckCircle,
+    Plus,
+    TrendingUp,
+    Trophy,
+} from 'lucide-vue-next';
 import { computed } from 'vue';
 
 interface TodayActivity {
@@ -33,6 +41,16 @@ interface RecentActivity {
     notes?: string;
 }
 
+interface Habit {
+    id: number;
+    name: string;
+    icon: string;
+    category: string;
+    activity_type_id: number;
+    base_points: number;
+    has_activity_today: boolean;
+}
+
 interface Props {
     user: {
         id: number;
@@ -49,6 +67,7 @@ interface Props {
             year: number;
         };
     };
+    habits: Habit[];
     today_activities: TodayActivity[];
     recent_activities: RecentActivity[];
 }
@@ -98,22 +117,78 @@ const handleEditActivity = () => {
             <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
                 <!-- Left Column: Today's Activities -->
                 <div class="space-y-6 lg:col-span-2">
-                    <!-- Today's Activities -->
+                    <!-- My Activities -->
                     <Card>
                         <CardHeader>
                             <div class="flex items-center justify-between">
                                 <div>
-                                    <CardTitle>Today's Activities</CardTitle>
+                                    <CardTitle>My Activities</CardTitle>
                                     <CardDescription>
-                                        {{ today_activities.length }} activities
-                                        • {{ todayPoints }} points
+                                        Activities you're tracking
                                     </CardDescription>
                                 </div>
-                                <Button size="sm" @click="handleLogActivity">
-                                    <Plus class="h-4 w-4" />
-                                    Log Activity
+                                <div class="flex gap-2">
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
+                                        @click="handleEditActivity"
+                                    >
+                                        Edit
+                                    </Button>
+                                    <Button size="sm" @click="handleLogActivity">
+                                        <Plus class="h-4 w-4" />
+                                        Log Activity
+                                    </Button>
+                                </div>
+                            </div>
+                        </CardHeader>
+                        <CardContent>
+                            <div
+                                v-if="habits && habits.length > 0"
+                                class="flex cursor-default flex-wrap gap-2"
+                            >
+                                <Badge
+                                    v-for="habit in habits"
+                                    :key="habit.id"
+                                    variant="outline"
+                                    class="border-secondary/20 bg-secondary px-3 py-1.5 text-sm text-secondary-foreground"
+                                >
+                                    <span class="mr-1.5">{{ habit.icon }}</span>
+                                    {{ habit.name }}
+                                    <CheckCircle
+                                        v-if="habit.has_activity_today"
+                                        class="ml-1.5 h-3 w-3"
+                                    />
+                                </Badge>
+                            </div>
+                            <div
+                                v-else
+                                class="py-8 text-center text-muted-foreground"
+                            >
+                                <Activity
+                                    class="mx-auto mb-3 h-12 w-12 opacity-50"
+                                />
+                                <p>No habits selected yet</p>
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    class="mt-3"
+                                    @click="handleEditActivity"
+                                >
+                                    Select Activities
                                 </Button>
                             </div>
+                        </CardContent>
+                    </Card>
+
+                    <!-- Today's Activities -->
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Today's Activities</CardTitle>
+                            <CardDescription>
+                                {{ today_activities.length }} activities
+                                • {{ todayPoints }} points
+                            </CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div
