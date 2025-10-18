@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Head, router } from '@inertiajs/vue3';
 import { computed, nextTick, onMounted, ref } from 'vue';
-// @ts-expect-error - SortableJS types are not fully compatible
 import Sortable from 'sortablejs';
 
 import HeadingSmall from '@/components/HeadingSmall.vue';

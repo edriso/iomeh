@@ -227,11 +227,12 @@ ranking_history (immutable)
 
 ## 🚀 Production Deployment
 
-### Build & Deploy
+### Complete Production Setup
 
 ```bash
 # 1. Install production dependencies
 composer install --optimize-autoloader --no-dev
+npm ci --production
 npm run build
 
 # 2. Configure environment
@@ -244,29 +245,87 @@ cp .env.example .env
 
 php artisan key:generate
 
-# 3. Setup database
+# 3. Setup database (CRITICAL STEPS)
 php artisan migrate --force
-php artisan db:seed --class=ActivityTypeSeeder  # REQUIRED!
+php artisan db:seed --class=ActivityTypeSeeder  # REQUIRED! Creates 45 activity types
 
-# 4. Optimize
+# 4. Optimize for production
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 php artisan storage:link
 
-# 5. Set permissions
+# 5. Set proper permissions
 chmod -R 755 storage bootstrap/cache
+chown -R www-data:www-data storage bootstrap/cache  # Adjust user/group as needed
+
+# 6. Clear any development caches
+php artisan cache:clear
+php artisan queue:restart  # If using queues
+```
+
+### 🔥 Critical Production Commands
+
+#### **Database Setup (MUST RUN)**
+```bash
+# Run migrations first
+php artisan migrate --force
+
+# Then seed the required activity types
+php artisan db:seed --class=ActivityTypeSeeder
+```
+
+#### **Performance Optimization**
+```bash
+# Cache everything for production
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+php artisan event:cache
+
+# Clear development caches
+php artisan cache:clear
+php artisan queue:restart
+```
+
+#### **File Permissions**
+```bash
+# Set proper permissions
+chmod -R 755 storage bootstrap/cache
+chown -R www-data:www-data storage bootstrap/cache
+
+# If using different web server user, adjust accordingly:
+# chown -R nginx:nginx storage bootstrap/cache
+# chown -R apache:apache storage bootstrap/cache
 ```
 
 ### ⚠️ Important: Seeder Rules
 
-**✅ ALWAYS RUN:**
-- `ActivityTypeSeeder` — Creates the 45 required activity types
+**✅ ALWAYS RUN IN PRODUCTION:**
+- `ActivityTypeSeeder` — Creates the 45 required activity types (MANDATORY!)
 
 **❌ NEVER RUN IN PRODUCTION:**
 - `php artisan migrate:fresh` — Destroys all data
 - `php artisan db:seed` — Creates fake test data
 - `UserSeeder`, `HabitSeeder`, `ActivitySeeder` — Development only
+
+### 🚨 Production Checklist
+
+#### **Before Going Live:**
+- [ ] Environment variables configured
+- [ ] Database migrations run
+- [ ] ActivityTypeSeeder executed
+- [ ] File permissions set correctly
+- [ ] Caches optimized
+- [ ] SSL certificate installed
+- [ ] OAuth credentials configured (if using)
+
+#### **Post-Deployment:**
+- [ ] Test user registration
+- [ ] Test activity logging
+- [ ] Verify streak calculations
+- [ ] Check rankings display
+- [ ] Test OAuth login (if enabled)
 
 ### Environment Variables
 
@@ -286,6 +345,137 @@ DB_PASSWORD=your_password
 # OAuth (Optional)
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
+```
+
+### 🛠️ Production Troubleshooting
+
+#### **Common Issues & Solutions**
+
+**Issue: "No activity types available"**
+```bash
+# Solution: Run the ActivityTypeSeeder
+php artisan db:seed --class=ActivityTypeSeeder
+```
+
+**Issue: "Permission denied" errors**
+```bash
+# Solution: Fix file permissions
+chmod -R 755 storage bootstrap/cache
+chown -R www-data:www-data storage bootstrap/cache
+```
+
+**Issue: "Class not found" errors**
+```bash
+# Solution: Clear caches and regenerate autoloader
+php artisan config:clear
+php artisan cache:clear
+composer dump-autoload --optimize
+```
+
+**Issue: Frontend assets not loading**
+```bash
+# Solution: Rebuild assets and link storage
+npm run build
+php artisan storage:link
+```
+
+**Issue: Database connection errors**
+```bash
+# Solution: Check database configuration
+php artisan config:clear
+php artisan config:cache
+```
+
+#### **Health Check Commands**
+
+```bash
+# Verify application is working
+php artisan route:list
+php artisan config:show
+
+# Check database connectivity
+php artisan tinker
+# Then run: DB::connection()->getPdo();
+
+# Verify activity types are seeded
+php artisan tinker
+# Then run: App\Models\ActivityType::count();
+```
+
+#### **Performance Monitoring**
+
+```bash
+# Check application performance
+php artisan about
+
+# Monitor queue jobs (if using queues)
+php artisan queue:work --verbose
+
+# Check cache status
+php artisan cache:table  # If using database cache
+```
+
+### 🚀 Quick Deployment Script
+
+Create a `deploy.sh` script for easy production deployment:
+
+```bash
+#!/bin/bash
+# deploy.sh - Production deployment script
+
+echo "🚀 Starting IOMeH Production Deployment..."
+
+# 1. Install dependencies
+echo "📦 Installing dependencies..."
+composer install --optimize-autoloader --no-dev
+npm ci --production
+npm run build
+
+# 2. Configure environment
+echo "⚙️ Configuring environment..."
+if [ ! -f .env ]; then
+    cp .env.example .env
+    echo "⚠️  Please configure your .env file before continuing!"
+    exit 1
+fi
+
+# 3. Generate application key
+echo "🔑 Generating application key..."
+php artisan key:generate
+
+# 4. Setup database
+echo "🗄️ Setting up database..."
+php artisan migrate --force
+php artisan db:seed --class=ActivityTypeSeeder
+
+# 5. Optimize for production
+echo "⚡ Optimizing for production..."
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+php artisan event:cache
+php artisan storage:link
+
+# 6. Set permissions
+echo "🔐 Setting permissions..."
+chmod -R 755 storage bootstrap/cache
+chown -R www-data:www-data storage bootstrap/cache
+
+# 7. Clear development caches
+echo "🧹 Clearing development caches..."
+php artisan cache:clear
+php artisan queue:restart
+
+echo "✅ Deployment complete!"
+echo "🔍 Run health checks:"
+echo "   php artisan about"
+echo "   php artisan route:list"
+```
+
+Make it executable:
+```bash
+chmod +x deploy.sh
+./deploy.sh
 ```
 
 ---
