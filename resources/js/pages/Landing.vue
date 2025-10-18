@@ -7,12 +7,10 @@ import {
     Activity,
     Apple,
     Award,
-    Brain,
     CalendarCheck,
     Flame,
     Footprints,
     Heart,
-    Moon,
     TrendingUp,
     Trophy,
 } from 'lucide-vue-next';
@@ -49,22 +47,22 @@ const formatNumber = (num: number) => {
 // SEO Data
 // Note: The SEO component automatically appends " | IOMeH" to the title
 const seoData = {
-    title: 'Global Health Ranking Organization',
+    title: 'Global Fitness Ranking Foundation',
     description:
-        'IOMeH (I Owe Me Health) is your personal health ranking organization. Track workouts, nutrition, sleep, and mindfulness activities while competing on global ran. Turn health into competition.',
+        'IOMeH (I Owe Me Health) is your personal fitness ranking foundation. Track workouts and nutrition activities while competing on global rankings. Turn fitness into competition.',
     keywords: [
-        'health tracking',
-        'fitness ranking',
-        'wellness competition',
-        'wellness gamification',
+        'fitness tracking',
+        'workout ranking',
+        'fitness competition',
+        'fitness gamification',
         'activity tracking',
-        'wellness leaderboard',
+        'fitness leaderboard',
         'workout points',
         'nutrition tracking',
-        'sleep monitoring',
-        'mindfulness app',
-        'wellness organization',
+        'fitness foundation',
         'fitness motivation',
+        'gym tracking',
+        'exercise tracking',
     ],
     url: '/',
     image: '/iomeh.png',
@@ -144,10 +142,10 @@ const seoData = {
                 <p
                     class="mx-auto mb-10 max-w-3xl text-xl text-muted-foreground md:text-2xl"
                 >
-                    IOMeH turns health tracking into global competition. Log
-                    workouts, nutrition, sleep, and mindfulness activities—earn
-                    points and climb the rankings. It's like a sports
-                    organization, but for your health and wellness.
+                    IOMeH turns fitness tracking into global competition. Log
+                    workouts and nutrition activities—earn points and climb the
+                    rankings. It's like a sports foundation, but for your
+                    fitness journey.
                 </p>
 
                 <div
@@ -220,22 +218,23 @@ const seoData = {
             </div>
         </section>
 
-        <!-- Four Pillars of Health Section -->
+        <!-- Two Pillars of Fitness Section -->
         <section class="container mx-auto px-4 py-16">
             <div class="mx-auto max-w-5xl">
                 <div class="mb-16 text-center">
                     <h2
                         class="mb-4 text-3xl font-bold text-foreground md:text-4xl"
                     >
-                        Track All Dimensions of Wellness
+                        Track Your Fitness Journey
                     </h2>
                     <p class="mx-auto max-w-2xl text-lg text-muted-foreground">
-                        True health is multi-dimensional. IOMeH tracks all four
-                        pillars with many activities to choose from.
+                        Focus on what matters most for your fitness goals. IOMeH
+                        tracks workouts and nutrition with many activities to
+                        choose from.
                     </p>
                 </div>
 
-                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
                     <!-- Workout -->
                     <div
                         class="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 to-primary/5 p-8"
@@ -253,14 +252,14 @@ const seoData = {
                                     💪 Workout
                                 </h3>
                                 <p class="text-sm text-muted-foreground">
-                                    20 activities | 10-50 points
+                                    30 activities | 10-60 points
                                 </p>
                             </div>
                         </div>
                         <p class="text-muted-foreground">
                             Running, gym, HIIT, yoga, swimming, cycling, sports,
-                            martial arts, and more. Points based on MET
-                            (Metabolic Equivalent) values.
+                            martial arts, and more. Points based on intensity
+                            and duration.
                         </p>
                     </div>
 
@@ -279,66 +278,13 @@ const seoData = {
                                     🥗 Nutrition
                                 </h3>
                                 <p class="text-sm text-muted-foreground">
-                                    9 activities | 10-25 points
+                                    15 activities | 10-30 points
                                 </p>
                             </div>
                         </div>
                         <p class="text-muted-foreground">
-                            Healthy meals, meal prep, fruits & vegetables,
-                            hydration, protein goals, avoiding junk food, and
-                            supplements.
-                        </p>
-                    </div>
-
-                    <!-- Wellness -->
-                    <div
-                        class="rounded-2xl border border-blue-500/20 bg-gradient-to-br from-blue-500/10 to-blue-500/5 p-8"
-                    >
-                        <div class="mb-6 flex items-center gap-4">
-                            <div
-                                class="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-500"
-                            >
-                                <Moon class="h-7 w-7 text-white" />
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-bold text-foreground">
-                                    🌟 Wellness
-                                </h3>
-                                <p class="text-sm text-muted-foreground">
-                                    8 activities | 15-30 points
-                                </p>
-                            </div>
-                        </div>
-                        <p class="text-muted-foreground">
-                            Quality sleep, early wake-ups, sunlight exposure,
-                            nature time, cold showers, sauna, and social
-                            connections.
-                        </p>
-                    </div>
-
-                    <!-- Mindfulness -->
-                    <div
-                        class="rounded-2xl border border-purple-500/20 bg-gradient-to-br from-purple-500/10 to-purple-500/5 p-8"
-                    >
-                        <div class="mb-6 flex items-center gap-4">
-                            <div
-                                class="flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-500"
-                            >
-                                <Brain class="h-7 w-7 text-white" />
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-bold text-foreground">
-                                    🧘 Mindfulness
-                                </h3>
-                                <p class="text-sm text-muted-foreground">
-                                    8 activities | 15-25 points
-                                </p>
-                            </div>
-                        </div>
-                        <p class="text-muted-foreground">
-                            Meditation, breathing exercises, journaling,
-                            reading, prayer, digital detox, learning, and
-                            creative activities.
+                            Healthy meals, vegetables, fruits, hydration,
+                            protein goals, supplements, and cooking at home.
                         </p>
                     </div>
                 </div>
@@ -627,7 +573,7 @@ const seoData = {
                         Compete on Global Rankings
                     </h2>
                     <p class="mx-auto max-w-2xl text-lg text-muted-foreground">
-                        Like a sports organization, but for health. See where
+                        Like a sports foundation, but for health. See where
                         you rank today, this season, and all-time.
                     </p>
                 </div>
@@ -802,9 +748,8 @@ const seoData = {
                                 Log Today's Activities
                             </h3>
                             <p class="text-muted-foreground">
-                                Record today's activities in real-time—workouts,
-                                meals, sleep, mindfulness. Add notes and
-                                optional proof.
+                                Record today's activities in real-time—workouts
+                                and nutrition. Add notes and optional proof.
                             </p>
                         </div>
                     </div>

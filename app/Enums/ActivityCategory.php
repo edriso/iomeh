@@ -6,16 +6,12 @@ enum ActivityCategory: string
 {
     case WORKOUT = 'workout';
     case NUTRITION = 'nutrition';
-    case WELLNESS = 'wellness';
-    case MINDFULNESS = 'mindfulness';
 
     public function label(): string
     {
         return match($this) {
             self::WORKOUT => 'Workout',
             self::NUTRITION => 'Nutrition',
-            self::WELLNESS => 'Wellness',
-            self::MINDFULNESS => 'Mindfulness',
         };
     }
 
@@ -24,8 +20,6 @@ enum ActivityCategory: string
         return match($this) {
             self::WORKOUT => 'Physical activities and exercises',
             self::NUTRITION => 'Healthy eating and hydration',
-            self::WELLNESS => 'Sleep, recovery, and lifestyle',
-            self::MINDFULNESS => 'Mental health and stress management',
         };
     }
 
@@ -34,8 +28,6 @@ enum ActivityCategory: string
         return match($this) {
             self::WORKOUT => '💪',
             self::NUTRITION => '🥗',
-            self::WELLNESS => '🌟',
-            self::MINDFULNESS => '🧘',
         };
     }
 

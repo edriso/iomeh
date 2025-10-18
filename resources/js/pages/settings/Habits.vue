@@ -213,8 +213,6 @@ function getCategoryColor(category: string): string {
     const colors: Record<string, string> = {
         workout: 'bg-red-500/10 text-red-500 border-red-500/20',
         nutrition: 'bg-green-500/10 text-green-500 border-green-500/20',
-        wellness: 'bg-blue-500/10 text-blue-500 border-blue-500/20',
-        mindfulness: 'bg-purple-500/10 text-purple-500 border-purple-500/20',
     };
     return colors[category.toLowerCase()] || 'bg-gray-500/10 text-gray-500';
 }

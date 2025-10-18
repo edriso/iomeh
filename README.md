@@ -1,14 +1,14 @@
 # IOMeH - I Owe Me Health
 
-> **Your Global Health Rank — Shaped by Your Daily Habits.**
+> **Your Global Fitness Rank — Shaped by Your Daily Workouts and Nutrition.**
 
-A global health tracking and ranking platform that gamifies your health journey. Track workouts, nutrition, sleep, and mindfulness activities while competing on seasonal leaderboards. Think of it as a sports organization, but for your health.
+A global fitness tracking and ranking platform that gamifies your workout and nutrition journey. Track your daily exercises and healthy eating while competing on seasonal leaderboards. Think of it as a sports foundation, but for your fitness.
 
 ---
 
 ## ✨ Key Features
 
-- 🏋️ **Many Activities** — Track across 4 categories: Workout, Nutrition, Wellness, Mindfulness
+- 🏋️ **Many Activities** — Track across 2 categories: Workout, Nutrition
 - 🏆 **Global Rankings** — Compete on daily, seasonal (Q1-Q4), and annual leaderboards
 - 🎮 **Smart Points** — Earn 10-50 points per activity based on MET values and health impact
 - 🔥 **Streak Multipliers** — Build daily streaks to multiply points up to 5.0×
@@ -27,10 +27,8 @@ Log activities for today only - ensuring accurate streak calculations:
 
 | Category | Examples | Points Range |
 |----------|----------|--------------|
-| 💪 **Workout** | Running, HIIT, Gym, Swimming, Yoga, Cycling, Sports | 10-50 pts |
-| 🥗 **Nutrition** | Healthy Meals, Meal Prep, Hydration, Supplements | 10-25 pts |
-| 🌟 **Wellness** | Quality Sleep, Sunlight, Nature Time, Cold Shower | 15-30 pts |
-| 🧘 **Mindfulness** | Meditation, Journaling, Reading, Learning | 15-25 pts |
+| 💪 **Workout** | Running, HIIT, Gym, Swimming, Yoga, Cycling, Sports | 10-60 pts |
+| 🥗 **Nutrition** | Healthy Meals, Vegetables, Fruits, Hydration, Supplements | 10-30 pts |
 
 **Important:** Activities can only be logged for today to maintain streak integrity and prevent backdating.
 
