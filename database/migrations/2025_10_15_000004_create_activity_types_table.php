@@ -15,7 +15,6 @@ return new class extends Migration
         Schema::create('activity_types', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->string('slug')->unique();
             $table->enum('category', ActivityCategory::values());
             $table->unsignedSmallInteger('base_points')->default(0);
             $table->decimal('met_value', 4, 1)->nullable()->comment('Metabolic Equivalent of Task');

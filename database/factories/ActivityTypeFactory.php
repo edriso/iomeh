@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\ActivityType;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ActivityType>
@@ -18,11 +17,8 @@ class ActivityTypeFactory extends Factory
      */
     public function definition(): array
     {
-        $name = fake()->unique()->words(2, true);
-        
         return [
-            'name' => $name,
-            'slug' => Str::slug($name),
+            'name' => fake()->unique()->words(2, true),
             'category' => fake()->randomElement(\App\Enums\ActivityCategory::cases())->value,
             'base_points' => fake()->numberBetween(10, 50),
             'met_value' => fake()->optional(0.6)->randomFloat(1, 2.0, 12.0),

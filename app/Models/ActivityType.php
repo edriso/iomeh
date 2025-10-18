@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Enums\ActivityCategory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 
 class ActivityType extends Model
 {
@@ -13,7 +12,6 @@ class ActivityType extends Model
 
     protected $fillable = [
         'name',
-        'slug',
         'category',
         'base_points',
         'met_value',
@@ -32,20 +30,6 @@ class ActivityType extends Model
             'display_order' => 'integer',
             'is_active' => 'boolean',
         ];
-    }
-
-    /**
-     * Boot the model.
-     */
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($activityType) {
-            if (empty($activityType->slug)) {
-                $activityType->slug = Str::slug($activityType->name);
-            }
-        });
     }
 
     /**

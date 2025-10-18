@@ -18,21 +18,10 @@ test('activity type can be created with all fields', function () {
     ]);
     
     expect($activityType->name)->toBe('Morning Run');
-    expect($activityType->slug)->toBe('morning-run');
     expect($activityType->category)->toBe(ActivityCategory::WORKOUT);
     expect($activityType->base_points)->toBe(30);
     expect((float)$activityType->met_value)->toBe(8.0);
     expect($activityType->is_active)->toBeTrue();
-});
-
-test('activity type automatically generates slug from name', function () {
-    $activityType = ActivityType::create([
-        'name' => 'Heavy Weight Lifting',
-        'category' => ActivityCategory::WORKOUT->value,
-        'base_points' => 40,
-    ]);
-    
-    expect($activityType->slug)->toBe('heavy-weight-lifting');
 });
 
 test('activity type casts category to enum', function () {
