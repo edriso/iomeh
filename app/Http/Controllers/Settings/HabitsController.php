@@ -70,10 +70,12 @@ class HabitsController extends Controller
     public function update(Request $request)
     {
         $validated = $request->validate([
-            'habits' => ['required', 'array', 'min:1'],
+            'habits' => ['required', 'array', 'min:1', 'max:15'],
             'habits.*.activity_type_id' => ['required', 'exists:activity_types,id'],
             'habits.*.custom_name' => ['required', 'string', 'max:100'],
             'habits.*.notes' => ['nullable', 'string', 'max:500'],
+        ], [
+            'habits.max' => 'You can have a maximum of 15 habits. Please remove some habits before adding new ones.',
         ]);
 
         /** @var User $user */

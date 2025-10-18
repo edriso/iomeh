@@ -104,6 +104,13 @@ const categories = computed(() => {
 
 // Functions
 function addHabit(activityType: ActivityType) {
+    // Check if user has reached the maximum number of habits
+    if (localHabits.value.length >= 15) {
+        errors.value.habits =
+            'You can have a maximum of 15 habits. Please remove some habits before adding new ones.';
+        return;
+    }
+
     const newHabit: Habit = {
         id: Date.now(), // Temporary ID for new habits
         activity_type_id: activityType.id,
@@ -116,6 +123,11 @@ function addHabit(activityType: ActivityType) {
     localHabits.value.push(newHabit);
     showAddDialog.value = false;
     selectedCategory.value = null;
+
+    // Clear any previous errors
+    if (errors.value.habits) {
+        delete errors.value.habits;
+    }
 }
 
 function removeHabit(index: number) {
@@ -229,6 +241,40 @@ function getCategoryColor(category: string): string {
                     description="Manage your health and wellness activities"
                 />
 
+                <!-- Habit Counter -->
+                <div
+                    class="flex items-center justify-between rounded-lg border bg-muted/50 p-4"
+                >
+                    <div class="flex items-center gap-2">
+                        <div
+                            class="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10"
+                        >
+                            <span class="text-sm font-medium text-primary">{{
+                                localHabits.length
+                            }}</span>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium">Current Habits</p>
+                            <p class="text-xs text-muted-foreground">
+                                Maximum of 15 habits allowed
+                            </p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-sm font-medium text-muted-foreground">
+                            {{ localHabits.length }}/15
+                        </div>
+                        <div class="h-2 w-20 rounded-full bg-muted">
+                            <div
+                                class="h-2 rounded-full bg-primary transition-all duration-300"
+                                :style="{
+                                    width: `${(localHabits.length / 15) * 100}%`,
+                                }"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+
                 <Alert>
                     <Info class="h-4 w-4" />
                     <AlertDescription>
@@ -274,7 +320,10 @@ function getCategoryColor(category: string): string {
                         variant="outline"
                         class="w-full"
                         @click="showAddDialog = true"
-                        :disabled="availableTypes.length === 0"
+                        :disabled="
+                            availableTypes.length === 0 ||
+                            localHabits.length >= 15
+                        "
                     >
                         <Plus class="mr-2 h-4 w-4" />
                         Add Activity
@@ -285,6 +334,14 @@ function getCategoryColor(category: string): string {
                         class="text-center text-sm text-muted-foreground"
                     >
                         You've added all available activity types!
+                    </p>
+
+                    <p
+                        v-else-if="localHabits.length >= 15"
+                        class="text-center text-sm text-muted-foreground"
+                    >
+                        Maximum of 15 habits reached. Remove some habits to add
+                        new ones.
                     </p>
 
                     <!-- Action Buttons -->
