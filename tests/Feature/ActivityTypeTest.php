@@ -25,13 +25,13 @@ test('activity type can be created with all fields', function () {
 
 test('activity type casts category to enum', function () {
     $activityType = ActivityType::create([
-        'name' => 'Yoga Session',
-        'category' => ActivityCategory::WELLNESS->value,
+        'name' => 'Morning Run',
+        'category' => ActivityCategory::WORKOUT->value,
         'base_points' => 25,
     ]);
     
     expect($activityType->category)->toBeInstanceOf(ActivityCategory::class);
-    expect($activityType->category)->toBe(ActivityCategory::WELLNESS);
+    expect($activityType->category)->toBe(ActivityCategory::WORKOUT);
 });
 
 test('activity type has activities relationship', function () {
@@ -47,17 +47,13 @@ test('activity type has habits relationship', function () {
 });
 
 test('all activity categories are valid', function () {
-    expect(ActivityCategory::cases())->toHaveCount(4);
+    expect(ActivityCategory::cases())->toHaveCount(2);
     expect(ActivityCategory::values())->toContain('workout');
     expect(ActivityCategory::values())->toContain('nutrition');
-    expect(ActivityCategory::values())->toContain('wellness');
-    expect(ActivityCategory::values())->toContain('mindfulness');
 });
 
 test('activity category has display names', function () {
     expect(ActivityCategory::WORKOUT->label())->toBe('Workout');
     expect(ActivityCategory::NUTRITION->label())->toBe('Nutrition');
-    expect(ActivityCategory::WELLNESS->label())->toBe('Wellness');
-    expect(ActivityCategory::MINDFULNESS->label())->toBe('Mindfulness');
 });
 
