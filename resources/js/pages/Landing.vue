@@ -34,7 +34,7 @@ withDefaults(defineProps<Props>(), {
 });
 
 // Get app name from environment variable
-const appName = import.meta.env.VITE_APP_NAME || 'IOMeW';
+const appName = import.meta.env.VITE_APP_NAME || 'IOMeH';
 
 // Get current year dynamically
 const currentYear = new Date().getFullYear();
@@ -47,13 +47,13 @@ const formatNumber = (num: number) => {
 };
 
 // SEO Data
-// Note: The SEO component automatically appends " | IOMeW" to the title
+// Note: The SEO component automatically appends " | IOMeH" to the title
 const seoData = {
-    title: 'Global Wellness Ranking Organization',
+    title: 'Global Health Ranking Organization',
     description:
-        'IOMeW (I Owe Me Wellness) is your personal wellness ranking organization. Track workouts, nutrition, sleep, and mindfulness activities while competing on global ran. Turn wellness into competition.',
+        'IOMeH (I Owe Me Health) is your personal health ranking organization. Track workouts, nutrition, sleep, and mindfulness activities while competing on global ran. Turn health into competition.',
     keywords: [
-        'wellness tracking',
+        'health tracking',
         'fitness ranking',
         'wellness competition',
         'wellness gamification',
@@ -67,8 +67,8 @@ const seoData = {
         'fitness motivation',
     ],
     url: '/',
-    image: '/iomew.png',
-    imageAlt: 'IOMeW - I Owe Me Wellness',
+    image: '/iomeh.png',
+    imageAlt: 'IOMeH - I Owe Me Health',
     type: 'website' as const,
 };
 </script>
@@ -102,7 +102,7 @@ const seoData = {
                                 {{ appName }}
                             </h1>
                             <p class="text-xs text-muted-foreground md:text-sm">
-                                I Owe Me Wellness
+                                I Owe Me Health
                             </p>
                         </div>
                     </div>
@@ -128,7 +128,7 @@ const seoData = {
                     >
                         <Trophy class="h-4 w-4" />
                         <span
-                            >Your Global Wellness Rank — Shaped by Your Daily
+                            >Your Global Health Rank — Shaped by Your Daily
                             Habits</span
                         >
                     </div>
@@ -137,17 +137,17 @@ const seoData = {
                 <h1
                     class="mb-6 text-4xl font-bold text-foreground md:text-6xl lg:text-7xl"
                 >
-                    Track Your Wellness<br />
+                    Track Your Health<br />
                     <span class="text-primary">Earn Your Rank</span>
                 </h1>
 
                 <p
                     class="mx-auto mb-10 max-w-3xl text-xl text-muted-foreground md:text-2xl"
                 >
-                    IOMeW turns wellness tracking into global competition. Log
+                    IOMeH turns health tracking into global competition. Log
                     workouts, nutrition, sleep, and mindfulness activities—earn
                     points and climb the rankings. It's like a sports
-                    organization, but for your wellness.
+                    organization, but for your health and wellness.
                 </p>
 
                 <div
@@ -230,8 +230,8 @@ const seoData = {
                         Track All Dimensions of Wellness
                     </h2>
                     <p class="mx-auto max-w-2xl text-lg text-muted-foreground">
-                        True wellness is multi-dimensional. IOMeW tracks all
-                        four pillars with 45+ activities.
+                        True health is multi-dimensional. IOMeH tracks all
+                        four pillars with many activities to choose from.
                     </p>
                 </div>
 
@@ -869,7 +869,7 @@ const seoData = {
                     <h2
                         class="mb-4 text-3xl font-bold text-foreground md:text-4xl"
                     >
-                        How IOMeW Works
+                        How IOMeH Works
                     </h2>
                     <p class="text-lg text-muted-foreground">
                         Simple 4-step process to start competing
@@ -888,8 +888,7 @@ const seoData = {
                                 Sign Up & Select Activities
                             </h3>
                             <p class="text-muted-foreground">
-                                Choose 5-10 activities you want to track from
-                                45+ options across all health categories.
+                                Choose 5-10 activities you want to track from many options across all health categories.
                             </p>
                         </div>
                     </div>
@@ -1005,8 +1004,8 @@ const seoData = {
                     Ready to Compete in Wellness?
                 </h2>
                 <p class="mb-8 text-lg text-muted-foreground">
-                    Join IOMeW today and turn "I should prioritize wellness"
-                    into "I compete in wellness." Track, compete, and earn your
+                    Join IOMeH today and turn "I should prioritize health"
+                    into "I compete in health." Track, compete, and earn your
                     rank.
                 </p>
                 <Link href="/register">
@@ -1025,7 +1024,7 @@ const seoData = {
             <div class="container mx-auto px-4 py-8">
                 <div class="text-center text-muted-foreground">
                     <p class="mb-2 font-medium">
-                        {{ appName }} - I Owe Me Wellness
+                        {{ appName }} - I Owe Me Health
                     </p>
                     <p class="text-sm">
                         &copy; {{ currentYear }} {{ appName }}. All rights

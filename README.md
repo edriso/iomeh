@@ -1,14 +1,14 @@
-# IOMeW - I Owe Me Wellness
+# IOMeH - I Owe Me Health
 
-> **Your Global Wellness Rank — Shaped by Your Daily Habits.**
+> **Your Global Health Rank — Shaped by Your Daily Habits.**
 
-A global wellness tracking and ranking platform that gamifies your wellness journey. Track workouts, nutrition, sleep, and mindfulness activities while competing on seasonal leaderboards. Think of it as a sports organization, but for your wellness.
+A global health tracking and ranking platform that gamifies your health journey. Track workouts, nutrition, sleep, and mindfulness activities while competing on seasonal leaderboards. Think of it as a sports organization, but for your health.
 
 ---
 
 ## ✨ Key Features
 
-- 🏋️ **45+ Activities** — Track across 4 categories: Workout, Nutrition, Wellness, Mindfulness
+- 🏋️ **Many Activities** — Track across 4 categories: Workout, Nutrition, Wellness, Mindfulness
 - 🏆 **Global Rankings** — Compete on daily, seasonal (Q1-Q4), and annual leaderboards
 - 🎮 **Smart Points** — Earn 10-50 points per activity based on MET values and health impact
 - 🔥 **Streak Multipliers** — Build daily streaks to multiply points up to 5.0×
@@ -23,7 +23,7 @@ A global wellness tracking and ranking platform that gamifies your wellness jour
 
 ### 1. Track Your Activities
 
-Choose from 45+ activities across 4 categories:
+Choose activities across 4 categories:
 
 | Category | Examples | Points Range |
 |----------|----------|--------------|
@@ -105,8 +105,8 @@ Activities are validated to current season for fair competition:
 
 ```bash
 # Clone and enter directory
-git clone git@github.com:edriso/iomew.git
-cd iomew
+git clone git@github.com:edriso/iomeh.git
+cd iomeh
 
 # Install dependencies
 composer install
@@ -275,7 +275,6 @@ chmod -R 755 storage bootstrap/cache
 
 ```env
 # Essential
-APP_NAME="IOMeW"
 APP_ENV=production
 APP_DEBUG=false
 APP_URL=https://yourdomain.com
@@ -283,7 +282,7 @@ APP_URL=https://yourdomain.com
 # Database
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
-DB_DATABASE=iomew
+DB_DATABASE=iomeh
 DB_USERNAME=your_user
 DB_PASSWORD=your_password
 
@@ -341,7 +340,7 @@ GOOGLE_CLIENT_SECRET=
 ### Project Structure
 
 ```
-iomew/
+iomeh/
 ├── app/
 │   ├── Http/Controllers/     # Request handlers
 │   ├── Models/               # Eloquent models
@@ -420,6 +419,6 @@ MIT License - see LICENSE file for details
 
 ---
 
-**Your Global Wellness Rank — Shaped by Your Daily Habits.** 💪🏆
+**Your Global Health Rank — Shaped by Your Daily Habits.** 💪🏆
 
 *Track. Compete. Thrive.*

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title') - IOMeW</title>
+    <title>@yield('title') - IOMeH</title>
     <style>
         body {
             font-family: 'Nunito', Georgia, serif;
@@ -116,15 +116,15 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="{{ config('app.url') }}/iomew.png" alt="IOMeW" class="logo">
-            <div class="app-name">IOMeW</div>
-            <div class="tagline">I Owe Me Wellness</div>
+            <img src="{{ config('app.url') }}/iomeh.png" alt="IOMeH" class="logo">
+            <div class="app-name">IOMeH</div>
+            <div class="tagline">I Owe Me Health</div>
         </div>
 
         @yield('content')
 
         <div class="footer">
-            <p>Stay well!<br>IOMeW Team</p>
+            <p>Stay healthy!<br>IOMeH Team</p>
             <p style="font-size: 12px; color: #94a3b8;">
                 This email was sent to {{ $user->email ?? 'you' }}. If you didn't create an account, you can safely ignore this email.
             </p>

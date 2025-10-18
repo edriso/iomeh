@@ -28,7 +28,7 @@ class WelcomeEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Welcome to IOMeW! Start Your Wellness Journey',
+            subject: 'Welcome to IOMeH! Start Your Health Journey',
         );
     }
 

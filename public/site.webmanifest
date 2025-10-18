@@ -1,6 +1,6 @@
 {
-    "name": "IOMeW - I Owe Me Wellness",
-    "short_name": "IOMeW",
+    "name": "IOMeH - I Owe Me Health",
+    "short_name": "IOMeH",
     "description": "Track your health and fitness journey. Earn points, build streaks, compete globally.",
     "start_url": "/",
     "display": "standalone",
@@ -20,12 +20,12 @@
             "type": "image/png"
         },
         {
-            "src": "/iomew.png",
+            "src": "/iomeh.png",
             "sizes": "512x512",
             "type": "image/png"
         },
         {
-            "src": "/iomew.svg",
+            "src": "/iomeh.svg",
             "sizes": "any",
             "type": "image/svg+xml"
         }

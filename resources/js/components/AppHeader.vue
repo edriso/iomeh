@@ -17,7 +17,7 @@ import { computed } from 'vue';
 const page = usePage();
 const user = computed(() => page.props.auth?.user as User | undefined);
 
-const appName = import.meta.env.VITE_APP_NAME || 'IOMeW';
+const appName = import.meta.env.VITE_APP_NAME || 'IOMeH';
 
 const navLinks = [
     {

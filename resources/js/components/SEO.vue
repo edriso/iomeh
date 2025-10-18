@@ -25,31 +25,31 @@ interface SEOProps {
 
 const props = withDefaults(defineProps<SEOProps>(), {
     description:
-        'Track your wellness journey with IOMeW (I Owe Me Wellness) - the gamified wellness tracking platform. Build consistent habits, earn points, and compete on global rankings.',
+        'Track your health journey with IOMeH (I Owe Me Health) - the gamified health tracking platform. Build consistent habits, earn points, and compete on global rankings.',
     keywords: () => [
-        'wellness tracking',
+        'health tracking',
         'fitness platform',
-        'wellness',
+        'health',
         'workout tracking',
         'nutrition tracking',
-        'wellness gamification',
+        'health gamification',
         'fitness rankings',
     ],
     type: 'website',
     locale: 'en_US',
-    siteName: 'IOMeW',
+    siteName: 'IOMeH',
     twitterCard: 'summary_large_image',
-    twitterSite: '@iomew',
+    twitterSite: '@iomeh',
     noIndex: false,
     noFollow: false,
 });
 
 // Get app configuration
-const appName = 'IOMeW';
+const appName = 'IOMeH';
 const appUrl = typeof window !== 'undefined' ? window.location.origin : '';
 
 // Computed properties for meta tags
-// Note: Inertia's title callback already appends " | IOMeW" to the browser title
+// Note: Inertia's title callback already appends " | IOMeH" to the browser title
 // But we need the full title for Open Graph and Twitter meta tags
 const fullTitle = computed(() => {
     return props.title === appName
@@ -67,7 +67,7 @@ const fullUrl = computed(() => {
 });
 
 const defaultImage = computed(() => {
-    return props.image || `${appUrl}/iomew.png`;
+    return props.image || `${appUrl}/iomeh.png`;
 });
 
 const robotsContent = computed(() => {

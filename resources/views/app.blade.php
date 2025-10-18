@@ -6,9 +6,9 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         
         {{-- SEO Meta Tags --}}
-        <meta name="description" content="Track your wellness journey with IOMeW (I Owe Me Wellness) - the gamified wellness tracking platform. Build consistent habits, earn points, and compete on global rankings.">
-        <meta name="keywords" content="wellness tracking, fitness platform, wellness, workout tracking, nutrition tracking, wellness gamification, fitness rankings">
-        <meta name="author" content="IOMeW">
+        <meta name="description" content="Track your health journey with IOMeH (I Owe Me Health) - the gamified health tracking platform. Build consistent habits, earn points, and compete on global rankings.">
+        <meta name="keywords" content="health tracking, fitness platform, health, workout tracking, nutrition tracking, health gamification, fitness rankings">
+        <meta name="author" content="IOMeH">
         <meta name="robots" content="index, follow">
         
         {{-- Open Graph Meta Tags --}}
@@ -18,7 +18,7 @@
         
         {{-- Twitter Card Meta Tags --}}
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:site" content="@iomew">
+        <meta name="twitter:site" content="@iomeh">
         
         {{-- Theme and App Meta Tags --}}
         <meta name="theme-color" content="#c4e456">
@@ -65,7 +65,7 @@
             }
         </style>
 
-        <title inertia>{{ config('app.name', 'IOMeW') }}</title>
+        <title inertia>{{ config('app.name', 'IOMeH') }}</title>
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
