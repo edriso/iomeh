@@ -29,12 +29,12 @@ const validateForm = (formData: any) => {
             'Username can only contain letters, numbers, and underscores.';
     }
 
-    // Full name validation
-    const fullName = formData.full_name?.trim() || '';
-    if (!fullName || fullName.length < 2) {
-        errors.full_name = 'Full name must be at least 2 characters long.';
-    } else if (fullName.length > 100) {
-        errors.full_name = 'Full name must not exceed 100 characters.';
+    // Name validation
+    const name = formData.name?.trim() || '';
+    if (!name || name.length < 2) {
+        errors.name = 'Name must be at least 2 characters long.';
+    } else if (name.length > 100) {
+        errors.name = 'Name must not exceed 100 characters.';
     }
 
     // Email validation
@@ -89,10 +89,10 @@ const handleSubmit = (event: Event) => {
                     'input[name="username"]',
                 ) as HTMLInputElement
             )?.value || '',
-        full_name:
+        name:
             (
                 document.querySelector(
-                    'input[name="full_name"]',
+                    'input[name="name"]',
                 ) as HTMLInputElement
             )?.value || '',
         email:
@@ -186,19 +186,19 @@ onMounted(() => {
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="full_name">Name</Label>
+                    <Label for="name">Name</Label>
                     <Input
-                        id="full_name"
+                        id="name"
                         type="text"
                         required
                         :tabindex="2"
                         autocomplete="name"
-                        name="full_name"
-                        placeholder="Enter your full name"
+                        name="name"
+                        placeholder="Enter your name"
                         maxlength="100"
                     />
                     <InputError
-                        :message="clientErrors.full_name || errors.full_name"
+                        :message="clientErrors.name || errors.name"
                     />
                 </div>
 
