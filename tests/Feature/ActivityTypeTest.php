@@ -8,24 +8,24 @@ uses(RefreshDatabase::class);
 
 test('activity type can be created with all fields', function () {
     $activityType = ActivityType::create([
-        'name' => 'Morning Run',
+        'name' => ['en' => 'Morning Run', 'ar' => 'الركض الصباحي'],
         'category' => ActivityCategory::WORKOUT->value,
         'base_points' => 30,
-        'description' => 'A morning jogging session',
+        'description' => ['en' => 'A morning jogging session', 'ar' => 'جلسة ركض صباحية'],
         'icon' => '🏃',
         'is_active' => true,
     ]);
     
-    expect($activityType->name)->toBe('Morning Run');
+    expect($activityType->getTranslatedName())->toBe('Morning Run');
     expect($activityType->category)->toBe(ActivityCategory::WORKOUT);
     expect($activityType->base_points)->toBe(30);
-    expect($activityType->description)->toBe('A morning jogging session');
+    expect($activityType->getTranslatedDescription())->toBe('A morning jogging session');
     expect($activityType->is_active)->toBeTrue();
 });
 
 test('activity type casts category to enum', function () {
     $activityType = ActivityType::create([
-        'name' => 'Morning Run',
+        'name' => ['en' => 'Morning Run', 'ar' => 'الركض الصباحي'],
         'category' => ActivityCategory::WORKOUT->value,
         'base_points' => 25,
     ]);

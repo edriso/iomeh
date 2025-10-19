@@ -9,7 +9,9 @@ uses(RefreshDatabase::class);
 
 test('user can have habits', function () {
     $user = User::factory()->create();
-    $activityType = ActivityType::factory()->create(['name' => 'Running']);
+    $activityType = ActivityType::factory()->create([
+        'name' => ['en' => 'Running', 'ar' => 'الركض']
+    ]);
     
     $habit = Habit::create([
         'user_id' => $user->id,
@@ -39,7 +41,9 @@ test('habit belongs to user and activity type', function () {
 
 test('habit can have custom name', function () {
     $user = User::factory()->create();
-    $activityType = ActivityType::factory()->create(['name' => 'Weight Training']);
+    $activityType = ActivityType::factory()->create([
+        'name' => ['en' => 'Weight Training', 'ar' => 'تدريب الأثقال']
+    ]);
     
     $habit = Habit::create([
         'user_id' => $user->id,

@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\ActivityType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,13 +16,23 @@ class ActivityTypeFactory extends Factory
      */
     public function definition(): array
     {
+        $name = fake()->unique()->words(2, true);
+        $description = fake()->optional(0.7)->sentence();
+        
         return [
-            'name' => fake()->unique()->words(2, true),
+            'name' => [
+                'en' => $name,
+                'ar' => fake()->words(2, true), // Generate Arabic-like text
+            ],
+            'locale' => 'activity.' . strtolower(str_replace(' ', '_', $name)),
             'category' => fake()->randomElement(\App\Enums\ActivityCategory::cases())->value,
             'base_points' => fake()->numberBetween(10, 50),
             'icon' => fake()->randomElement(['💪', '🏃', '🧘', '🍎', '🥗', '💤', '🏋️', '🚴', '🏊']),
             'display_order' => fake()->numberBetween(0, 100),
-            'description' => fake()->optional(0.7)->sentence(),
+            'description' => $description ? [
+                'en' => $description,
+                'ar' => fake()->sentence(), // Generate Arabic-like text
+            ] : null,
             'is_active' => fake()->boolean(95),
         ];
     }
@@ -47,30 +56,6 @@ class ActivityTypeFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'category' => \App\Enums\ActivityCategory::NUTRITION->value,
             'icon' => fake()->randomElement(['🍎', '🥗', '🥑', '🍇', '🥤']),
-        ]);
-    }
-
-    /**
-     * Indicate that the activity type is wellness.
-     */
-    public function wellness(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'category' => \App\Enums\ActivityCategory::WELLNESS->value,
-            'met_value' => null,
-            'icon' => fake()->randomElement(['💤', '🧘', '📚', '🎵', '🌿']),
-        ]);
-    }
-
-    /**
-     * Indicate that the activity type is mindfulness.
-     */
-    public function mindfulness(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'category' => \App\Enums\ActivityCategory::MINDFULNESS->value,
-            'met_value' => null,
-            'icon' => fake()->randomElement(['🧘‍♀️', '📝', '📚', '🙏', '🎨']),
         ]);
     }
 }

@@ -72,3 +72,4 @@ require __DIR__.'/auth.php';
 Route::fallback(function () {
     return Inertia::render('errors/404');
 });
+

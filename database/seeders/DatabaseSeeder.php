@@ -12,7 +12,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $seeders = [
-            ActivityTypeSeeder::class,  // Create activity types first
+            ActivityTypeWithTranslationsSeeder::class,  // Create activity types with translations first
             UserSeeder::class,           // Create users
             HabitSeeder::class,       // Create habits (depends on users and activity types)
             ActivitySeeder::class,       // Create activities (depends on users and habits)

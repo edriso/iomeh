@@ -12,14 +12,12 @@ class ActivityType extends Model
 
     protected $fillable = [
         'name',
-        'name_translations',
-        'translation_key',
+        'locale',
         'category',
         'base_points',
         'icon',
         'display_order',
         'description',
-        'description_translations',
         'is_active',
     ];
 
@@ -30,8 +28,8 @@ class ActivityType extends Model
             'base_points' => 'integer',
             'display_order' => 'integer',
             'is_active' => 'boolean',
-            'name_translations' => 'array',
-            'description_translations' => 'array',
+            'name' => 'array',
+            'description' => 'array',
         ];
     }
 
@@ -84,7 +82,7 @@ class ActivityType extends Model
     public function getTranslatedNameAttribute()
     {
         $locale = app()->getLocale();
-        return $this->name_translations[$locale] ?? $this->name;
+        return $this->name[$locale] ?? $this->name['en'] ?? '';
     }
 
     /**
@@ -93,7 +91,7 @@ class ActivityType extends Model
     public function getTranslatedDescriptionAttribute()
     {
         $locale = app()->getLocale();
-        return $this->description_translations[$locale] ?? $this->description;
+        return $this->description[$locale] ?? $this->description['en'] ?? null;
     }
 
     /**
@@ -101,7 +99,7 @@ class ActivityType extends Model
      */
     public function getNameInLocale(string $locale): string
     {
-        return $this->name_translations[$locale] ?? $this->name;
+        return $this->name[$locale] ?? $this->name['en'] ?? '';
     }
 
     /**
@@ -109,7 +107,25 @@ class ActivityType extends Model
      */
     public function getDescriptionInLocale(string $locale): ?string
     {
-        return $this->description_translations[$locale] ?? $this->description;
+        return $this->description[$locale] ?? $this->description['en'] ?? null;
+    }
+
+    /**
+     * Get the translated name for the current locale.
+     */
+    public function getTranslatedName()
+    {
+        $locale = app()->getLocale();
+        return $this->name[$locale] ?? $this->name['en'] ?? '';
+    }
+
+    /**
+     * Get the translated description for the current locale.
+     */
+    public function getTranslatedDescription()
+    {
+        $locale = app()->getLocale();
+        return $this->description[$locale] ?? $this->description['en'] ?? null;
     }
 }
 

@@ -9,7 +9,7 @@ use Illuminate\Database\Seeder;
 class ActivityTypeWithTranslationsSeeder extends Seeder
 {
     /**
-     * Seed activity types with translations for IOMeH workout and nutrition tracking platform.
+     * Seed activity types with proper translation structure.
      */
     public function run(): void
     {
@@ -19,182 +19,242 @@ class ActivityTypeWithTranslationsSeeder extends Seeder
             // ========================================
             
             [
-                'name' => 'Walking',
-                'name_translations' => [
+                'name' => [
                     'en' => 'Walking',
                     'ar' => 'المشي',
                 ],
-                'translation_key' => 'activity.walking',
+                'locale' => 'activity.walking',
                 'category' => ActivityCategory::WORKOUT->value,
-                'base_points' => 15,
-                'icon' => '🚶‍♂️',
+                'base_points' => 25,
+                'icon' => '🚶',
                 'display_order' => 1,
-                'description' => 'Walking for 30+ minutes',
-                'description_translations' => [
+                'description' => [
                     'en' => 'Walking for 30+ minutes',
                     'ar' => 'المشي لمدة 30+ دقيقة',
                 ],
                 'is_active' => true,
             ],
             [
-                'name' => 'Running',
-                'name_translations' => [
+                'name' => [
                     'en' => 'Running',
-                    'ar' => 'الجري',
+                    'ar' => 'الركض',
                 ],
-                'translation_key' => 'activity.running',
-                'category' => ActivityCategory::WORKOUT->value,
-                'base_points' => 40,
-                'icon' => '🏃‍♂️',
-                'display_order' => 2,
-                'description' => 'Running for 20+ minutes',
-                'description_translations' => [
-                    'en' => 'Running for 20+ minutes',
-                    'ar' => 'الجري لمدة 20+ دقيقة',
-                ],
-                'is_active' => true,
-            ],
-            [
-                'name' => 'Gym Workout',
-                'name_translations' => [
-                    'en' => 'Gym Workout',
-                    'ar' => 'تمرين الجيم',
-                ],
-                'translation_key' => 'activity.gym_workout',
+                'locale' => 'activity.running',
                 'category' => ActivityCategory::WORKOUT->value,
                 'base_points' => 50,
-                'icon' => '🏋️‍♂️',
-                'display_order' => 3,
-                'description' => 'Gym workout for 45+ minutes',
-                'description_translations' => [
-                    'en' => 'Gym workout for 45+ minutes',
-                    'ar' => 'تمرين الجيم لمدة 45+ دقيقة',
+                'icon' => '🏃',
+                'display_order' => 2,
+                'description' => [
+                    'en' => 'Running for 20+ minutes',
+                    'ar' => 'الركض لمدة 20+ دقيقة',
                 ],
                 'is_active' => true,
             ],
             [
-                'name' => 'Cycling',
-                'name_translations' => [
+                'name' => [
+                    'en' => 'Strength Training',
+                    'ar' => 'تدريب القوة',
+                ],
+                'locale' => 'activity.strength_training',
+                'category' => ActivityCategory::WORKOUT->value,
+                'base_points' => 45,
+                'icon' => '🏋️',
+                'display_order' => 3,
+                'description' => [
+                    'en' => 'Weight lifting or bodyweight exercises',
+                    'ar' => 'رفع الأثقال أو تمارين وزن الجسم',
+                ],
+                'is_active' => true,
+            ],
+            [
+                'name' => [
                     'en' => 'Cycling',
                     'ar' => 'ركوب الدراجة',
                 ],
-                'translation_key' => 'activity.cycling',
+                'locale' => 'activity.cycling',
                 'category' => ActivityCategory::WORKOUT->value,
-                'base_points' => 35,
-                'icon' => '🚴‍♂️',
+                'base_points' => 40,
+                'icon' => '🚴',
                 'display_order' => 4,
-                'description' => 'Cycling for 30+ minutes',
-                'description_translations' => [
+                'description' => [
                     'en' => 'Cycling for 30+ minutes',
                     'ar' => 'ركوب الدراجة لمدة 30+ دقيقة',
                 ],
                 'is_active' => true,
             ],
             [
-                'name' => 'Swimming',
-                'name_translations' => [
+                'name' => [
                     'en' => 'Swimming',
                     'ar' => 'السباحة',
                 ],
-                'translation_key' => 'activity.swimming',
+                'locale' => 'activity.swimming',
                 'category' => ActivityCategory::WORKOUT->value,
-                'base_points' => 45,
-                'icon' => '🏊‍♂️',
+                'base_points' => 55,
+                'icon' => '🏊',
                 'display_order' => 5,
-                'description' => 'Swimming for 30+ minutes',
-                'description_translations' => [
-                    'en' => 'Swimming for 30+ minutes',
-                    'ar' => 'السباحة لمدة 30+ دقيقة',
+                'description' => [
+                    'en' => 'Swimming for 20+ minutes',
+                    'ar' => 'السباحة لمدة 20+ دقيقة',
                 ],
                 'is_active' => true,
             ],
             [
-                'name' => 'Stretching',
-                'name_translations' => [
-                    'en' => 'Stretching',
-                    'ar' => 'التمدد',
-                ],
-                'translation_key' => 'activity.stretching',
-                'category' => ActivityCategory::WORKOUT->value,
-                'base_points' => 15,
-                'icon' => '🤸‍♀️',
-                'display_order' => 6,
-                'description' => 'Stretching session for 15+ minutes',
-                'description_translations' => [
-                    'en' => 'Stretching session for 15+ minutes',
-                    'ar' => 'جلسة تمدد لمدة 15+ دقيقة',
-                ],
-                'is_active' => true,
-            ],
-            [
-                'name' => 'Home Workout',
-                'name_translations' => [
-                    'en' => 'Home Workout',
-                    'ar' => 'تمرين منزلي',
-                ],
-                'translation_key' => 'activity.home_workout',
-                'category' => ActivityCategory::WORKOUT->value,
-                'base_points' => 35,
-                'icon' => '🏠',
-                'display_order' => 7,
-                'description' => 'Home workout for 30+ minutes',
-                'description_translations' => [
-                    'en' => 'Home workout for 30+ minutes',
-                    'ar' => 'تمرين منزلي لمدة 30+ دقيقة',
-                ],
-                'is_active' => true,
-            ],
-            [
-                'name' => 'HIIT',
-                'name_translations' => [
-                    'en' => 'HIIT',
-                    'ar' => 'تمارين HIIT',
-                ],
-                'translation_key' => 'activity.hiit',
-                'category' => ActivityCategory::WORKOUT->value,
-                'base_points' => 50,
-                'icon' => '⚡',
-                'display_order' => 8,
-                'description' => 'High Intensity Interval Training',
-                'description_translations' => [
-                    'en' => 'High Intensity Interval Training',
-                    'ar' => 'تمارين عالية الكثافة',
-                ],
-                'is_active' => true,
-            ],
-            [
-                'name' => 'Yoga',
-                'name_translations' => [
+                'name' => [
                     'en' => 'Yoga',
                     'ar' => 'اليوجا',
                 ],
-                'translation_key' => 'activity.yoga',
+                'locale' => 'activity.yoga',
                 'category' => ActivityCategory::WORKOUT->value,
-                'base_points' => 25,
-                'icon' => '🧘‍♀️',
-                'display_order' => 9,
-                'description' => 'Yoga session for 30+ minutes',
-                'description_translations' => [
-                    'en' => 'Yoga session for 30+ minutes',
-                    'ar' => 'جلسة يوجا لمدة 30+ دقيقة',
+                'base_points' => 30,
+                'icon' => '🧘',
+                'display_order' => 6,
+                'description' => [
+                    'en' => 'Yoga or stretching session',
+                    'ar' => 'جلسة يوجا أو تمارين الإطالة',
                 ],
                 'is_active' => true,
             ],
             [
-                'name' => 'Dancing',
-                'name_translations' => [
+                'name' => [
                     'en' => 'Dancing',
                     'ar' => 'الرقص',
                 ],
-                'translation_key' => 'activity.dancing',
+                'locale' => 'activity.dancing',
+                'category' => ActivityCategory::WORKOUT->value,
+                'base_points' => 35,
+                'icon' => '💃',
+                'display_order' => 7,
+                'description' => [
+                    'en' => 'Dancing for 30+ minutes',
+                    'ar' => 'الرقص لمدة 30+ دقيقة',
+                ],
+                'is_active' => true,
+            ],
+            [
+                'name' => [
+                    'en' => 'Basketball',
+                    'ar' => 'كرة السلة',
+                ],
+                'locale' => 'activity.basketball',
+                'category' => ActivityCategory::WORKOUT->value,
+                'base_points' => 50,
+                'icon' => '🏀',
+                'display_order' => 8,
+                'description' => [
+                    'en' => 'Basketball game or practice',
+                    'ar' => 'مباراة أو تدريب كرة السلة',
+                ],
+                'is_active' => true,
+            ],
+            [
+                'name' => [
+                    'en' => 'Football',
+                    'ar' => 'كرة القدم',
+                ],
+                'locale' => 'activity.football',
+                'category' => ActivityCategory::WORKOUT->value,
+                'base_points' => 50,
+                'icon' => '⚽',
+                'display_order' => 9,
+                'description' => [
+                    'en' => 'Football/soccer game or practice',
+                    'ar' => 'مباراة أو تدريب كرة القدم',
+                ],
+                'is_active' => true,
+            ],
+            [
+                'name' => [
+                    'en' => 'Tennis',
+                    'ar' => 'التنس',
+                ],
+                'locale' => 'activity.tennis',
+                'category' => ActivityCategory::WORKOUT->value,
+                'base_points' => 45,
+                'icon' => '🎾',
+                'display_order' => 10,
+                'description' => [
+                    'en' => 'Tennis match or practice',
+                    'ar' => 'مباراة أو تدريب التنس',
+                ],
+                'is_active' => true,
+            ],
+            [
+                'name' => [
+                    'en' => 'Hiking',
+                    'ar' => 'المشي لمسافات طويلة',
+                ],
+                'locale' => 'activity.hiking',
+                'category' => ActivityCategory::WORKOUT->value,
+                'base_points' => 40,
+                'icon' => '🥾',
+                'display_order' => 11,
+                'description' => [
+                    'en' => 'Hiking or trail walking',
+                    'ar' => 'المشي لمسافات طويلة أو المشي في الطبيعة',
+                ],
+                'is_active' => true,
+            ],
+            [
+                'name' => [
+                    'en' => 'Pilates',
+                    'ar' => 'البيلاتس',
+                ],
+                'locale' => 'activity.pilates',
                 'category' => ActivityCategory::WORKOUT->value,
                 'base_points' => 30,
-                'icon' => '💃',
-                'display_order' => 10,
-                'description' => 'Dancing for 20+ minutes',
-                'description_translations' => [
-                    'en' => 'Dancing for 20+ minutes',
-                    'ar' => 'الرقص لمدة 20+ دقيقة',
+                'icon' => '🤸',
+                'display_order' => 12,
+                'description' => [
+                    'en' => 'Pilates class or session',
+                    'ar' => 'حصة أو جلسة بيلاتس',
+                ],
+                'is_active' => true,
+            ],
+            [
+                'name' => [
+                    'en' => 'Boxing',
+                    'ar' => 'الملاكمة',
+                ],
+                'locale' => 'activity.boxing',
+                'category' => ActivityCategory::WORKOUT->value,
+                'base_points' => 55,
+                'icon' => '🥊',
+                'display_order' => 13,
+                'description' => [
+                    'en' => 'Boxing training or sparring',
+                    'ar' => 'تدريب الملاكمة أو المباراة',
+                ],
+                'is_active' => true,
+            ],
+            [
+                'name' => [
+                    'en' => 'Martial Arts',
+                    'ar' => 'الرياضات القتالية',
+                ],
+                'locale' => 'activity.martial_arts',
+                'category' => ActivityCategory::WORKOUT->value,
+                'base_points' => 50,
+                'icon' => '🥋',
+                'display_order' => 14,
+                'description' => [
+                    'en' => 'Karate, Taekwondo, or other martial arts',
+                    'ar' => 'الكاراتيه، التايكوندو، أو الرياضات القتالية الأخرى',
+                ],
+                'is_active' => true,
+            ],
+            [
+                'name' => [
+                    'en' => 'Rock Climbing',
+                    'ar' => 'تسلق الصخور',
+                ],
+                'locale' => 'activity.rock_climbing',
+                'category' => ActivityCategory::WORKOUT->value,
+                'base_points' => 60,
+                'icon' => '🧗',
+                'display_order' => 15,
+                'description' => [
+                    'en' => 'Indoor or outdoor rock climbing',
+                    'ar' => 'تسلق الصخور في الداخل أو الخارج',
                 ],
                 'is_active' => true,
             ],
@@ -204,110 +264,162 @@ class ActivityTypeWithTranslationsSeeder extends Seeder
             // ========================================
             
             [
-                'name' => 'Healthy Breakfast',
-                'name_translations' => [
+                'name' => [
                     'en' => 'Healthy Breakfast',
                     'ar' => 'فطور صحي',
                 ],
-                'translation_key' => 'activity.healthy_breakfast',
+                'locale' => 'activity.healthy_breakfast',
                 'category' => ActivityCategory::NUTRITION->value,
-                'base_points' => 20,
+                'base_points' => 15,
                 'icon' => '🥣',
                 'display_order' => 1,
-                'description' => 'Nutritious breakfast with protein and fiber',
-                'description_translations' => [
+                'description' => [
                     'en' => 'Nutritious breakfast with protein and fiber',
                     'ar' => 'فطور مغذي يحتوي على البروتين والألياف',
                 ],
                 'is_active' => true,
             ],
             [
-                'name' => 'Vegetables',
-                'name_translations' => [
-                    'en' => 'Vegetables',
-                    'ar' => 'الخضروات',
+                'name' => [
+                    'en' => 'Vegetable Intake',
+                    'ar' => 'تناول الخضروات',
                 ],
-                'translation_key' => 'activity.vegetables',
+                'locale' => 'activity.vegetables',
                 'category' => ActivityCategory::NUTRITION->value,
-                'base_points' => 15,
+                'base_points' => 20,
                 'icon' => '🥬',
                 'display_order' => 2,
-                'description' => 'Eating 3+ servings of vegetables',
-                'description_translations' => [
-                    'en' => 'Eating 3+ servings of vegetables',
-                    'ar' => 'تناول 3+ حصص من الخضروات',
+                'description' => [
+                    'en' => '5+ servings of vegetables',
+                    'ar' => '5+ حصص من الخضروات',
                 ],
                 'is_active' => true,
             ],
             [
-                'name' => 'Fruits',
-                'name_translations' => [
-                    'en' => 'Fruits',
-                    'ar' => 'الفواكه',
+                'name' => [
+                    'en' => 'Fruit Intake',
+                    'ar' => 'تناول الفواكه',
                 ],
-                'translation_key' => 'activity.fruits',
+                'locale' => 'activity.fruits',
                 'category' => ActivityCategory::NUTRITION->value,
                 'base_points' => 15,
                 'icon' => '🍎',
                 'display_order' => 3,
-                'description' => 'Eating 2+ servings of fruits',
-                'description_translations' => [
-                    'en' => 'Eating 2+ servings of fruits',
-                    'ar' => 'تناول 2+ حصص من الفواكه',
+                'description' => [
+                    'en' => '3+ servings of fresh fruits',
+                    'ar' => '3+ حصص من الفواكه الطازجة',
                 ],
                 'is_active' => true,
             ],
             [
-                'name' => 'Water Intake',
-                'name_translations' => [
+                'name' => [
                     'en' => 'Water Intake',
                     'ar' => 'شرب الماء',
                 ],
-                'translation_key' => 'activity.water_intake',
+                'locale' => 'activity.water',
                 'category' => ActivityCategory::NUTRITION->value,
                 'base_points' => 10,
                 'icon' => '💧',
                 'display_order' => 4,
-                'description' => 'Drinking 8+ glasses of water',
-                'description_translations' => [
-                    'en' => 'Drinking 8+ glasses of water',
-                    'ar' => 'شرب 8+ أكواب من الماء',
+                'description' => [
+                    'en' => '8+ glasses of water',
+                    'ar' => '8+ أكواب من الماء',
                 ],
                 'is_active' => true,
             ],
             [
-                'name' => 'Protein Goal',
-                'name_translations' => [
-                    'en' => 'Protein Goal',
-                    'ar' => 'هدف البروتين',
+                'name' => [
+                    'en' => 'Lean Protein',
+                    'ar' => 'البروتين الخالي من الدهون',
                 ],
-                'translation_key' => 'activity.protein_goal',
-                'category' => ActivityCategory::NUTRITION->value,
-                'base_points' => 25,
-                'icon' => '🥩',
-                'display_order' => 5,
-                'description' => 'Meeting daily protein requirements',
-                'description_translations' => [
-                    'en' => 'Meeting daily protein requirements',
-                    'ar' => 'تحقيق متطلبات البروتين اليومية',
-                ],
-                'is_active' => true,
-            ],
-            [
-                'name' => 'Cooking at Home',
-                'name_translations' => [
-                    'en' => 'Cooking at Home',
-                    'ar' => 'الطبخ في المنزل',
-                ],
-                'translation_key' => 'activity.cooking_home',
+                'locale' => 'activity.lean_protein',
                 'category' => ActivityCategory::NUTRITION->value,
                 'base_points' => 20,
-                'icon' => '👨‍🍳',
+                'icon' => '🍗',
+                'display_order' => 5,
+                'description' => [
+                    'en' => 'Lean protein source (chicken, fish, beans)',
+                    'ar' => 'مصدر بروتين خالي من الدهون (دجاج، سمك، فاصوليا)',
+                ],
+                'is_active' => true,
+            ],
+            [
+                'name' => [
+                    'en' => 'Whole Grains',
+                    'ar' => 'الحبوب الكاملة',
+                ],
+                'locale' => 'activity.whole_grains',
+                'category' => ActivityCategory::NUTRITION->value,
+                'base_points' => 15,
+                'icon' => '🌾',
                 'display_order' => 6,
-                'description' => 'Preparing healthy meals at home',
-                'description_translations' => [
-                    'en' => 'Preparing healthy meals at home',
-                    'ar' => 'تحضير وجبات صحية في المنزل',
+                'description' => [
+                    'en' => 'Whole grain foods (brown rice, quinoa, oats)',
+                    'ar' => 'أطعمة الحبوب الكاملة (الأرز البني، الكينوا، الشوفان)',
+                ],
+                'is_active' => true,
+            ],
+            [
+                'name' => [
+                    'en' => 'Healthy Snacks',
+                    'ar' => 'وجبات خفيفة صحية',
+                ],
+                'locale' => 'activity.healthy_snacks',
+                'category' => ActivityCategory::NUTRITION->value,
+                'base_points' => 10,
+                'icon' => '🥜',
+                'display_order' => 7,
+                'description' => [
+                    'en' => 'Nuts, seeds, or healthy snacks',
+                    'ar' => 'المكسرات، البذور، أو وجبات خفيفة صحية',
+                ],
+                'is_active' => true,
+            ],
+            [
+                'name' => [
+                    'en' => 'Meal Prep',
+                    'ar' => 'تحضير الوجبات',
+                ],
+                'locale' => 'activity.meal_prep',
+                'category' => ActivityCategory::NUTRITION->value,
+                'base_points' => 25,
+                'icon' => '🍱',
+                'display_order' => 8,
+                'description' => [
+                    'en' => 'Preparing healthy meals in advance',
+                    'ar' => 'تحضير وجبات صحية مسبقاً',
+                ],
+                'is_active' => true,
+            ],
+            [
+                'name' => [
+                    'en' => 'No Processed Foods',
+                    'ar' => 'عدم تناول الأطعمة المصنعة',
+                ],
+                'locale' => 'activity.no_processed',
+                'category' => ActivityCategory::NUTRITION->value,
+                'base_points' => 20,
+                'icon' => '🚫',
+                'display_order' => 9,
+                'description' => [
+                    'en' => 'Avoiding processed and junk foods',
+                    'ar' => 'تجنب الأطعمة المصنعة والوجبات السريعة',
+                ],
+                'is_active' => true,
+            ],
+            [
+                'name' => [
+                    'en' => 'Balanced Meal',
+                    'ar' => 'وجبة متوازنة',
+                ],
+                'locale' => 'activity.balanced_meal',
+                'category' => ActivityCategory::NUTRITION->value,
+                'base_points' => 25,
+                'icon' => '🍽️',
+                'display_order' => 10,
+                'description' => [
+                    'en' => 'Complete balanced meal with all food groups',
+                    'ar' => 'وجبة متوازنة كاملة تحتوي على جميع المجموعات الغذائية',
                 ],
                 'is_active' => true,
             ],

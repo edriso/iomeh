@@ -14,18 +14,13 @@ return new class extends Migration
     {
         Schema::create('activity_types', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
+            $table->json('name');
+            $table->json('description')->nullable();
+            $table->string('locale')->nullable();
             $table->enum('category', ActivityCategory::values());
             $table->unsignedSmallInteger('base_points')->default(0);
             $table->string('icon', 50)->nullable();
             $table->unsignedTinyInteger('display_order')->default(0);
-            $table->text('description')->nullable();
-
-            // Add translation columns
-            $table->json('name_translations')->nullable();
-            $table->json('description_translations')->nullable();
-            $table->string('translation_key')->nullable();
-            
             $table->boolean('is_active')->default(true);
             $table->timestamps();
             
