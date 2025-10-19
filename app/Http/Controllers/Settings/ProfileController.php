@@ -7,6 +7,7 @@ use App\Http\Requests\Settings\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -39,8 +40,13 @@ class ProfileController extends Controller
     {
         $validated = $request->validated();
         
-        $request->user()->fill($validated);
-        $request->user()->save();
+        $user = $request->user();
+        $user->fill($validated);
+        $user->save();
+
+        // Clear the home page cache for this user
+        $cacheKey = "home_data_user_{$user->id}";
+        Cache::forget($cacheKey);
 
         return to_route('profile.edit');
     }
