@@ -1,10 +1,11 @@
-import { ref } from 'vue';
+import { nextTick, ref } from 'vue';
 
 // Global state for log activity modal
 const showLogActivityModal = ref(false);
 
 export function useLogActivity() {
-    const openLogActivityModal = () => {
+    const openLogActivityModal = async () => {
+        await nextTick();
         showLogActivityModal.value = true;
     };
 

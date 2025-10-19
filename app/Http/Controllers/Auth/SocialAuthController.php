@@ -68,7 +68,7 @@ class SocialAuthController extends Controller
             
             // Validate required data from Google
             if (!$googleUser->getEmail()) {
-                return redirect('/login')->with('error', 'Unable to retrieve email from Google. Please try again.');
+                return redirect('/login')->with('error', __('social.unable_retrieve_email'));
             }
             
             // Check if user already has a social login with this provider
@@ -99,7 +99,7 @@ class SocialAuthController extends Controller
             if ($existingUser) {
                 // If trying to sign up with an existing email, inform them to login instead
                 if ($context === 'register') {
-                    return redirect('/login')->with('error', 'An account with this Google email already exists. Please log in instead.');
+                    return redirect('/login')->with('error', __('social.account_exists_login'));
                 }
                 
                 // Link the Google account to existing user
@@ -121,7 +121,7 @@ class SocialAuthController extends Controller
             // Handle based on context
             if ($context === 'login') {
                 // For login: Don't create new user, show error
-                return redirect('/login')->with('error', 'No account found with that Google email. Please sign up first or try a different account.');
+                return redirect('/login')->with('error', __('social.no_account_found'));
             }
 
             // For register: Create new user
@@ -152,14 +152,14 @@ class SocialAuthController extends Controller
         } catch (\Laravel\Socialite\Two\InvalidStateException $e) {
             $redirectTo = $context === 'register' ? '/register' : '/login';
             $action = $context === 'register' ? 'signing up' : 'logging in';
-            return redirect($redirectTo)->with('error', "Authentication session expired or invalid. Please try {$action} again with Google.");
+            return redirect($redirectTo)->with('error', __('social.session_expired', ['action' => $action]));
         } catch (\GuzzleHttp\Exception\ClientException $e) {
-            return redirect('/login')->with('error', 'Authentication failed. Please check your Google account and try again.');
+            return redirect('/login')->with('error', __('social.auth_failed'));
         } catch (\Exception $e) {
             Log::error('Google OAuth Error: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString()
             ]);
-            return redirect('/login')->with('error', 'Unable to login with Google. Please try again or contact support.');
+            return redirect('/login')->with('error', __('social.unable_login'));
         }
     }
 
@@ -206,7 +206,7 @@ class SocialAuthController extends Controller
         }
 
         if ($provider !== 'google') {
-            return redirect()->back()->with('error', 'Provider not supported.');
+            return redirect()->back()->with('error', __('social.provider_not_supported'));
         }
 
         return Socialite::driver($provider)->redirect();
@@ -222,11 +222,12 @@ class SocialAuthController extends Controller
         }
 
         if ($provider !== 'google') {
-            return redirect()->back()->with('error', 'Provider not supported.');
+            return redirect()->back()->with('error', __('social.provider_not_supported'));
         }
 
         try {
             $socialUser = Socialite::driver($provider)->user();
+            /** @var User $user */
             $user = Auth::user();
 
             // Check if this social account is already linked to another user
@@ -235,7 +236,7 @@ class SocialAuthController extends Controller
                 ->first();
 
             if ($existingSocialLogin && $existingSocialLogin->user_id !== $user->id) {
-                return redirect()->back()->with('error', 'This Google account is already linked to another user.');
+                return redirect()->back()->with('error', __('social.account_already_linked'));
             }
 
             // Check if user already has this provider linked
@@ -256,10 +257,10 @@ class SocialAuthController extends Controller
                 'avatar' => $socialUser->getAvatar(),
             ]);
 
-            return redirect()->back()->with('success', 'Google account linked successfully.');
+            return redirect()->back()->with('success', __('success.social_linked'));
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Unable to link Google account. Please try again.');
+            return redirect()->back()->with('error', __('social.unable_link'));
         }
     }
 
@@ -273,26 +274,27 @@ class SocialAuthController extends Controller
         }
 
         if ($provider !== 'google') {
-            return redirect()->back()->with('error', 'Provider not supported.');
+            return redirect()->back()->with('error', __('social.provider_not_supported'));
         }
 
+        /** @var User $user */
         $user = Auth::user();
 
         // Check if user has a password or other social accounts before unlinking
         $socialLoginsCount = $user->socialLogins()->count();
         
         if (!$user->hasPassword() && $socialLoginsCount <= 1) {
-            return redirect()->back()->with('error', 'Cannot unlink your only login method. Please set a password first.');
+            return redirect()->back()->with('error', __('social.cannot_unlink_only_method'));
         }
 
         $socialLogin = $user->socialLogins()->where('provider', $provider)->first();
 
         if (!$socialLogin) {
-            return redirect()->back()->with('error', 'No linked account found for this provider.');
+            return redirect()->back()->with('error', __('social.no_linked_account'));
         }
 
         $socialLogin->delete();
 
-        return redirect()->back()->with('success', 'Account unlinked successfully.');
+        return redirect()->back()->with('success', __('success.social_unlinked'));
     }
 }

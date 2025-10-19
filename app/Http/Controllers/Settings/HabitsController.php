@@ -34,7 +34,7 @@ class HabitsController extends Controller
                     'display_order' => $habit->display_order,
                     'activity_type' => [
                         'id' => $habit->activityType->id,
-                        'name' => $habit->activityType->name,
+                        'name' => $habit->activityType->translated_name,
                         'category' => $habit->activityType->category->value,
                         'base_points' => $habit->activityType->base_points,
                         'icon' => $habit->activityType->icon,
@@ -49,11 +49,11 @@ class HabitsController extends Controller
             ->map(function ($type) {
                 return [
                     'id' => $type->id,
-                    'name' => $type->name,
+                    'name' => $type->translated_name,
                     'category' => $type->category->value,
                     'base_points' => $type->base_points,
                     'icon' => $type->icon,
-                    'description' => $type->description,
+                    'description' => $type->translated_description,
                 ];
             })
             ->groupBy('category');
@@ -71,40 +71,37 @@ class HabitsController extends Controller
     {
         $validated = $request->validate([
             'habits' => ['required', 'array', 'min:1', 'max:15'],
-            'habits.*.activity_type_id' => ['required', 'exists:activity_types,id'],
+            'habits.*.activity_type_id' => ['nullable', 'exists:activity_types,id'],
             'habits.*.custom_name' => ['required', 'string', 'max:100'],
+            'habits.*.custom_icon' => ['nullable', 'string', 'max:50'],
             'habits.*.notes' => ['nullable', 'string', 'max:500'],
         ], [
-            'habits.max' => 'You can have a maximum of 15 habits. Please remove some habits before adding new ones.',
+            'habits.required' => __('validation.required'),
+            'habits.max' => __('habits.maximum_reached'),
+            'habits.*.activity_type_id.exists' => __('validation.in'),
+            'habits.*.custom_name.required' => __('validation.required'),
+            'habits.*.custom_name.max' => __('validation.max.string', ['max' => 100]),
+            'habits.*.custom_icon.max' => __('validation.max.string', ['max' => 50]),
+            'habits.*.notes.max' => __('validation.max.string', ['max' => 500]),
         ]);
 
         /** @var User $user */
         $user = Auth::user();
 
-        // Get IDs of habits to keep
-        $activityTypeIds = collect($validated['habits'])
-            ->pluck('activity_type_id')
-            ->toArray();
+        // Clear all existing habits and recreate them
+        $user->habits()->delete();
 
-        // Delete habits that are no longer selected
-        $user->habits()
-            ->whereNotIn('activity_type_id', $activityTypeIds)
-            ->delete();
-
-        // Update or create habits
+        // Create new habits
         foreach ($validated['habits'] as $index => $habitData) {
-            $user->habits()->updateOrCreate(
-                [
-                    'activity_type_id' => $habitData['activity_type_id'],
-                ],
-                [
-                    'custom_name' => $habitData['custom_name'],
-                    'notes' => $habitData['notes'] ?? null,
-                    'display_order' => $index,
-                ]
-            );
+            $user->habits()->create([
+                'activity_type_id' => $habitData['activity_type_id'],
+                'custom_name' => $habitData['custom_name'],
+                'custom_icon' => $habitData['custom_icon'] ?? null,
+                'notes' => $habitData['notes'] ?? null,
+                'display_order' => $index,
+            ]);
         }
 
-        return back()->with('success', 'Habits updated successfully!');
+        return back()->with('success', __('success.habits_updated'));
     }
 }

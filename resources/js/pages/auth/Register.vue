@@ -1,15 +1,24 @@
 <script setup lang="ts">
 import RegisteredUserController from '@/actions/App/Http/Controllers/Auth/RegisteredUserController';
 import InputError from '@/components/InputError.vue';
+import PasswordInput from '@/components/PasswordInput.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useTranslations } from '@/composables/useTranslations';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import { login } from '@/routes/index';
-import { Form, Head } from '@inertiajs/vue3';
+import { Form, Head, usePage } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 import { onMounted, ref } from 'vue';
+
+// Get current locale from shared Inertia data and initialize
+const page = usePage();
+const initialLocale = (page.props.currentLocale as string) || 'en';
+
+// Use translations with reactive locale
+const { t, isRTL } = useTranslations(initialLocale);
 
 // Timezone detection
 const detectedTimezone = ref('UTC');
@@ -23,44 +32,45 @@ const validateForm = (formData: any) => {
     // Username validation
     const username = formData.username?.trim() || '';
     if (!username || username.length < 3) {
-        errors.username = 'Username must be at least 3 characters long.';
+        errors.username = t('validation.username.min');
     } else if (!/^[a-zA-Z0-9_]+$/.test(username)) {
-        errors.username =
-            'Username can only contain letters, numbers, and underscores.';
+        errors.username = t('validation.username.regex');
     }
 
     // Name validation
     const name = formData.name?.trim() || '';
     if (!name || name.length < 2) {
-        errors.name = 'Name must be at least 2 characters long.';
+        errors.name = t('validation.name.min');
     } else if (name.length > 100) {
-        errors.name = 'Name must not exceed 100 characters.';
+        errors.name = t('validation.name.max');
     }
 
     // Email validation
     const email = formData.email?.trim() || '';
     if (!email) {
-        errors.email = 'Email address is required.';
+        errors.email = t('validation.email.required');
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        errors.email = 'Please enter a valid email address.';
+        errors.email = t('validation.email.valid');
     }
 
     // Password validation
     if (!formData.password || formData.password.length < 8) {
-        errors.password = 'Password must be at least 8 characters long.';
+        errors.password = t('validation.password.min');
     }
 
     // Password confirmation validation
     if (!formData.password_confirmation) {
-        errors.password_confirmation = 'Please confirm your password.';
+        errors.password_confirmation = t(
+            'validation.password_confirmation.required',
+        );
     } else if (formData.password !== formData.password_confirmation) {
-        errors.password_confirmation = 'Passwords do not match.';
+        errors.password_confirmation = t('validation.password.confirmed');
     }
 
     // Bio validation (if provided)
     const bio = formData.bio?.trim() || '';
     if (bio && bio.length > 255) {
-        errors.bio = 'Bio must be 255 characters or less.';
+        errors.bio = t('validation.bio.max');
     }
 
     // Website URL validation (if provided)
@@ -69,8 +79,7 @@ const validateForm = (formData: any) => {
         try {
             new URL(websiteUrl);
         } catch {
-            errors.website_url =
-                'Please enter a valid URL (e.g., https://example.com).';
+            errors.website_url = t('validation.website_url.url');
         }
     }
 
@@ -151,10 +160,11 @@ onMounted(() => {
 
 <template>
     <AuthBase
-        title="Create an account"
-        description="Enter your details below to create your account"
+        :title="t('auth.create_account')"
+        :description="t('auth.create_account_description')"
+        :dir="isRTL ? 'rtl' : 'ltr'"
     >
-        <Head title="Register" />
+        <Head :title="t('nav.register')" />
 
         <Form
             v-bind="RegisteredUserController.store.form()"
@@ -166,7 +176,7 @@ onMounted(() => {
             <input type="hidden" name="timezone" :value="detectedTimezone" />
             <div class="grid gap-6">
                 <div class="grid gap-2">
-                    <Label for="username">Username</Label>
+                    <Label for="username">{{ t('profile.username') }}</Label>
                     <Input
                         id="username"
                         type="text"
@@ -175,7 +185,7 @@ onMounted(() => {
                         :tabindex="1"
                         autocomplete="username"
                         name="username"
-                        placeholder="Choose a username"
+                        :placeholder="t('auth.choose_username')"
                     />
                     <InputError
                         :message="clientErrors.username || errors.username"
@@ -183,7 +193,7 @@ onMounted(() => {
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="name">Name</Label>
+                    <Label for="name">{{ t('profile.name') }}</Label>
                     <Input
                         id="name"
                         type="text"
@@ -191,14 +201,14 @@ onMounted(() => {
                         :tabindex="2"
                         autocomplete="name"
                         name="name"
-                        placeholder="Enter your name"
+                        :placeholder="t('auth.enter_name')"
                         maxlength="100"
                     />
                     <InputError :message="clientErrors.name || errors.name" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="email">Email address</Label>
+                    <Label for="email">{{ t('auth.email_address') }}</Label>
                     <Input
                         id="email"
                         type="email"
@@ -206,21 +216,20 @@ onMounted(() => {
                         :tabindex="3"
                         autocomplete="email"
                         name="email"
-                        placeholder="Enter your email"
+                        :placeholder="t('auth.enter_email')"
                     />
                     <InputError :message="clientErrors.email || errors.email" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password">Password</Label>
-                    <Input
+                    <Label for="password">{{ t('auth.password') }}</Label>
+                    <PasswordInput
                         id="password"
-                        type="password"
+                        name="password"
                         required
                         :tabindex="4"
                         autocomplete="new-password"
-                        name="password"
-                        placeholder="Create a password"
+                        :placeholder="t('auth.create_password')"
                     />
                     <InputError
                         :message="clientErrors.password || errors.password"
@@ -228,15 +237,16 @@ onMounted(() => {
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password_confirmation">Confirm password</Label>
-                    <Input
+                    <Label for="password_confirmation">{{
+                        t('auth.confirm_password')
+                    }}</Label>
+                    <PasswordInput
                         id="password_confirmation"
-                        type="password"
+                        name="password_confirmation"
                         required
                         :tabindex="5"
                         autocomplete="new-password"
-                        name="password_confirmation"
-                        placeholder="Confirm your password"
+                        :placeholder="t('auth.confirm_password_placeholder')"
                     />
                     <InputError
                         :message="
@@ -258,7 +268,7 @@ onMounted(() => {
                         v-if="processing"
                         class="h-4 w-4 animate-spin"
                     />
-                    Create account
+                    {{ t('nav.register') }}
                 </Button>
             </div>
 
@@ -268,7 +278,7 @@ onMounted(() => {
                 </div>
                 <div class="relative flex justify-center text-xs uppercase">
                     <span class="bg-background px-2 text-muted-foreground">
-                        Or continue with
+                        {{ t('auth.or_continue_with') }}
                     </span>
                 </div>
             </div>
@@ -297,16 +307,16 @@ onMounted(() => {
                         fill="#EA4335"
                     />
                 </svg>
-                Sign up with Google
+                {{ t('auth.sign_up_with_google') }}
             </Button>
 
             <div class="text-center text-sm text-muted-foreground">
-                Already have an account?
+                {{ t('auth.already_have_account') }}
                 <TextLink
                     :href="login()"
                     class="underline underline-offset-4"
                     :tabindex="6"
-                    >Log in</TextLink
+                    >{{ t('nav.login') }}</TextLink
                 >
             </div>
         </Form>

@@ -62,7 +62,7 @@ test('profile displays current season points correctly', function () {
     Season::create([
         'user_id' => $user->id,
         'year' => $currentYear,
-        'name' => $currentSeason,
+        'quarter_number' => $currentSeason,
         'points' => 150,
         'season_year_points' => 150,
     ]);

@@ -25,6 +25,7 @@ return new class extends Migration
             $table->unsignedSmallInteger('longest_streak')->default(0);
             $table->date('last_activity_date')->nullable();
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('locale', 2)->default('en');
             $table->boolean('is_active')->default(true);
             $table->rememberToken();
             $table->timestamps();

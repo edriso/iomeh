@@ -40,12 +40,26 @@ class RegisteredUserController extends Controller
             'avatar' => 'nullable|string|max:255',
             'bio' => 'nullable|string|max:255',
             'website_url' => 'nullable|url|max:255',
+        ], [
+            'name.min' => __('validation.name.min'),
+            'name.max' => __('validation.name.max'),
+            'email.required' => __('validation.email.required'),
+            'email.email' => __('validation.email.valid'),
+            'email.unique' => __('validation.email.unique'),
+            'password.required' => __('validation.password.required'),
+            'password.confirmed' => __('validation.password.confirmed'),
+            'username.required' => __('validation.username.min'),
+            'username.min' => __('validation.username.min'),
+            'username.regex' => __('validation.username.regex'),
+            'bio.max' => __('validation.bio.max'),
+            'website_url.url' => __('validation.website_url.url'),
+            'avatar.url' => __('validation.avatar.url'),
         ]);
 
         // Check for case-insensitive username uniqueness
         $existingUser = User::whereRaw('LOWER(username) = ?', [strtolower($request->username)])->first();
         if ($existingUser) {
-            return back()->withErrors(['username' => 'The username has already been taken.']);
+            return back()->withErrors(['username' => __('validation.username.unique')]);
         }
 
         try {
@@ -61,10 +75,10 @@ class RegisteredUserController extends Controller
         } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
             // Handle unique constraint violations
             if (str_contains($e->getMessage(), 'users.email')) {
-                return back()->withErrors(['email' => 'The email has already been taken.']);
+                return back()->withErrors(['email' => __('validation.email.unique')]);
             }
             if (str_contains($e->getMessage(), 'users.username')) {
-                return back()->withErrors(['username' => 'The username has already been taken.']);
+                return back()->withErrors(['username' => __('validation.username.unique')]);
             }
             throw $e;
         }

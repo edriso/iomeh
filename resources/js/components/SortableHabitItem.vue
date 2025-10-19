@@ -6,8 +6,9 @@ import { Card, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { GripVertical, Trash2 } from 'lucide-vue-next';
-import { computed } from 'vue';
+import { useTranslations } from '@/composables/useTranslations';
+import { GripVertical, Trash2, X } from 'lucide-vue-next';
+import { computed, ref } from 'vue';
 
 interface ActivityType {
     id: number;
@@ -20,11 +21,12 @@ interface ActivityType {
 
 interface Habit {
     id: number;
-    activity_type_id: number;
+    activity_type_id: number | null;
     custom_name: string;
+    custom_icon: string | null;
     notes: string | null;
     display_order: number;
-    activity_type: ActivityType;
+    activity_type: ActivityType | null;
 }
 
 interface Props {
@@ -41,6 +43,103 @@ const emit = defineEmits<{
     'update:habit': [habit: Habit];
 }>();
 
+// Translations
+const { t } = useTranslations();
+
+// Emoji picker state
+const showEmojiPicker = ref(false);
+const customEmojiInput = ref('');
+
+// Emoji data
+const popularEmojis = [
+    '😀',
+    '😊',
+    '😎',
+    '🤔',
+    '😴',
+    '🤗',
+    '😍',
+    '🥰',
+    '😘',
+    '😉',
+    '😋',
+    '🤤',
+    '😏',
+    '😒',
+    '😔',
+    '😢',
+];
+
+const fitnessEmojis = [
+    '🏃‍♂️',
+    '🏃‍♀️',
+    '🚴‍♂️',
+    '🚴‍♀️',
+    '🏊‍♂️',
+    '🏊‍♀️',
+    '🏋️‍♂️',
+    '🏋️‍♀️',
+    '🤸‍♂️',
+    '🤸‍♀️',
+    '🤾‍♂️',
+    '🤾‍♀️',
+    '🤽‍♂️',
+    '🤽‍♀️',
+    '🤼‍♂️',
+    '🤼‍♀️',
+    '🏌️‍♂️',
+    '🏌️‍♀️',
+    '🏇',
+    '🤺',
+    '🏄‍♂️',
+    '🏄‍♀️',
+    '🏊‍♂️',
+    '🏊‍♀️',
+    '⛹️‍♂️',
+    '⛹️‍♀️',
+    '🏋️‍♂️',
+    '🏋️‍♀️',
+    '🚴‍♂️',
+    '🚴‍♀️',
+    '🏃‍♂️',
+    '🏃‍♀️',
+];
+
+const foodEmojis = [
+    '🍎',
+    '🍊',
+    '🍋',
+    '🍌',
+    '🍉',
+    '🍇',
+    '🍓',
+    '🍈',
+    '🍒',
+    '🍑',
+    '🥭',
+    '🍍',
+    '🥥',
+    '🥝',
+    '🍅',
+    '🥕',
+    '🌽',
+    '🌶️',
+    '🥒',
+    '🥬',
+    '🥦',
+    '🧄',
+    '🧅',
+    '🍄',
+    '🥜',
+    '🌰',
+    '🍞',
+    '🥐',
+    '🥖',
+    '🍯',
+    '🥛',
+    '🧀',
+];
+
 // Computed properties for better type safety
 const customName = computed({
     get: () => props.habit.custom_name,
@@ -56,9 +155,42 @@ const notes = computed({
     },
 });
 
+const customIcon = computed({
+    get: () => props.habit.custom_icon,
+    set: (value: string | null) => {
+        emit('update:habit', { ...props.habit, custom_icon: value });
+    },
+});
+
+// Get the effective icon (custom or activity type icon)
+const effectiveIcon = computed(() => {
+    return props.habit.custom_icon || props.habit.activity_type?.icon || '🏃‍♂️';
+});
+
 // Helper function to get error message
 const getErrorMessage = (field: string): string | undefined => {
     return props.errors[`habits.${props.index}.${field}`];
+};
+
+// Emoji picker methods
+const toggleEmojiPicker = () => {
+    showEmojiPicker.value = !showEmojiPicker.value;
+};
+
+const closeEmojiPicker = () => {
+    showEmojiPicker.value = false;
+    customEmojiInput.value = '';
+};
+
+const selectEmoji = (emoji: string) => {
+    customIcon.value = emoji;
+    closeEmojiPicker();
+};
+
+const selectCustomEmoji = () => {
+    if (customEmojiInput.value) {
+        selectEmoji(customEmojiInput.value);
+    }
 };
 </script>
 
@@ -78,13 +210,16 @@ const getErrorMessage = (field: string): string | undefined => {
                     </div>
                     <div class="flex-1">
                         <div class="mb-2 flex items-center gap-2">
-                            <span
-                                v-if="habit.activity_type.icon"
-                                class="text-2xl"
+                            <button
+                                type="button"
+                                @click="toggleEmojiPicker"
+                                class="cursor-pointer rounded p-1 text-2xl transition-colors hover:bg-muted"
+                                :title="t('habits.change_icon')"
                             >
-                                {{ habit.activity_type.icon }}
-                            </span>
+                                {{ effectiveIcon }}
+                            </button>
                             <Badge
+                                v-if="habit.activity_type"
                                 variant="outline"
                                 :class="
                                     getCategoryColor(
@@ -92,22 +227,28 @@ const getErrorMessage = (field: string): string | undefined => {
                                     )
                                 "
                             >
-                                {{ habit.activity_type.category }}
+                                {{
+                                    t(`habits.${habit.activity_type.category}`)
+                                }}
                             </Badge>
-                            <span class="text-xs text-muted-foreground">
-                                {{ habit.activity_type.base_points }} pts
+                            <span
+                                v-if="habit.activity_type"
+                                class="text-xs text-muted-foreground"
+                            >
+                                {{ habit.activity_type.base_points }}
+                                {{ t('habits.points') }}
                             </span>
                         </div>
                         <div class="space-y-3">
                             <div>
                                 <Label :for="`name-${habit.id}`">
-                                    Custom Name
+                                    {{ t('habits.custom_name') }}
                                 </Label>
                                 <Input
                                     :id="`name-${habit.id}`"
                                     v-model="customName"
                                     type="text"
-                                    placeholder="e.g., Morning Workout"
+                                    :placeholder="t('habits.example_name')"
                                     class="mt-1"
                                 />
                                 <InputError
@@ -116,18 +257,133 @@ const getErrorMessage = (field: string): string | undefined => {
                             </div>
                             <div>
                                 <Label :for="`notes-${habit.id}`">
-                                    Notes (optional)
+                                    {{ t('habits.notes_optional') }}
                                 </Label>
                                 <Textarea
                                     :id="`notes-${habit.id}`"
                                     v-model="notes"
-                                    placeholder="Add any personal notes..."
+                                    :placeholder="t('habits.notes_placeholder')"
                                     :rows="2"
                                     class="mt-1"
                                 />
                                 <InputError
                                     :message="getErrorMessage('notes')"
                                 />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Emoji Picker Popup -->
+                <div
+                    v-if="showEmojiPicker"
+                    class="absolute top-0 right-0 left-0 z-50 rounded-lg border border-border bg-background p-4 shadow-lg"
+                    @click.stop
+                >
+                    <div class="mb-3 flex items-center justify-between">
+                        <h3 class="text-sm font-medium">
+                            {{ t('habits.choose_icon') }}
+                        </h3>
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            @click="closeEmojiPicker"
+                            class="h-6 w-6 p-0"
+                        >
+                            <X class="h-4 w-4" />
+                        </Button>
+                    </div>
+
+                    <div class="space-y-3">
+                        <!-- Popular emojis -->
+                        <div>
+                            <label
+                                class="mb-2 block text-xs font-medium text-muted-foreground"
+                            >
+                                {{ t('habits.popular') }}
+                            </label>
+                            <div class="grid grid-cols-8 gap-1">
+                                <button
+                                    v-for="emoji in popularEmojis"
+                                    :key="emoji"
+                                    @click="selectEmoji(emoji)"
+                                    class="flex h-8 w-8 items-center justify-center rounded transition-colors hover:bg-muted"
+                                    :class="{
+                                        'bg-muted': customIcon === emoji,
+                                    }"
+                                >
+                                    <span class="text-lg">{{ emoji }}</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Fitness emojis -->
+                        <div>
+                            <label
+                                class="mb-2 block text-xs font-medium text-muted-foreground"
+                            >
+                                {{ t('habits.fitness') }}
+                            </label>
+                            <div class="grid grid-cols-8 gap-1">
+                                <button
+                                    v-for="emoji in fitnessEmojis"
+                                    :key="emoji"
+                                    @click="selectEmoji(emoji)"
+                                    class="flex h-8 w-8 items-center justify-center rounded transition-colors hover:bg-muted"
+                                    :class="{
+                                        'bg-muted': customIcon === emoji,
+                                    }"
+                                >
+                                    <span class="text-lg">{{ emoji }}</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Food emojis -->
+                        <div>
+                            <label
+                                class="mb-2 block text-xs font-medium text-muted-foreground"
+                            >
+                                {{ t('habits.food_health') }}
+                            </label>
+                            <div class="grid grid-cols-8 gap-1">
+                                <button
+                                    v-for="emoji in foodEmojis"
+                                    :key="emoji"
+                                    @click="selectEmoji(emoji)"
+                                    class="flex h-8 w-8 items-center justify-center rounded transition-colors hover:bg-muted"
+                                    :class="{
+                                        'bg-muted': customIcon === emoji,
+                                    }"
+                                >
+                                    <span class="text-lg">{{ emoji }}</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Custom input -->
+                        <div>
+                            <label
+                                class="mb-2 block text-xs font-medium text-muted-foreground"
+                            >
+                                {{ t('habits.custom') }}
+                            </label>
+                            <div class="flex gap-2">
+                                <Input
+                                    v-model="customEmojiInput"
+                                    :placeholder="t('habits.enter_emoji')"
+                                    class="flex-1"
+                                    @keydown.enter="selectCustomEmoji"
+                                />
+                                <Button
+                                    type="button"
+                                    size="sm"
+                                    @click="selectCustomEmoji"
+                                    :disabled="!customEmojiInput"
+                                >
+                                    {{ t('habits.add') }}
+                                </Button>
                             </div>
                         </div>
                     </div>

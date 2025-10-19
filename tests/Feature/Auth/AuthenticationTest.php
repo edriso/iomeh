@@ -99,5 +99,5 @@ test('users are rate limited', function () {
 
     $errors = session('errors');
 
-    $this->assertStringContainsString('Too many login attempts', $errors->first('email'));
+    $this->assertStringContainsString('validation.auth.throttle', $errors->first('email'));
 });

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import EmailController from '@/actions/App/Http/Controllers/Settings/EmailController';
 import InputError from '@/components/InputError.vue';
+import PasswordInput from '@/components/PasswordInput.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { edit } from '@/routes/email';
@@ -11,28 +12,30 @@ import HeadingSmall from '@/components/HeadingSmall.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useTranslations } from '@/composables/useTranslations';
 import { type BreadcrumbItem } from '@/types';
+
+const { t, isRTL } = useTranslations();
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
-        title: 'Email settings',
+        title: t('settings.email'),
         href: edit().url,
     },
 ];
 
 const emailInput = ref<HTMLInputElement | null>(null);
-const currentPasswordInput = ref<HTMLInputElement | null>(null);
 </script>
 
 <template>
-    <AppLayout :breadcrumbs="breadcrumbItems">
-        <Head title="Email settings" />
+    <AppLayout :breadcrumbs="breadcrumbItems" :dir="isRTL ? 'rtl' : 'ltr'">
+        <Head :title="t('settings.email')" />
 
         <SettingsLayout>
             <div class="space-y-6">
                 <HeadingSmall
-                    title="Update email address"
-                    description="Change your email address. You'll need to verify the new email address."
+                    :title="t('email.update_email')"
+                    :description="t('email.update_description')"
                 />
 
                 <Form
@@ -50,7 +53,7 @@ const currentPasswordInput = ref<HTMLInputElement | null>(null);
                     v-slot="{ errors, processing, recentlySuccessful }"
                 >
                     <div class="grid gap-2">
-                        <Label for="email">New email address</Label>
+                        <Label for="email">{{ t('email.new_email') }}</Label>
                         <Input
                             id="email"
                             ref="emailInput"
@@ -58,36 +61,35 @@ const currentPasswordInput = ref<HTMLInputElement | null>(null);
                             type="email"
                             class="mt-1 block w-full"
                             autocomplete="email"
-                            placeholder="Enter new email address"
+                            :placeholder="t('email.enter_new_email')"
                         />
                         <InputError :message="errors.email" />
                     </div>
 
                     <div class="grid gap-2">
-                        <Label for="email_confirmation"
-                            >Confirm email address</Label
-                        >
+                        <Label for="email_confirmation">{{
+                            t('email.confirm_email')
+                        }}</Label>
                         <Input
                             id="email_confirmation"
                             name="email_confirmation"
                             type="email"
                             class="mt-1 block w-full"
                             autocomplete="email"
-                            placeholder="Confirm new email address"
+                            :placeholder="t('email.confirm_new_email')"
                         />
                         <InputError :message="errors.email_confirmation" />
                     </div>
 
                     <div class="grid gap-2">
-                        <Label for="current_password">Current password</Label>
-                        <Input
+                        <Label for="current_password">{{
+                            t('password.current_password')
+                        }}</Label>
+                        <PasswordInput
                             id="current_password"
-                            ref="currentPasswordInput"
                             name="current_password"
-                            type="password"
-                            class="mt-1 block w-full"
+                            :placeholder="t('password.enter_current_password')"
                             autocomplete="current-password"
-                            placeholder="Enter current password"
                         />
                         <InputError :message="errors.current_password" />
                     </div>
@@ -105,7 +107,7 @@ const currentPasswordInput = ref<HTMLInputElement | null>(null);
                         <Button
                             :disabled="processing"
                             data-test="update-email-button"
-                            >Save email</Button
+                            >{{ t('email.save_email') }}</Button
                         >
 
                         <Transition
@@ -118,7 +120,7 @@ const currentPasswordInput = ref<HTMLInputElement | null>(null);
                                 v-show="recentlySuccessful"
                                 class="text-sm text-muted-foreground"
                             >
-                                Saved.
+                                {{ t('email.saved') }}
                             </p>
                         </Transition>
                     </div>

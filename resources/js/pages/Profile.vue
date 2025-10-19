@@ -179,8 +179,7 @@ const handleDayClick = async (date: string) => {
             activitiesCache.value[date] = activities;
             selectedDateActivities.value = activities;
         }
-    } catch (error) {
-        console.error('Error fetching activities:', error);
+    } catch {
         selectedDateActivities.value = [];
     } finally {
         loadingActivities.value = false;

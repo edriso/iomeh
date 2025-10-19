@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import AppLogo from '@/components/AppLogo.vue';
+import LanguageSwitcher from '@/components/LanguageSwitcher.vue';
 import SEO from '@/components/SEO.vue';
 import { Button } from '@/components/ui/button';
+import { useTranslations } from '@/composables/useTranslations';
 import { STREAK_TIERS } from '@/utils/streakTiers';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import {
     Activity,
     Apple,
@@ -32,6 +34,13 @@ withDefaults(defineProps<Props>(), {
     }),
 });
 
+// Get current locale from shared Inertia data and initialize
+const page = usePage();
+const initialLocale = (page.props.currentLocale as string) || 'en';
+
+// Use translations with reactive locale
+const { t, isRTL } = useTranslations(initialLocale);
+
 // Get app name from environment variable
 const appName = import.meta.env.VITE_APP_NAME || 'IOMeH';
 
@@ -48,9 +57,9 @@ const formatNumber = (num: number) => {
 // SEO Data
 // Note: The SEO component automatically appends " | IOMeH" to the title
 const seoData = {
-    title: 'Global Fitness Ranking Foundation',
+    title: 'Global Fitness Ranking Platform',
     description:
-        'IOMeH (I Owe Me Health) is your personal fitness ranking foundation. Track workouts and nutrition activities while competing on global rankings. Turn fitness into competition.',
+        'IOMeH (I Owe Me Health) is your personal fitness ranking platform. Track workouts and nutrition activities while competing on global rankings. Turn fitness into competition.',
     keywords: [
         'fitness tracking',
         'workout ranking',
@@ -60,7 +69,7 @@ const seoData = {
         'fitness leaderboard',
         'workout points',
         'nutrition tracking',
-        'fitness foundation',
+        'fitness platform',
         'fitness motivation',
         'gym tracking',
         'exercise tracking',
@@ -85,6 +94,7 @@ const seoData = {
 
     <div
         class="min-h-screen bg-gradient-to-br from-primary/5 via-background to-emerald-500/5"
+        :dir="isRTL ? 'rtl' : 'ltr'"
     >
         <!-- Navigation -->
         <nav
@@ -107,11 +117,17 @@ const seoData = {
                     </div>
 
                     <div class="flex items-center gap-3">
+                        <LanguageSwitcher
+                            :show-label="false"
+                            variant="single"
+                        />
                         <Link href="/login">
-                            <Button variant="ghost" size="sm">Sign in</Button>
+                            <Button variant="ghost" size="sm">{{
+                                t('nav.login')
+                            }}</Button>
                         </Link>
                         <Link href="/register">
-                            <Button size="sm">Join Now</Button>
+                            <Button size="sm">{{ t('nav.register') }}</Button>
                         </Link>
                     </div>
                 </div>
@@ -126,27 +142,20 @@ const seoData = {
                         class="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium"
                     >
                         <Trophy class="h-4 w-4" />
-                        <span
-                            >Your Global Health Rank — Shaped by Your Daily
-                            Habits</span
-                        >
+                        <span>{{ t('landing.badge') }}</span>
                     </div>
                 </div>
 
                 <h1
                     class="mb-6 text-4xl font-bold text-foreground md:text-6xl lg:text-7xl"
                 >
-                    Track Your Health<br />
-                    <span class="text-primary">Earn Your Rank</span>
+                    {{ t('landing.hero_title') }}
                 </h1>
 
                 <p
                     class="mx-auto mb-10 max-w-3xl text-xl text-muted-foreground md:text-2xl"
                 >
-                    IOMeH turns fitness tracking into global competition. Log
-                    workouts and nutrition activities—earn points and climb the
-                    rankings. It's like a sports foundation, but for your
-                    fitness journey.
+                    {{ t('landing.subtitle') }}
                 </p>
 
                 <div
@@ -155,7 +164,7 @@ const seoData = {
                     <Link href="/register">
                         <Button size="lg" class="px-8 py-4 text-lg">
                             <Award class="h-5 w-5" />
-                            Start Competing
+                            {{ t('landing.get_started') }}
                         </Button>
                     </Link>
                     <Link href="/login">
@@ -164,7 +173,7 @@ const seoData = {
                             size="lg"
                             class="px-8 py-4 text-lg"
                         >
-                            Sign in
+                            {{ t('nav.login') }}
                         </Button>
                     </Link>
                 </div>
@@ -172,7 +181,7 @@ const seoData = {
                 <!-- Achievement Preview -->
                 <div class="mt-16">
                     <p class="mb-4 text-center text-sm text-muted-foreground">
-                        Track your progress across seasons
+                        {{ t('landing.progress_text') }}
                     </p>
                     <div
                         class="flex flex-wrap items-center justify-center gap-3"
@@ -183,9 +192,9 @@ const seoData = {
                         >
                             <div class="flex items-center gap-2">
                                 <Award class="h-5 w-5 text-primary" />
-                                <span class="font-bold text-foreground"
-                                    >2025 Q4 #7</span
-                                >
+                                <span class="font-bold text-foreground">{{
+                                    t('badge.quarter_rank')
+                                }}</span>
                             </div>
                         </div>
 
@@ -197,9 +206,9 @@ const seoData = {
                                 <Trophy
                                     class="h-5 w-5 text-amber-600 dark:text-amber-500"
                                 />
-                                <span class="font-bold text-foreground"
-                                    >2025 #15</span
-                                >
+                                <span class="font-bold text-foreground">{{
+                                    t('badge.year_rank')
+                                }}</span>
                             </div>
                         </div>
 
@@ -209,9 +218,9 @@ const seoData = {
                         >
                             <div class="flex items-center gap-2">
                                 <Flame class="h-5 w-5 text-orange-500" />
-                                <span class="font-bold text-foreground"
-                                    >14 Day Streak</span
-                                >
+                                <span class="font-bold text-foreground">{{
+                                    t('badge.streak')
+                                }}</span>
                             </div>
                         </div>
                     </div>
@@ -226,12 +235,10 @@ const seoData = {
                     <h2
                         class="mb-4 text-3xl font-bold text-foreground md:text-4xl"
                     >
-                        Track Your Fitness Journey
+                        {{ t('landing.fitness_journey_title') }}
                     </h2>
                     <p class="mx-auto max-w-2xl text-lg text-muted-foreground">
-                        Focus on what matters most for your fitness goals. IOMeH
-                        tracks workouts and nutrition with many activities to
-                        choose from.
+                        {{ t('landing.fitness_journey_description') }}
                     </p>
                 </div>
 
@@ -250,17 +257,15 @@ const seoData = {
                             </div>
                             <div>
                                 <h3 class="text-xl font-bold text-foreground">
-                                    💪 Workout
+                                    {{ t('landing.workout_title') }}
                                 </h3>
                                 <p class="text-sm text-muted-foreground">
-                                    30 activities | 10-60 points
+                                    {{ t('landing.workout_stats') }}
                                 </p>
                             </div>
                         </div>
                         <p class="text-muted-foreground">
-                            Running, gym, HIIT, swimming, cycling, sports,
-                            martial arts, and more. Points based on intensity
-                            and duration.
+                            {{ t('landing.workout_description') }}
                         </p>
                     </div>
 
@@ -276,16 +281,15 @@ const seoData = {
                             </div>
                             <div>
                                 <h3 class="text-xl font-bold text-foreground">
-                                    🥗 Nutrition
+                                    {{ t('landing.nutrition_title') }}
                                 </h3>
                                 <p class="text-sm text-muted-foreground">
-                                    15 activities | 10-30 points
+                                    {{ t('landing.nutrition_stats') }}
                                 </p>
                             </div>
                         </div>
                         <p class="text-muted-foreground">
-                            Healthy meals, vegetables, fruits, hydration,
-                            protein goals, supplements, and cooking at home.
+                            {{ t('landing.nutrition_description') }}
                         </p>
                     </div>
                 </div>
@@ -299,11 +303,10 @@ const seoData = {
                     <h2
                         class="mb-4 text-3xl font-bold text-foreground md:text-4xl"
                     >
-                        🔥 Streak Bonus System
+                        {{ t('landing.streak_bonus_title') }}
                     </h2>
                     <p class="mx-auto max-w-2xl text-lg text-muted-foreground">
-                        Consistency is key. Build daily streaks and multiply
-                        your points with progressive rewards up to
+                        {{ t('landing.streak_bonus_description') }}
                         {{
                             STREAK_TIERS[
                                 STREAK_TIERS.length - 1
@@ -322,10 +325,10 @@ const seoData = {
                     >
                         <div class="mb-2 text-2xl">🌱</div>
                         <h3 class="mb-1 text-sm font-bold text-foreground">
-                            Newcomer
+                            {{ t('landing.tier_newcomer') }}
                         </h3>
                         <p class="mb-2 text-xs text-muted-foreground">
-                            Days 1-2
+                            {{ t('landing.days_1_2') }}
                         </p>
                         <div
                             class="rounded-full bg-primary/10 px-2 py-1 text-xs font-bold text-primary"
@@ -340,10 +343,10 @@ const seoData = {
                     >
                         <div class="mb-2 text-2xl">🔥</div>
                         <h3 class="mb-1 text-sm font-bold text-foreground">
-                            Beginner
+                            {{ t('landing.tier_beginner') }}
                         </h3>
                         <p class="mb-2 text-xs text-muted-foreground">
-                            Days 3-6
+                            {{ t('landing.days_3_6') }}
                         </p>
                         <div
                             class="rounded-full bg-primary/10 px-2 py-1 text-xs font-bold text-primary"
@@ -358,10 +361,10 @@ const seoData = {
                     >
                         <div class="mb-2 text-2xl">⚡</div>
                         <h3 class="mb-1 text-sm font-bold text-foreground">
-                            Regular
+                            {{ t('landing.tier_regular') }}
                         </h3>
                         <p class="mb-2 text-xs text-muted-foreground">
-                            Days 7-13
+                            {{ t('landing.days_7_13') }}
                         </p>
                         <div
                             class="rounded-full bg-primary/10 px-2 py-1 text-xs font-bold text-primary"
@@ -376,10 +379,10 @@ const seoData = {
                     >
                         <div class="mb-2 text-2xl">💪</div>
                         <h3 class="mb-1 text-sm font-bold text-foreground">
-                            Committed
+                            {{ t('landing.tier_committed') }}
                         </h3>
                         <p class="mb-2 text-xs text-muted-foreground">
-                            Days 14-29
+                            {{ t('landing.days_14_29') }}
                         </p>
                         <div
                             class="rounded-full bg-amber-500/10 px-2 py-1 text-xs font-bold text-amber-600 dark:text-amber-500"
@@ -394,10 +397,10 @@ const seoData = {
                     >
                         <div class="mb-2 text-2xl">🚀</div>
                         <h3 class="mb-1 text-sm font-bold text-foreground">
-                            Dedicated
+                            {{ t('landing.tier_dedicated') }}
                         </h3>
                         <p class="mb-2 text-xs text-muted-foreground">
-                            Days 30-59
+                            {{ t('landing.days_30_59') }}
                         </p>
                         <div
                             class="rounded-full bg-amber-500/10 px-2 py-1 text-xs font-bold text-amber-600 dark:text-amber-500"
@@ -416,10 +419,10 @@ const seoData = {
                     >
                         <div class="mb-2 text-2xl">⭐</div>
                         <h3 class="mb-1 text-sm font-bold text-foreground">
-                            Expert
+                            {{ t('landing.tier_expert') }}
                         </h3>
                         <p class="mb-2 text-xs text-muted-foreground">
-                            Days 60-99
+                            {{ t('landing.days_60_99') }}
                         </p>
                         <div
                             class="rounded-full bg-amber-500/10 px-2 py-1 text-xs font-bold text-amber-600 dark:text-amber-500"
@@ -434,10 +437,10 @@ const seoData = {
                     >
                         <div class="mb-2 text-2xl">👑</div>
                         <h3 class="mb-1 text-sm font-bold text-foreground">
-                            Master
+                            {{ t('landing.tier_master') }}
                         </h3>
                         <p class="mb-2 text-xs text-muted-foreground">
-                            Days 100-199
+                            {{ t('landing.days_100_199') }}
                         </p>
                         <div
                             class="rounded-full bg-amber-500/20 px-2 py-1 text-xs font-bold text-amber-700 dark:text-amber-400"
@@ -452,10 +455,10 @@ const seoData = {
                     >
                         <div class="mb-2 text-2xl">🏆</div>
                         <h3 class="mb-1 text-sm font-bold text-foreground">
-                            Legend
+                            {{ t('landing.tier_legend') }}
                         </h3>
                         <p class="mb-2 text-xs text-muted-foreground">
-                            Days 200+
+                            {{ t('landing.days_200_plus') }}
                         </p>
                         <div
                             class="rounded-full bg-amber-500/20 px-2 py-1 text-xs font-bold text-amber-700 dark:text-amber-400"
@@ -472,7 +475,7 @@ const seoData = {
                     <h3
                         class="mb-6 text-center text-2xl font-bold text-foreground"
                     >
-                        How It Works
+                        {{ t('landing.how_it_works_title') }}
                     </h3>
                     <div class="grid gap-6 md:grid-cols-3">
                         <div class="text-center">
@@ -482,11 +485,10 @@ const seoData = {
                                 <Flame class="h-6 w-6 text-primary" />
                             </div>
                             <h4 class="mb-2 font-bold text-foreground">
-                                Build Streaks
+                                {{ t('landing.build_streaks_title') }}
                             </h4>
                             <p class="text-sm text-muted-foreground">
-                                Log activities daily to maintain your streak.
-                                Miss a day and it resets to 1.
+                                {{ t('landing.build_streaks_description') }}
                             </p>
                         </div>
                         <div class="text-center">
@@ -498,10 +500,10 @@ const seoData = {
                                 />
                             </div>
                             <h4 class="mb-2 font-bold text-foreground">
-                                Multiply Points
+                                {{ t('landing.multiply_points_title') }}
                             </h4>
                             <p class="text-sm text-muted-foreground">
-                                Your streak tier multiplies all activity points.
+                                {{ t('landing.multiply_points_description') }}
                                 {{
                                     STREAK_TIERS.find(
                                         (tier) => tier.name === 'Dedicated',
@@ -521,11 +523,10 @@ const seoData = {
                                 <Trophy class="h-6 w-6 text-purple-600" />
                             </div>
                             <h4 class="mb-2 font-bold text-foreground">
-                                Milestone Bonuses
+                                {{ t('landing.milestone_bonuses_title') }}
                             </h4>
                             <p class="text-sm text-muted-foreground">
-                                Hit milestones (7, 30, 100, 365 days) for extra
-                                bonus points on top of multipliers!
+                                {{ t('landing.milestone_bonuses_description') }}
                             </p>
                         </div>
                     </div>
@@ -538,21 +539,21 @@ const seoData = {
                     <h3
                         class="mb-6 text-center text-xl font-bold text-foreground"
                     >
-                        📊 Example: 30-Day Streak
+                        {{ t('landing.example_calculation_title') }}
                     </h3>
                     <div class="space-y-4 text-center">
                         <div>
                             <p class="text-sm text-muted-foreground">
-                                Base Activity Points
+                                {{ t('landing.base_activity_points') }}
                             </p>
                             <p class="text-2xl font-bold text-foreground">
-                                20 pts
+                                20 {{ t('points.short') }}
                             </p>
                         </div>
                         <div class="text-2xl text-muted-foreground">×</div>
                         <div>
                             <p class="text-sm text-muted-foreground">
-                                Dedicated Tier (30 days)
+                                {{ t('landing.dedicated_tier') }}
                             </p>
                             <p
                                 class="text-2xl font-bold text-amber-600 dark:text-amber-500"
@@ -561,24 +562,24 @@ const seoData = {
                                     STREAK_TIERS.find(
                                         (tier) => tier.name === 'Dedicated',
                                     )?.multiplier
-                                }}× Multiplier
+                                }}× {{ t('landing.multiplier') }}
                             </p>
                         </div>
                         <div class="text-2xl text-muted-foreground">+</div>
                         <div>
                             <p class="text-sm text-muted-foreground">
-                                Milestone Bonus
+                                {{ t('landing.milestone_bonus') }}
                             </p>
                             <p class="text-2xl font-bold text-purple-600">
-                                +200 pts
+                                +200 {{ t('points.short') }}
                             </p>
                         </div>
                         <div class="border-t border-border pt-4">
                             <p class="text-sm text-muted-foreground">
-                                Total Points Earned
+                                {{ t('landing.total_points_earned') }}
                             </p>
                             <p class="text-3xl font-bold text-primary">
-                                250 pts 🎉
+                                250 {{ t('points.short') }} 🎉
                             </p>
                         </div>
                     </div>
@@ -593,11 +594,10 @@ const seoData = {
                     <h2
                         class="mb-4 text-3xl font-bold text-foreground md:text-4xl"
                     >
-                        Compete on Global Rankings
+                        {{ t('landing.global_rankings_title') }}
                     </h2>
                     <p class="mx-auto max-w-2xl text-lg text-muted-foreground">
-                        Like a sports foundation, but for health. See where you
-                        rank today, this season, and all-time.
+                        {{ t('landing.global_rankings_description') }}
                     </p>
                 </div>
 
@@ -610,9 +610,11 @@ const seoData = {
                         <div class="mb-2 flex justify-center">
                             <Footprints class="h-8 w-8 text-primary" />
                         </div>
-                        <h3 class="mb-1 font-bold text-foreground">Today</h3>
+                        <h3 class="mb-1 font-bold text-foreground">
+                            {{ t('landing.today_title') }}
+                        </h3>
                         <p class="text-sm text-muted-foreground">
-                            Real-time daily rankings
+                            {{ t('landing.today_description') }}
                         </p>
                     </div>
 
@@ -625,10 +627,10 @@ const seoData = {
                             />
                         </div>
                         <h3 class="mb-1 font-bold text-foreground">
-                            Yesterday
+                            {{ t('landing.yesterday_title') }}
                         </h3>
                         <p class="text-sm text-muted-foreground">
-                            Previous day champions
+                            {{ t('landing.yesterday_description') }}
                         </p>
                     </div>
 
@@ -639,10 +641,10 @@ const seoData = {
                             <Award class="h-8 w-8 text-amber-500" />
                         </div>
                         <h3 class="mb-1 font-bold text-foreground">
-                            Season (Q1-Q4)
+                            {{ t('landing.season_label') }}
                         </h3>
                         <p class="text-sm text-muted-foreground">
-                            Quarterly ran
+                            {{ t('landing.quarterly_rank') }}
                         </p>
                     </div>
 
@@ -652,9 +654,11 @@ const seoData = {
                         <div class="mb-2 flex justify-center">
                             <Trophy class="h-8 w-8 text-amber-500" />
                         </div>
-                        <h3 class="mb-1 font-bold text-foreground">Year</h3>
+                        <h3 class="mb-1 font-bold text-foreground">
+                            {{ t('landing.year_title') }}
+                        </h3>
                         <p class="text-sm text-muted-foreground">
-                            Annual champions
+                            {{ t('landing.year_description') }}
                         </p>
                     </div>
                 </div>
@@ -666,7 +670,7 @@ const seoData = {
                     <h3
                         class="mb-6 text-center text-xl font-bold text-foreground"
                     >
-                        Today's Top 3
+                        {{ t('landing.todays_top3_title') }}
                     </h3>
                     <div class="space-y-4">
                         <div
@@ -684,7 +688,7 @@ const seoData = {
                                 </div>
                             </div>
                             <span class="text-xl font-bold text-primary"
-                                >180 pts</span
+                                >180 {{ t('points.short') }}</span
                             >
                         </div>
 
@@ -703,7 +707,7 @@ const seoData = {
                                 </div>
                             </div>
                             <span class="text-xl font-bold text-primary"
-                                >165 pts</span
+                                >165 {{ t('points.short') }}</span
                             >
                         </div>
 
@@ -722,7 +726,7 @@ const seoData = {
                                 </div>
                             </div>
                             <span class="text-xl font-bold text-primary"
-                                >155 pts</span
+                                >155 {{ t('points.short') }}</span
                             >
                         </div>
                     </div>
@@ -737,10 +741,10 @@ const seoData = {
                     <h2
                         class="mb-4 text-3xl font-bold text-foreground md:text-4xl"
                     >
-                        How IOMeH Works
+                        {{ t('landing.how_iomeh_works_title') }}
                     </h2>
                     <p class="text-lg text-muted-foreground">
-                        Simple 4-step process to start competing
+                        {{ t('landing.how_iomeh_works_description') }}
                     </p>
                 </div>
 
@@ -753,11 +757,10 @@ const seoData = {
                         </div>
                         <div>
                             <h3 class="mb-2 font-bold text-foreground">
-                                Sign Up & Select Activities
+                                {{ t('landing.step1_title') }}
                             </h3>
                             <p class="text-muted-foreground">
-                                Choose 5-10 activities you want to track from
-                                many options across all health categories.
+                                {{ t('landing.step1_description') }}
                             </p>
                         </div>
                     </div>
@@ -770,11 +773,10 @@ const seoData = {
                         </div>
                         <div>
                             <h3 class="mb-2 font-bold text-foreground">
-                                Log Today's Activities
+                                {{ t('landing.step2_title') }}
                             </h3>
                             <p class="text-muted-foreground">
-                                Record today's activities in real-time—workouts
-                                and nutrition. Add notes and optional proof.
+                                {{ t('landing.step2_description') }}
                             </p>
                         </div>
                     </div>
@@ -787,11 +789,10 @@ const seoData = {
                         </div>
                         <div>
                             <h3 class="mb-2 font-bold text-foreground">
-                                Earn Points & Build Streaks
+                                {{ t('landing.step3_title') }}
                             </h3>
                             <p class="text-muted-foreground">
-                                Get 10-50 points per activity. Build daily
-                                streaks. Watch your stats grow.
+                                {{ t('landing.step3_description') }}
                             </p>
                         </div>
                     </div>
@@ -804,11 +805,10 @@ const seoData = {
                         </div>
                         <div>
                             <h3 class="mb-2 font-bold text-foreground">
-                                Climb the Rankings
+                                {{ t('landing.climb_rankings') }}
                             </h3>
                             <p class="text-muted-foreground">
-                                Compete on daily, seasonal, and yearly ran.
-                                Track your rank: "2025 Q1 #11".
+                                {{ t('landing.step4_description') }}
                             </p>
                         </div>
                     </div>
@@ -822,7 +822,7 @@ const seoData = {
                 class="mx-auto max-w-4xl rounded-2xl bg-gradient-to-r from-primary/10 to-emerald-500/10 p-12 text-center"
             >
                 <h2 class="mb-8 text-3xl font-bold text-foreground">
-                    Join the Global Health Community
+                    {{ t('landing.community_title') }}
                 </h2>
                 <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
                     <div>
@@ -834,7 +834,9 @@ const seoData = {
                                 {{ formatNumber(stats.active_users) }}
                             </span>
                         </div>
-                        <div class="text-muted-foreground">Active Athletes</div>
+                        <div class="text-muted-foreground">
+                            {{ t('landing.stats.active_users') }}
+                        </div>
                     </div>
                     <div>
                         <div
@@ -846,7 +848,7 @@ const seoData = {
                             </span>
                         </div>
                         <div class="text-muted-foreground">
-                            Activities Logged
+                            {{ t('landing.stats.total_activities') }}
                         </div>
                     </div>
                     <div>
@@ -859,7 +861,7 @@ const seoData = {
                             </span>
                         </div>
                         <div class="text-muted-foreground">
-                            Combined Streak Days
+                            {{ t('landing.stats.combined_streak') }}
                         </div>
                     </div>
                 </div>
@@ -870,16 +872,15 @@ const seoData = {
         <section class="container mx-auto px-4 py-20">
             <div class="mx-auto max-w-3xl text-center">
                 <h2 class="mb-4 text-3xl font-bold text-foreground md:text-4xl">
-                    Ready to Compete in Wellness?
+                    {{ t('landing.ready_to_compete_title') }}
                 </h2>
                 <p class="mb-8 text-lg text-muted-foreground">
-                    Join IOMeH today and turn "I should prioritize health" into
-                    "I compete in health." Track, compete, and earn your rank.
+                    {{ t('landing.ready_to_compete_description') }}
                 </p>
                 <Link href="/register">
                     <Button size="lg" class="px-8 py-4 text-lg">
                         <Trophy class="h-5 w-5" />
-                        Start Your Journey
+                        {{ t('landing.start_journey') }}
                     </Button>
                 </Link>
             </div>

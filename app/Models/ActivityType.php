@@ -12,11 +12,14 @@ class ActivityType extends Model
 
     protected $fillable = [
         'name',
+        'name_translations',
+        'translation_key',
         'category',
         'base_points',
         'icon',
         'display_order',
         'description',
+        'description_translations',
         'is_active',
     ];
 
@@ -27,6 +30,8 @@ class ActivityType extends Model
             'base_points' => 'integer',
             'display_order' => 'integer',
             'is_active' => 'boolean',
+            'name_translations' => 'array',
+            'description_translations' => 'array',
         ];
     }
 
@@ -71,6 +76,40 @@ class ActivityType extends Model
             ->ordered()
             ->get()
             ->groupBy('category');
+    }
+
+    /**
+     * Get the translated name for the current locale.
+     */
+    public function getTranslatedNameAttribute()
+    {
+        $locale = app()->getLocale();
+        return $this->name_translations[$locale] ?? $this->name;
+    }
+
+    /**
+     * Get the translated description for the current locale.
+     */
+    public function getTranslatedDescriptionAttribute()
+    {
+        $locale = app()->getLocale();
+        return $this->description_translations[$locale] ?? $this->description;
+    }
+
+    /**
+     * Get the name in a specific locale.
+     */
+    public function getNameInLocale(string $locale): string
+    {
+        return $this->name_translations[$locale] ?? $this->name;
+    }
+
+    /**
+     * Get the description in a specific locale.
+     */
+    public function getDescriptionInLocale(string $locale): ?string
+    {
+        return $this->description_translations[$locale] ?? $this->description;
     }
 }
 

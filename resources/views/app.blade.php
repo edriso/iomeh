@@ -13,7 +13,7 @@
         
         {{-- Open Graph Meta Tags --}}
         <meta property="og:site_name" content="{{ config('app.name') }}">
-        <meta property="og:locale" content="en_US">
+        <meta property="og:locale" content="{{ str_replace('_', '-', app()->getLocale()) }}">
         <meta property="og:type" content="website">
         
         {{-- Twitter Card Meta Tags --}}

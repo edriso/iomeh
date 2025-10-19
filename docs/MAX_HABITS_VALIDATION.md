@@ -24,7 +24,7 @@ Implemented a maximum limit of **15 habits** per user to prevent abuse, ensure g
 ```php
 $validated = $request->validate([
     'habits' => ['required', 'array', 'min:1', 'max:15'],
-    'habits.*.activity_type_id' => ['required', 'exists:activity_types,id'],
+    'habits.*.activity_type_id' => ['nullable', 'exists:activity_types,id'],
     'habits.*.custom_name' => ['required', 'string', 'max:100'],
     'habits.*.notes' => ['nullable', 'string', 'max:500'],
 ], [

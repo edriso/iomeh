@@ -2,6 +2,7 @@
 import Heading from '@/components/Heading.vue';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { useTranslations } from '@/composables/useTranslations';
 import { toUrl, urlIsActive } from '@/lib/utils';
 import { edit as editAccount } from '@/routes/account';
 import { edit as editAppearance } from '@/routes/appearance';
@@ -9,44 +10,46 @@ import { edit as editEmail } from '@/routes/email';
 import { edit as editHabits } from '@/routes/habits';
 import { edit as editPassword } from '@/routes/password';
 import { edit as editProfile } from '@/routes/profile';
-import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
-const sidebarNavItems: NavItem[] = [
+const { t, isRTL } = useTranslations();
+
+const sidebarNavItems = computed(() => [
     {
-        title: 'Profile',
+        title: t('settings.profile'),
         href: editProfile(),
     },
     {
-        title: 'My Activities',
+        title: t('settings.habits'),
         href: editHabits(),
     },
     {
-        title: 'Password',
+        title: t('settings.password'),
         href: editPassword(),
     },
     {
-        title: 'Email',
+        title: t('settings.email'),
         href: editEmail(),
     },
     {
-        title: 'Appearance',
+        title: t('settings.appearance'),
         href: editAppearance(),
     },
     {
-        title: 'Account',
+        title: t('settings.account'),
         href: editAccount(),
     },
-];
+]);
 
 const currentPath = typeof window !== undefined ? window.location.pathname : '';
 </script>
 
 <template>
-    <div class="px-4 py-6">
+    <div class="px-4 py-6" :dir="isRTL ? 'rtl' : 'ltr'">
         <Heading
-            title="Settings"
-            description="Manage your profile and account settings"
+            :title="t('settings.title')"
+            :description="t('settings.description')"
         />
 
         <div class="flex flex-col lg:flex-row lg:space-x-12">
@@ -63,7 +66,6 @@ const currentPath = typeof window !== undefined ? window.location.pathname : '';
                         as-child
                     >
                         <Link :href="item.href">
-                            <component :is="item.icon" class="h-4 w-4" />
                             {{ item.title }}
                         </Link>
                     </Button>

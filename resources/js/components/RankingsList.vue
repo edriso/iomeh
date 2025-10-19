@@ -1,6 +1,14 @@
 <script setup lang="ts">
+import { useTranslations } from '@/composables/useTranslations';
+import { usePage } from '@inertiajs/vue3';
 import { Activity } from 'lucide-vue-next';
 import RankingsEntry from './RankingsEntry.vue';
+
+// Get current locale from shared Inertia data and initialize
+const page = usePage();
+const initialLocale = (page.props.currentLocale as string) || 'en';
+
+const { t } = useTranslations(initialLocale);
 
 interface RankingsEntry {
     rank: number;
@@ -24,11 +32,14 @@ interface Props {
     showYear?: boolean;
 }
 
-withDefaults(defineProps<Props>(), {
-    emptyMessage: 'No activities yet',
+const props = withDefaults(defineProps<Props>(), {
+    emptyMessage: '',
     showSeason: false,
     showYear: false,
 });
+
+const defaultEmptyMessage = t('rankings.no_activities_yet');
+const displayEmptyMessage = props.emptyMessage || defaultEmptyMessage;
 </script>
 
 <template>
@@ -37,7 +48,7 @@ withDefaults(defineProps<Props>(), {
         class="py-12 text-center text-muted-foreground"
     >
         <Activity class="mx-auto mb-4 h-12 w-12 opacity-50" />
-        <p>{{ emptyMessage }}</p>
+        <p>{{ displayEmptyMessage }}</p>
     </div>
     <div v-else class="space-y-2">
         <RankingsEntry

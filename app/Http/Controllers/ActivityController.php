@@ -38,7 +38,7 @@ class ActivityController extends Controller
 
         if ($existingActivity) {
             return back()->withErrors([
-                'habit_id' => 'You have already logged this activity for today.'
+                'habit_id' => __('activity.already_logged_today')
             ]);
         }
 
@@ -91,7 +91,7 @@ class ActivityController extends Controller
             $message .= " 🎉 Milestone bonus: +{$milestoneBonus} points for reaching {$predictedStreak} day streak!";
         }
 
-        return back()->with('success', $message);
+        return back()->with('success', __('success.activity_logged'));
     }
 
     /**
@@ -115,7 +115,7 @@ class ActivityController extends Controller
         // Invalidate home page cache for this user
         Cache::forget("home_data_user_{$activity->user_id}");
 
-        return back()->with('success', 'Activity updated successfully!');
+        return back()->with('success', __('success.activity_updated'));
     }
 
     /**
@@ -134,7 +134,7 @@ class ActivityController extends Controller
         // Invalidate home page cache for this user
         Cache::forget("home_data_user_{$userId}");
 
-        return back()->with('success', 'Activity deleted successfully!');
+        return back()->with('success', __('success.activity_deleted'));
     }
 
     /**
@@ -158,9 +158,9 @@ class ActivityController extends Controller
         $formattedActivities = $activities->map(function ($activity) {
             return [
                 'id' => $activity->id,
-                'activity_type_name' => $activity->habit->activityType->name,
+                'activity_type_name' => $activity->habit->activityType->translated_name,
                 'activity_type_icon' => $activity->habit->activityType->icon,
-                'custom_name' => $activity->habit->custom_name ?: $activity->habit->activityType->name,
+                'custom_name' => $activity->habit->custom_name ?: $activity->habit->activityType->translated_name,
                 'date' => $activity->date->format('Y-m-d'),
                 'points_earned' => $activity->points_earned,
                 'notes' => $activity->notes,

@@ -23,6 +23,7 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useTranslations } from '@/composables/useTranslations';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { edit, update } from '@/routes/habits';
@@ -40,11 +41,12 @@ interface ActivityType {
 
 interface Habit {
     id: number;
-    activity_type_id: number;
+    activity_type_id: number | null;
     custom_name: string;
+    custom_icon: string | null;
     notes: string | null;
     display_order: number;
-    activity_type: ActivityType;
+    activity_type: ActivityType | null;
 }
 
 interface Props {
@@ -54,9 +56,12 @@ interface Props {
 
 const props = defineProps<Props>();
 
+// Use translations with reactive locale
+const { t, isRTL } = useTranslations();
+
 const breadcrumbItems: BreadcrumbItem[] = [
     {
-        title: 'My Activities settings',
+        title: t('habits.title'),
         href: edit().url,
     },
 ];
@@ -105,8 +110,7 @@ const categories = computed(() => {
 function addHabit(activityType: ActivityType) {
     // Check if user has reached the maximum number of habits
     if (localHabits.value.length >= 15) {
-        errors.value.habits =
-            'You can have a maximum of 15 habits. Please remove some habits before adding new ones.';
+        errors.value.habits = t('habits.maximum_reached');
         return;
     }
 
@@ -114,6 +118,7 @@ function addHabit(activityType: ActivityType) {
         id: Date.now(), // Temporary ID for new habits
         activity_type_id: activityType.id,
         custom_name: activityType.name,
+        custom_icon: null,
         notes: null,
         display_order: localHabits.value.length,
         activity_type: activityType,
@@ -172,21 +177,32 @@ function validateForm() {
     errors.value = {};
 
     if (localHabits.value.length === 0) {
-        errors.value.habits = 'You must have at least one habit.';
+        errors.value.habits = t('validation.required');
         return false;
     }
 
     localHabits.value.forEach((habit, index) => {
         if (!habit.custom_name || habit.custom_name.trim().length === 0) {
-            errors.value[`habits.${index}.custom_name`] = 'Name is required.';
+            errors.value[`habits.${index}.custom_name`] = t(
+                'validation.required',
+            );
         } else if (habit.custom_name.length > 100) {
-            errors.value[`habits.${index}.custom_name`] =
-                'Name must be 100 characters or less.';
+            errors.value[`habits.${index}.custom_name`] = t(
+                'validation.habit_name.max',
+            );
         }
 
         if (habit.notes && habit.notes.length > 500) {
-            errors.value[`habits.${index}.notes`] =
-                'Notes must be 500 characters or less.';
+            errors.value[`habits.${index}.notes`] = t(
+                'validation.habit_notes.max',
+            );
+        }
+
+        if (habit.custom_icon && habit.custom_icon.length > 50) {
+            errors.value[`habits.${index}.custom_icon`] = t(
+                'validation.max.string',
+                '50',
+            );
         }
     });
 
@@ -202,6 +218,7 @@ function handleSubmit() {
         habits: localHabits.value.map((habit) => ({
             activity_type_id: habit.activity_type_id,
             custom_name: habit.custom_name,
+            custom_icon: habit.custom_icon || null,
             notes: habit.notes || null,
         })),
     };
@@ -222,7 +239,7 @@ function handleSubmit() {
 
 function getCategoryColor(category: string): string {
     const colors: Record<string, string> = {
-        workout: 'bg-red-500/10 text-red-500 border-red-500/20',
+        workout: 'bg-orange-500/10 text-orange-500 border-orange-500/20',
         nutrition: 'bg-green-500/10 text-green-500 border-green-500/20',
     };
     return colors[category.toLowerCase()] || 'bg-gray-500/10 text-gray-500';
@@ -230,14 +247,14 @@ function getCategoryColor(category: string): string {
 </script>
 
 <template>
-    <AppLayout :breadcrumbs="breadcrumbItems">
-        <Head title="My Activities settings" />
+    <AppLayout :breadcrumbs="breadcrumbItems" :dir="isRTL ? 'rtl' : 'ltr'">
+        <Head :title="t('habits.title')" />
 
         <SettingsLayout>
             <div class="space-y-6">
                 <HeadingSmall
-                    title="My Activities settings"
-                    description="Manage your health and wellness activities"
+                    :title="t('habits.title')"
+                    :description="t('habits.description')"
                 />
 
                 <!-- Habit Counter -->
@@ -253,9 +270,11 @@ function getCategoryColor(category: string): string {
                             }}</span>
                         </div>
                         <div>
-                            <p class="text-sm font-medium">Current Habits</p>
+                            <p class="text-sm font-medium">
+                                {{ t('habits.current_habits') }}
+                            </p>
                             <p class="text-xs text-muted-foreground">
-                                Maximum of 15 habits allowed
+                                {{ t('habits.maximum_habits_allowed') }}
                             </p>
                         </div>
                     </div>
@@ -277,8 +296,7 @@ function getCategoryColor(category: string): string {
                 <Alert>
                     <Info class="h-4 w-4" />
                     <AlertDescription>
-                        Add the activities that matter most to your health
-                        journey.
+                        {{ t('habits.add_activities_description') }}
                     </AlertDescription>
                 </Alert>
 
@@ -307,8 +325,7 @@ function getCategoryColor(category: string): string {
                         class="rounded-lg border-2 border-dashed py-12 text-center"
                     >
                         <p class="mb-4 text-muted-foreground">
-                            No habits added yet. Add your first habit to start
-                            tracking activities!
+                            {{ t('habits.no_habits_added') }}
                         </p>
                     </div>
 
@@ -325,22 +342,21 @@ function getCategoryColor(category: string): string {
                         "
                     >
                         <Plus class="mr-2 h-4 w-4" />
-                        Add Activity
+                        {{ t('habits.add_activity') }}
                     </Button>
 
                     <p
                         v-if="availableTypes.length === 0"
                         class="text-center text-sm text-muted-foreground"
                     >
-                        You've added all available activity types!
+                        {{ t('habits.youve_added_all') }}
                     </p>
 
                     <p
                         v-else-if="localHabits.length >= 15"
                         class="text-center text-sm text-muted-foreground"
                     >
-                        Maximum of 15 habits reached. Remove some habits to add
-                        new ones.
+                        {{ t('habits.maximum_reached') }}
                     </p>
 
                     <!-- Action Buttons -->
@@ -350,7 +366,7 @@ function getCategoryColor(category: string): string {
                             :disabled="localHabits.length === 0"
                         >
                             <Save class="mr-2 h-4 w-4" />
-                            Save Changes
+                            {{ t('common.save') }}
                         </Button>
                         <Button
                             variant="outline"
@@ -360,13 +376,13 @@ function getCategoryColor(category: string): string {
                                 )
                             "
                         >
-                            Reset
+                            {{ t('habits.reset') }}
                         </Button>
                         <span
                             v-if="recentlySuccessful"
                             class="text-sm text-muted-foreground"
                         >
-                            Saved successfully!
+                            {{ t('habits.saved_successfully') }}
                         </span>
                     </div>
                 </div>
@@ -377,9 +393,11 @@ function getCategoryColor(category: string): string {
         <Dialog v-model:open="showAddDialog">
             <DialogContent class="max-h-[80vh] max-w-2xl">
                 <DialogHeader>
-                    <DialogTitle>Add New Activity</DialogTitle>
+                    <DialogTitle>{{
+                        t('habits.add_new_activity')
+                    }}</DialogTitle>
                     <DialogDescription>
-                        Select an activity type to add to your activities
+                        {{ t('habits.select_activity_type') }}
                     </DialogDescription>
                 </DialogHeader>
 
@@ -395,7 +413,7 @@ function getCategoryColor(category: string): string {
                             }"
                             @click="selectedCategory = null"
                         >
-                            All
+                            {{ t('habits.all') }}
                         </Button>
                         <Button
                             v-for="category in categories"
@@ -409,7 +427,7 @@ function getCategoryColor(category: string): string {
                             }"
                             @click="selectedCategory = category"
                         >
-                            {{ category }}
+                            {{ t(`habits.${category}`) }}
                         </Button>
                     </div>
 
@@ -447,12 +465,15 @@ function getCategoryColor(category: string): string {
                                                     )
                                                 "
                                             >
-                                                {{ type.category }}
+                                                {{
+                                                    t(`habits.${type.category}`)
+                                                }}
                                             </Badge>
                                             <span
                                                 class="text-sm font-medium text-primary"
                                             >
-                                                {{ type.base_points }} pts
+                                                {{ type.base_points }}
+                                                {{ t('habits.points') }}
                                             </span>
                                         </div>
                                     </div>
@@ -463,7 +484,7 @@ function getCategoryColor(category: string): string {
                                 v-if="filteredAvailableTypes.length === 0"
                                 class="py-8 text-center text-muted-foreground"
                             >
-                                No available activity types in this category
+                                {{ t('habits.no_available_types') }}
                             </div>
                         </div>
                     </ScrollArea>

@@ -11,7 +11,7 @@ test('ranking belongs to user', function () {
     
     $ranking = Season::create([
         'user_id' => $user->id,
-        'name' => 4,
+        'quarter_number' => 4,
         'points' => 500,
         'season_year_points' => 500,
         'year' => 2025,
@@ -35,7 +35,7 @@ test('can get rankings for season', function () {
     
     Season::create([
         'user_id' => $user->id,
-        'name' => now()->quarter,
+        'quarter_number' => now()->quarter,
         'points' => 500,
         'season_year_points' => 500,
         'year' => now()->year,
@@ -53,7 +53,7 @@ test('can get rankings for year', function () {
     // Create a season ranking with season_year_points
     Season::create([
         'user_id' => $user->id,
-        'name' => 1,
+        'quarter_number' => 1,
         'points' => 500,
         'season_year_points' => 2000,
         'year' => now()->year,
@@ -70,7 +70,7 @@ test('ranking casts year properly', function () {
     
     $ranking = Season::create([
         'user_id' => $user->id,
-        'name' => 1,
+        'quarter_number' => 1,
         'points' => 500,
         'season_year_points' => 500,
         'year' => 2025,
@@ -85,7 +85,7 @@ test('ranking stores points correctly', function () {
     
     $ranking = Season::create([
         'user_id' => $user->id,
-        'name' => 2,
+        'quarter_number' => 2,
         'points' => 1500,
         'season_year_points' => 3000,
         'year' => 2025,
@@ -93,7 +93,7 @@ test('ranking stores points correctly', function () {
     
     expect($ranking->points)->toBe(1500);
     expect($ranking->season_year_points)->toBe(3000);
-    expect($ranking->name)->toBe(2);
+    expect($ranking->quarter_number)->toBe(2);
 });
 
 test('activity in current quarter creates season ranking with both points', function () {
@@ -117,7 +117,7 @@ test('activity in current quarter creates season ranking with both points', func
     // Check season ranking was created with both points and season_year_points
     $seasonSeason = \App\Models\Season::where('user_id', $user->id)
         ->where('year', $currentYear)
-        ->where('name', $currentSeason)
+        ->where('quarter_number', $currentSeason)
         ->first();
     
     expect($seasonSeason)->not->toBeNull();
@@ -160,12 +160,12 @@ test('activity in next quarter creates new season ranking and updates season_yea
     $currentSeason = ceil(now()->month / 3);
     $currentSeason = \App\Models\Season::where('user_id', $user->id)
         ->where('year', now()->year)
-        ->where('name', $currentSeason)
+        ->where('quarter_number', $currentSeason)
         ->first();
     
     $nextSeason = \App\Models\Season::where('user_id', $user->id)
         ->where('year', $nextQuarterDate->year)
-        ->where('name', $nextSeason)
+        ->where('quarter_number', $nextSeason)
         ->first();
     
     expect($currentSeason->points)->toBe(50);
@@ -217,7 +217,7 @@ test('activity in next year creates separate year rankings', function () {
     // Check next year Q1 ranking
     $nextYearQ1Season = \App\Models\Season::where('user_id', $user->id)
         ->where('year', $nextYear)
-        ->where('name', 1)
+        ->where('quarter_number', 1)
         ->first();
     
     expect($nextYearQ1Season)->not->toBeNull();
@@ -260,7 +260,7 @@ test('multiple activities in same quarter accumulate points', function () {
     
     $seasonSeason = \App\Models\Season::where('user_id', $user->id)
         ->where('year', $currentYear)
-        ->where('name', $currentSeason)
+        ->where('quarter_number', $currentSeason)
         ->first();
     
     expect($seasonSeason->points)->toBe(225);
@@ -279,7 +279,7 @@ test('season rank is calculated correctly for multiple users', function () {
     // User 1: 300 points
     Season::create([
         'user_id' => $user1->id,
-        'name' => $currentSeason,
+        'quarter_number' => $currentSeason,
         'points' => 300,
         'season_year_points' => 300,
         'year' => $currentYear,
@@ -288,7 +288,7 @@ test('season rank is calculated correctly for multiple users', function () {
     // User 2: 200 points
     Season::create([
         'user_id' => $user2->id,
-        'name' => $currentSeason,
+        'quarter_number' => $currentSeason,
         'points' => 200,
         'season_year_points' => 200,
         'year' => $currentYear,
@@ -297,15 +297,15 @@ test('season rank is calculated correctly for multiple users', function () {
     // User 3: 200 points (tie with user 2)
     Season::create([
         'user_id' => $user3->id,
-        'name' => $currentSeason,
+        'quarter_number' => $currentSeason,
         'points' => 200,
         'season_year_points' => 200,
         'year' => $currentYear,
     ]);
     
-    $season1 = Season::where('user_id', $user1->id)->where('name', $currentSeason)->first();
-    $season2 = Season::where('user_id', $user2->id)->where('name', $currentSeason)->first();
-    $season3 = Season::where('user_id', $user3->id)->where('name', $currentSeason)->first();
+    $season1 = Season::where('user_id', $user1->id)->where('quarter_number', $currentSeason)->first();
+    $season2 = Season::where('user_id', $user2->id)->where('quarter_number', $currentSeason)->first();
+    $season3 = Season::where('user_id', $user3->id)->where('quarter_number', $currentSeason)->first();
     
     expect($season1->season_rank)->toBe(1); // User 1 is rank 1
     expect($season2->season_rank)->toBe(2); // User 2 and 3 are tied at rank 2
@@ -322,14 +322,14 @@ test('year rank is calculated correctly for multiple users with multiple seasons
     // User 1: Q1 with 500 total year points
     Season::create([
         'user_id' => $user1->id,
-        'name' => 1,
+        'quarter_number' => 1,
         'points' => 200,
         'season_year_points' => 500,
         'year' => $currentYear,
     ]);
     Season::create([
         'user_id' => $user1->id,
-        'name' => 2,
+        'quarter_number' => 2,
         'points' => 300,
         'season_year_points' => 500,
         'year' => $currentYear,
@@ -338,14 +338,14 @@ test('year rank is calculated correctly for multiple users with multiple seasons
     // User 2: Q1 with 400 total year points
     Season::create([
         'user_id' => $user2->id,
-        'name' => 1,
+        'quarter_number' => 1,
         'points' => 150,
         'season_year_points' => 400,
         'year' => $currentYear,
     ]);
     Season::create([
         'user_id' => $user2->id,
-        'name' => 2,
+        'quarter_number' => 2,
         'points' => 250,
         'season_year_points' => 400,
         'year' => $currentYear,
@@ -354,7 +354,7 @@ test('year rank is calculated correctly for multiple users with multiple seasons
     // User 3: Q1 with 400 total year points (tie with user 2)
     Season::create([
         'user_id' => $user3->id,
-        'name' => 1,
+        'quarter_number' => 1,
         'points' => 400,
         'season_year_points' => 400,
         'year' => $currentYear,

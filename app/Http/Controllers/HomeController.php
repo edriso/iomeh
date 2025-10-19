@@ -44,7 +44,9 @@ class HomeController extends Controller
             'combined_streak' => User::sum('current_streak'),
         ];
 
-        return Inertia::render('Landing', ['stats' => $stats]);
+        return Inertia::render('Landing', [
+            'stats' => $stats,
+        ]);
     }
 
     /**
@@ -84,7 +86,8 @@ class HomeController extends Controller
                 return [
                     'id' => $habit->id,
                     'name' => $habit->custom_name,
-                    'icon' => $habit->activityType->icon,
+                    'icon' => $habit->getEffectiveIcon(),
+                    'custom_icon' => $habit->custom_icon,
                     'category' => $habit->activityType->category->value,
                     'activity_type_id' => $habit->activity_type_id,
                     'base_points' => $habit->activityType->base_points,
@@ -109,7 +112,7 @@ class HomeController extends Controller
         $currentSeasonName = ceil(now()->month / 3);
         $userSeason = $user->seasons()
             ->where('year', now()->year)
-            ->where('name', $currentSeasonName)
+            ->where('quarter_number', $currentSeasonName)
             ->first();
 
         $yearSeason = $user->seasons()

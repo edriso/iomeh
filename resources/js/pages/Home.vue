@@ -17,13 +17,10 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { useLogActivity } from '@/composables/useLogActivity';
+import { useTranslations } from '@/composables/useTranslations';
 import { seoConfigs } from '@/config/seo';
 import AppLayout from '@/layouts/AppLayout.vue';
-import {
-    getNextTierMessage,
-    getStreakDisplayText,
-    getTierProgress,
-} from '@/utils/streakTiers';
+import { getNextTierMessage, getTierProgress } from '@/utils/streakTiers';
 import { router } from '@inertiajs/vue3';
 import {
     Activity,
@@ -60,8 +57,9 @@ interface Habit {
     id: number;
     name: string;
     icon: string;
+    custom_icon?: string | null;
     category: string;
-    activity_type_id: number;
+    activity_type_id: number | null;
     base_points: number;
     has_activity_today: boolean;
     notes?: string | null;
@@ -100,6 +98,9 @@ interface Props {
 // Props
 const props = defineProps<Props>();
 
+// Use translations with reactive locale
+const { t, isRTL } = useTranslations();
+
 // Composables
 const { openLogActivityModal } = useLogActivity();
 
@@ -119,9 +120,54 @@ const todayPoints = computed(() =>
 const streakProgress = computed(() =>
     getTierProgress(props.user.current_streak),
 );
-const streakMessage = computed(() =>
-    getNextTierMessage(props.user.current_streak),
-);
+
+// Translate streak tier name
+const translatedTierName = computed(() => {
+    const tierMap: Record<string, string> = {
+        Newcomer: t('streak.newcomer'),
+        Beginner: t('streak.beginner'),
+        Regular: t('streak.regular'),
+        Committed: t('streak.committed'),
+        Dedicated: t('streak.dedicated'),
+        Expert: t('streak.expert'),
+        Master: t('streak.master'),
+        Legend: t('streak.legend'),
+    };
+
+    return tierMap[props.user.streak_tier.name] || props.user.streak_tier.name;
+});
+const streakMessage = computed(() => {
+    const message = getNextTierMessage(props.user.current_streak);
+
+    // Translate the message
+    if (message === 'Legend status achieved!') {
+        return t('home.legend_status_achieved');
+    }
+
+    // Parse the message format: "X days to TierName (X×)"
+    const match = message.match(/(\d+) days to (.+) \((\d+(?:\.\d+)?)×\)/);
+    if (match) {
+        const [, days, tierName, multiplier] = match;
+
+        // Map tier names to translation keys
+        const tierMap: Record<string, string> = {
+            Newcomer: t('streak.newcomer'),
+            Beginner: t('streak.beginner'),
+            Regular: t('streak.regular'),
+            Committed: t('streak.committed'),
+            Dedicated: t('streak.dedicated'),
+            Expert: t('streak.expert'),
+            Master: t('streak.master'),
+            Legend: t('streak.legend'),
+        };
+
+        const translatedTierName = tierMap[tierName] || tierName;
+        return `${days} ${t('home.days_to')} ${translatedTierName} (${multiplier}×)`;
+    }
+
+    // If no match, return original message (fallback)
+    return message;
+});
 
 // Navigation Methods
 const navigateToRankings = () => router.visit('/rankings');
@@ -151,17 +197,17 @@ const formatActivityTime = (createdAt: string) => {
 </script>
 
 <template>
-    <AppLayout>
+    <AppLayout :dir="isRTL ? 'rtl' : 'ltr'">
         <SEO v-bind="seoConfigs.home" />
 
         <div class="container mx-auto px-4 py-8">
             <!-- Welcome Header -->
             <div class="mb-8">
                 <h1 class="mb-2 text-3xl font-bold text-foreground lg:text-4xl">
-                    Welcome back, {{ user.name }}! 👋
+                    {{ t('home.welcome') }}, {{ user.name }}! 👋
                 </h1>
                 <p class="text-muted-foreground lg:text-lg">
-                    Track your health, earn points, and climb the rankings
+                    {{ t('home.description') }}
                 </p>
             </div>
 
@@ -173,9 +219,11 @@ const formatActivityTime = (createdAt: string) => {
                         <CardHeader>
                             <div class="flex items-center justify-between">
                                 <div>
-                                    <CardTitle>My Activities</CardTitle>
+                                    <CardTitle>{{
+                                        t('settings.habits')
+                                    }}</CardTitle>
                                     <CardDescription>
-                                        Activities you're tracking
+                                        {{ t('home.activities_description') }}
                                     </CardDescription>
                                 </div>
                                 <div class="flex gap-2">
@@ -184,14 +232,14 @@ const formatActivityTime = (createdAt: string) => {
                                         variant="outline"
                                         @click="navigateToHabits"
                                     >
-                                        Edit
+                                        {{ t('common.edit') }}
                                     </Button>
                                     <Button
                                         size="sm"
                                         @click="handleLogActivity"
                                     >
                                         <Plus class="h-4 w-4" />
-                                        Log Activity
+                                        {{ t('home.add_activity') }}
                                     </Button>
                                 </div>
                             </div>
@@ -235,14 +283,14 @@ const formatActivityTime = (createdAt: string) => {
                                 <Activity
                                     class="mx-auto mb-3 h-12 w-12 opacity-50"
                                 />
-                                <p>No habits selected yet</p>
+                                <p>{{ t('home.no_habits_selected') }}</p>
                                 <Button
                                     size="sm"
                                     variant="outline"
                                     class="mt-3"
                                     @click="navigateToHabits"
                                 >
-                                    Select Activities
+                                    {{ t('home.select_activities') }}
                                 </Button>
                             </div>
                         </CardContent>
@@ -251,10 +299,13 @@ const formatActivityTime = (createdAt: string) => {
                     <!-- Today's Activities -->
                     <Card>
                         <CardHeader>
-                            <CardTitle>Today's Activities</CardTitle>
+                            <CardTitle>{{
+                                t('home.today_activities')
+                            }}</CardTitle>
                             <CardDescription>
-                                {{ today_activities.length }} activities •
-                                {{ todayPoints }} points
+                                {{ today_activities.length }}
+                                {{ t('home.activities_count') }} •
+                                {{ todayPoints }} {{ t('home.points_count') }}
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -281,7 +332,7 @@ const formatActivityTime = (createdAt: string) => {
                                                 class="text-xs"
                                             >
                                                 +{{ activity.points_earned }}
-                                                pts
+                                                {{ t('points.short') }}
                                             </Badge>
                                         </div>
                                         <p
@@ -309,12 +360,14 @@ const formatActivityTime = (createdAt: string) => {
                                 <Calendar
                                     class="mx-auto mb-3 h-12 w-12 opacity-50"
                                 />
-                                <p class="mb-2">No activities logged today</p>
+                                <p class="mb-2">
+                                    {{ t('home.no_activities_today') }}
+                                </p>
                                 <p class="mb-4 text-sm">
-                                    Start tracking your health!
+                                    {{ t('home.start_tracking') }}
                                 </p>
                                 <Button size="sm" @click="navigateToHabits">
-                                    Edit Activities
+                                    {{ t('home.edit_activities') }}
                                 </Button>
                             </div>
                         </CardContent>
@@ -328,7 +381,7 @@ const formatActivityTime = (createdAt: string) => {
                         <CardHeader>
                             <CardTitle class="flex items-center gap-2">
                                 <Flame class="h-5 w-5 text-orange-500" />
-                                Your Streak
+                                {{ t('home.your_streak') }}
                             </CardTitle>
                         </CardHeader>
                         <CardContent class="space-y-4">
@@ -342,11 +395,11 @@ const formatActivityTime = (createdAt: string) => {
                                     </div>
                                     <div class="text-sm text-muted-foreground">
                                         {{
-                                            getStreakDisplayText(
-                                                user.current_streak,
-                                            )
+                                            user.current_streak === 1
+                                                ? t('home.day')
+                                                : t('home.days')
                                         }}
-                                        in a row
+                                        {{ t('home.in_a_row') }}
                                     </div>
                                 </div>
                                 <div class="text-right">
@@ -354,11 +407,11 @@ const formatActivityTime = (createdAt: string) => {
                                         class="text-sm font-medium text-primary"
                                     >
                                         {{ user.streak_tier.icon }}
-                                        {{ user.streak_tier.name }}
+                                        {{ translatedTierName }}
                                     </div>
                                     <div class="text-xs text-muted-foreground">
                                         {{ user.streak_tier.multiplier }}×
-                                        multiplier
+                                        {{ t('home.multiplier') }}
                                     </div>
                                 </div>
                             </div>
@@ -383,7 +436,8 @@ const formatActivityTime = (createdAt: string) => {
                                             user.current_streak
                                         "
                                     >
-                                        Best: {{ user.longest_streak }}
+                                        {{ t('home.best') }}:
+                                        {{ user.longest_streak }}
                                     </span>
                                 </div>
                             </div>
@@ -395,7 +449,7 @@ const formatActivityTime = (createdAt: string) => {
                         <CardHeader>
                             <CardTitle class="flex items-center gap-2">
                                 <TrendingUp class="h-5 w-5 text-primary" />
-                                Your Rankings
+                                {{ t('home.your_rankings') }}
                             </CardTitle>
                         </CardHeader>
                         <CardContent class="space-y-3">
@@ -406,8 +460,11 @@ const formatActivityTime = (createdAt: string) => {
                                 <div class="flex items-center gap-2">
                                     <Award class="h-4 w-4 text-primary" />
                                     <Badge variant="outline" class="text-xs">
-                                        {{ user.season_rank.season }}
-                                        {{ user.season_rank.year }}
+                                        {{
+                                            isRTL
+                                                ? `${t('rankings.q4_rankings')} ${user.season_rank.year}`
+                                                : `${user.season_rank.season} ${user.season_rank.year}`
+                                        }}
                                     </Badge>
                                 </div>
                                 <span class="text-2xl font-bold text-primary">
@@ -423,7 +480,8 @@ const formatActivityTime = (createdAt: string) => {
                                         class="h-4 w-4 text-amber-600 dark:text-amber-500"
                                     />
                                     <Badge variant="outline" class="text-xs">
-                                        {{ user.year_rank.year }} Year
+                                        {{ user.year_rank.year }}
+                                        {{ t('home.year') }}
                                     </Badge>
                                 </div>
                                 <span
@@ -438,7 +496,7 @@ const formatActivityTime = (createdAt: string) => {
                                 @click="navigateToRankings"
                             >
                                 <TrendingUp class="h-4 w-4" />
-                                View All Rankings
+                                {{ t('home.view_all_rankings') }}
                             </Button>
                         </CardContent>
                     </Card>
@@ -446,8 +504,12 @@ const formatActivityTime = (createdAt: string) => {
                     <!-- Recent Activities -->
                     <Card>
                         <CardHeader>
-                            <CardTitle>Recent Activity</CardTitle>
-                            <CardDescription>Last 7 days</CardDescription>
+                            <CardTitle>{{
+                                t('home.recent_activities')
+                            }}</CardTitle>
+                            <CardDescription>{{
+                                t('home.last_7_days')
+                            }}</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div
@@ -493,7 +555,9 @@ const formatActivityTime = (createdAt: string) => {
                                 v-else
                                 class="py-8 text-center text-muted-foreground"
                             >
-                                <p class="text-sm">No recent activities</p>
+                                <p class="text-sm">
+                                    {{ t('home.no_recent_activities') }}
+                                </p>
                             </div>
                         </CardContent>
                     </Card>
@@ -510,7 +574,7 @@ const formatActivityTime = (createdAt: string) => {
                         {{ selectedHabit?.name }}
                     </DialogTitle>
                     <DialogDescription>
-                        Personal notes for this activity
+                        {{ t('home.personal_notes') }}
                     </DialogDescription>
                 </DialogHeader>
                 <div class="mt-4">

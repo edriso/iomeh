@@ -60,17 +60,17 @@ class UserSeeder extends Seeder
         // Create seasons for last year (2024)
         $lastYear = $currentYear - 1;
         $seasonData = [
-            ['name' => 1, 'points' => 450, 'season_year_points' => 1850],
-            ['name' => 2, 'points' => 520, 'season_year_points' => 1850],
-            ['name' => 3, 'points' => 380, 'season_year_points' => 1850],
-            ['name' => 4, 'points' => 500, 'season_year_points' => 1850],
+            ['quarter_number' => 1, 'points' => 450, 'season_year_points' => 1850],
+            ['quarter_number' => 2, 'points' => 520, 'season_year_points' => 1850],
+            ['quarter_number' => 3, 'points' => 380, 'season_year_points' => 1850],
+            ['quarter_number' => 4, 'points' => 500, 'season_year_points' => 1850],
         ];
         
         foreach ($seasonData as $data) {
             Season::create([
                 'user_id' => $user->id,
                 'year' => $lastYear,
-                'name' => $data['name'],
+                'quarter_number' => $data['quarter_number'],
                 'points' => $data['points'],
                 'season_year_points' => $data['season_year_points'],
             ]);
@@ -79,17 +79,17 @@ class UserSeeder extends Seeder
         // Create seasons for year before last (2023)
         $twoYearsAgo = $currentYear - 2;
         $seasonData2023 = [
-            ['name' => 1, 'points' => 320, 'season_year_points' => 1200],
-            ['name' => 2, 'points' => 290, 'season_year_points' => 1200],
-            ['name' => 3, 'points' => 310, 'season_year_points' => 1200],
-            ['name' => 4, 'points' => 280, 'season_year_points' => 1200],
+            ['quarter_number' => 1, 'points' => 320, 'season_year_points' => 1200],
+            ['quarter_number' => 2, 'points' => 290, 'season_year_points' => 1200],
+            ['quarter_number' => 3, 'points' => 310, 'season_year_points' => 1200],
+            ['quarter_number' => 4, 'points' => 280, 'season_year_points' => 1200],
         ];
         
         foreach ($seasonData2023 as $data) {
             Season::create([
                 'user_id' => $user->id,
                 'year' => $twoYearsAgo,
-                'name' => $data['name'],
+                'quarter_number' => $data['quarter_number'],
                 'points' => $data['points'],
                 'season_year_points' => $data['season_year_points'],
             ]);
@@ -100,7 +100,7 @@ class UserSeeder extends Seeder
             Season::create([
                 'user_id' => $user->id,
                 'year' => $currentYear,
-                'name' => $q,
+                'quarter_number' => $q,
                 'points' => fake()->numberBetween(200, 600),
                 'season_year_points' => 0, // Will be calculated by ActivitySeeder
             ]);

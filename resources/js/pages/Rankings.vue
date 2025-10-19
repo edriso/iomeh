@@ -8,10 +8,11 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useTranslations } from '@/composables/useTranslations';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { Award, CalendarCheck, Footprints, Trophy } from 'lucide-vue-next';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 interface RankingsEntry {
     rank: number;
@@ -51,7 +52,31 @@ interface Props {
 
 const props = defineProps<Props>();
 
+// Use translations with reactive locale
+const { t, isRTL } = useTranslations();
+
 const activeTab = ref('today');
+
+// Computed properties for proper Arabic formatting
+const seasonRankingsTitle = computed(() => {
+    if (isRTL.value) {
+        // Arabic: "تصنيفات الموسم الرابع 2025"
+        return `${t('rankings.q4_rankings')} ${props.current_year}`;
+    } else {
+        // English: "Q4 2025 Rankings"
+        return `${props.current_season} ${props.current_year} ${t('rankings.rankings')}`;
+    }
+});
+
+const annualRankingsTitle = computed(() => {
+    if (isRTL.value) {
+        // Arabic: "التصنيفات السنوية 2025"
+        return `${t('rankings.annual_rankings')} ${props.current_year}`;
+    } else {
+        // English: "2025 Annual Rankings"
+        return `${props.current_year} ${t('rankings.annual_rankings')}`;
+    }
+});
 
 const getCurrentUserRankText = (
     period: keyof typeof props.current_user_rank,
@@ -65,8 +90,8 @@ const getCurrentUserPointsText = (
     period: keyof typeof props.current_user_rank,
 ) => {
     const rank = props.current_user_rank[period];
-    if (!rank) return '0 pts';
-    return `${rank.points} pts`;
+    if (!rank) return `0 ${t('points.short')}`;
+    return `${rank.points} ${t('points.short')}`;
 };
 
 const onTabChange = (newTab: string) => {
@@ -75,8 +100,8 @@ const onTabChange = (newTab: string) => {
 </script>
 
 <template>
-    <AppLayout>
-        <Head title="Rankings" />
+    <AppLayout :dir="isRTL ? 'rtl' : 'ltr'">
+        <Head :title="t('rankings.title')" />
 
         <div class="container mx-auto px-4 py-8">
             <!-- Header -->
@@ -85,11 +110,10 @@ const onTabChange = (newTab: string) => {
                     class="mb-2 flex items-center gap-3 text-3xl font-bold text-foreground"
                 >
                     <Trophy class="h-8 w-8 text-primary" />
-                    Global Rankings
+                    {{ t('rankings.title') }}
                 </h1>
                 <p class="text-muted-foreground">
-                    Compete with athletes worldwide across different time
-                    periods
+                    {{ t('rankings.description') }}
                 </p>
             </div>
 
@@ -98,17 +122,16 @@ const onTabChange = (newTab: string) => {
                 class="mb-6 border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10"
             >
                 <CardHeader>
-                    <CardTitle>Your Rankings</CardTitle>
-                    <CardDescription
-                        >See where you stand across all
-                        leaderboards</CardDescription
-                    >
+                    <CardTitle>{{ t('rankings.your_rankings') }}</CardTitle>
+                    <CardDescription>
+                        {{ t('rankings.your_rankings_description') }}
+                    </CardDescription>
                 </CardHeader>
                 <CardContent>
                     <div class="grid grid-cols-2 gap-6 sm:grid-cols-4">
                         <div class="text-center">
                             <p class="mb-1 text-xs text-muted-foreground">
-                                Today
+                                {{ t('rankings.today') }}
                             </p>
                             <p class="text-2xl font-bold text-primary">
                                 {{ getCurrentUserRankText('today') }}
@@ -119,7 +142,7 @@ const onTabChange = (newTab: string) => {
                         </div>
                         <div class="text-center">
                             <p class="mb-1 text-xs text-muted-foreground">
-                                Yesterday
+                                {{ t('rankings.yesterday') }}
                             </p>
                             <p class="text-2xl font-bold text-primary">
                                 {{ getCurrentUserRankText('yesterday') }}
@@ -130,7 +153,11 @@ const onTabChange = (newTab: string) => {
                         </div>
                         <div class="text-center">
                             <p class="mb-1 text-xs text-muted-foreground">
-                                {{ current_season }}
+                                {{
+                                    isRTL
+                                        ? t('rankings.q4_rankings')
+                                        : current_season
+                                }}
                             </p>
                             <p class="text-2xl font-bold text-primary">
                                 {{ getCurrentUserRankText('season') }}
@@ -159,22 +186,30 @@ const onTabChange = (newTab: string) => {
                 <TabsList class="grid w-full grid-cols-4">
                     <TabsTrigger value="today" class="flex items-center gap-2">
                         <Footprints class="h-4 w-4" />
-                        <span class="hidden sm:inline">Today</span>
+                        <span class="hidden sm:inline">{{
+                            t('rankings.today')
+                        }}</span>
                     </TabsTrigger>
                     <TabsTrigger
                         value="yesterday"
                         class="flex items-center gap-2"
                     >
                         <CalendarCheck class="h-4 w-4" />
-                        <span class="hidden sm:inline">Yesterday</span>
+                        <span class="hidden sm:inline">{{
+                            t('rankings.yesterday')
+                        }}</span>
                     </TabsTrigger>
                     <TabsTrigger value="season" class="flex items-center gap-2">
                         <Award class="h-4 w-4" />
-                        <span class="hidden sm:inline">Season</span>
+                        <span class="hidden sm:inline">{{
+                            t('rankings.season')
+                        }}</span>
                     </TabsTrigger>
                     <TabsTrigger value="year" class="flex items-center gap-2">
                         <Trophy class="h-4 w-4" />
-                        <span class="hidden sm:inline">Year</span>
+                        <span class="hidden sm:inline">{{
+                            t('rankings.year')
+                        }}</span>
                     </TabsTrigger>
                 </TabsList>
 
@@ -182,14 +217,21 @@ const onTabChange = (newTab: string) => {
                 <TabsContent value="today">
                     <Card>
                         <CardHeader>
-                            <CardTitle>Today's Leaders</CardTitle>
+                            <CardTitle>{{
+                                t('rankings.todays_leaders')
+                            }}</CardTitle>
                             <CardDescription>
-                                Real-time rankings for
+                                {{ t('rankings.todays_leaders_description') }}
                                 {{
-                                    new Date().toLocaleDateString('en-US', {
-                                        month: 'long',
-                                        day: 'numeric',
-                                    })
+                                    isRTL
+                                        ? `${new Date().getDate()} ${new Date().toLocaleDateString('ar-EG', { month: 'long' })}`
+                                        : new Date().toLocaleDateString(
+                                              'en-US',
+                                              {
+                                                  month: 'long',
+                                                  day: 'numeric',
+                                              },
+                                          )
                                 }}
                             </CardDescription>
                         </CardHeader>
@@ -197,7 +239,9 @@ const onTabChange = (newTab: string) => {
                             <RankingsList
                                 :rankings="rankings.today"
                                 :current-user-id="user.id"
-                                empty-message="No activities logged today yet. Be the first!"
+                                :empty-message="
+                                    t('rankings.no_activities_today')
+                                "
                             />
                         </CardContent>
                     </Card>
@@ -207,16 +251,29 @@ const onTabChange = (newTab: string) => {
                 <TabsContent value="yesterday">
                     <Card>
                         <CardHeader>
-                            <CardTitle>Yesterday's Champions</CardTitle>
+                            <CardTitle>{{
+                                t('rankings.yesterdays_champions')
+                            }}</CardTitle>
                             <CardDescription>
-                                Final rankings for
                                 {{
-                                    new Date(
-                                        Date.now() - 86400000,
-                                    ).toLocaleDateString('en-US', {
-                                        month: 'long',
-                                        day: 'numeric',
-                                    })
+                                    t(
+                                        'rankings.yesterdays_champions_description',
+                                    )
+                                }}
+                                {{
+                                    isRTL
+                                        ? (() => {
+                                              const yesterday = new Date(
+                                                  Date.now() - 86400000,
+                                              );
+                                              return `${yesterday.getDate()} ${yesterday.toLocaleDateString('ar-EG', { month: 'long' })}`;
+                                          })()
+                                        : new Date(
+                                              Date.now() - 86400000,
+                                          ).toLocaleDateString('en-US', {
+                                              month: 'long',
+                                              day: 'numeric',
+                                          })
                                 }}
                             </CardDescription>
                         </CardHeader>
@@ -224,7 +281,9 @@ const onTabChange = (newTab: string) => {
                             <RankingsList
                                 :rankings="rankings.yesterday"
                                 :current-user-id="user.id"
-                                empty-message="No activities logged yesterday"
+                                :empty-message="
+                                    t('rankings.no_activities_yesterday')
+                                "
                             />
                         </CardContent>
                     </Card>
@@ -234,12 +293,9 @@ const onTabChange = (newTab: string) => {
                 <TabsContent value="season">
                     <Card>
                         <CardHeader>
-                            <CardTitle
-                                >{{ current_season }}
-                                {{ current_year }} Rankings</CardTitle
-                            >
+                            <CardTitle>{{ seasonRankingsTitle }}</CardTitle>
                             <CardDescription>
-                                Quarterly leaderboard for the current season
+                                {{ t('rankings.season_description') }}
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -247,7 +303,9 @@ const onTabChange = (newTab: string) => {
                                 :rankings="rankings.season"
                                 :current-user-id="user.id"
                                 show-season
-                                empty-message="No season rankings yet. Start logging activities!"
+                                :empty-message="
+                                    t('rankings.no_season_rankings')
+                                "
                             />
                         </CardContent>
                     </Card>
@@ -257,12 +315,9 @@ const onTabChange = (newTab: string) => {
                 <TabsContent value="year">
                     <Card>
                         <CardHeader>
-                            <CardTitle
-                                >{{ current_year }} Annual Rankings</CardTitle
-                            >
+                            <CardTitle>{{ annualRankingsTitle }}</CardTitle>
                             <CardDescription>
-                                Yearly leaderboard - the ultimate test of
-                                consistency
+                                {{ t('rankings.year_description') }}
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -270,7 +325,9 @@ const onTabChange = (newTab: string) => {
                                 :rankings="rankings.year"
                                 :current-user-id="user.id"
                                 show-year
-                                empty-message="No yearly rankings yet"
+                                :empty-message="
+                                    t('rankings.no_yearly_rankings')
+                                "
                             />
                         </CardContent>
                     </Card>

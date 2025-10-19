@@ -142,7 +142,7 @@ test('activity creation automatically creates ranking records', function () {
     // Check ranking record was created
     $seasonRanking = \App\Models\Season::where('user_id', $user->id)
         ->where('year', $currentYear)
-        ->where('name', $currentSeason)
+        ->where('quarter_number', $currentSeason)
         ->first();
     
     expect($seasonRanking)->not->toBeNull();
@@ -196,13 +196,13 @@ test('activity on different dates creates appropriate rankings', function () {
     // Check Q1 ranking
     $q1Ranking = \App\Models\Season::where('user_id', $user->id)
         ->where('year', 2025)
-        ->where('name', 1)
+        ->where('quarter_number', 1)
         ->first();
     
     // Check Q2 ranking
     $q2Ranking = \App\Models\Season::where('user_id', $user->id)
         ->where('year', 2025)
-        ->where('name', 2)
+        ->where('quarter_number', 2)
         ->first();
     
     expect($q1Ranking->points)->toBe(50);

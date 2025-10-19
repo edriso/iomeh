@@ -13,7 +13,7 @@ class Season extends Model
 
     protected $fillable = [
         'user_id',
-        'name',
+        'quarter_number',
         'year',
         'points',
         'season_year_points',
@@ -22,7 +22,7 @@ class Season extends Model
     protected function casts(): array
     {
         return [
-            'name' => 'integer',
+            'quarter_number' => 'integer',
             'year' => 'integer',
             'points' => 'integer',
             'season_year_points' => 'integer',
@@ -38,12 +38,12 @@ class Season extends Model
     }
 
     /**
-     * Scope to get seasons filtered by year and name, ordered by points.
+     * Scope to get seasons filtered by year and quarter, ordered by points.
      */
-    public function scopeForSeason($query, $year, $name)
+    public function scopeForSeason($query, $year, $quarterNumber)
     {
         return $query->where('year', $year)
-                    ->where('name', $name)
+                    ->where('quarter_number', $quarterNumber)
                     ->orderBy('points', 'desc');
     }
 
@@ -63,7 +63,7 @@ class Season extends Model
     {
         // Use a more efficient query with proper indexing
         return self::where('year', $this->year)
-            ->where('name', $this->name)
+            ->where('quarter_number', $this->quarter_number)
             ->where('points', '>', $this->points)
             ->count() + 1;
     }
@@ -89,7 +89,30 @@ class Season extends Model
      */
     public function getDisplayNameAttribute()
     {
-        return 'Q' . $this->name;
+        return 'Q' . $this->quarter_number;
+    }
+
+    /**
+     * Get translated quarter name.
+     */
+    public function getTranslatedQuarterName($locale = 'en')
+    {
+        $translations = [
+            'en' => [
+                1 => 'Q1',
+                2 => 'Q2', 
+                3 => 'Q3',
+                4 => 'Q4',
+            ],
+            'ar' => [
+                1 => 'الربع الأول',
+                2 => 'الربع الثاني',
+                3 => 'الربع الثالث', 
+                4 => 'الربع الرابع',
+            ]
+        ];
+
+        return $translations[$locale][$this->quarter_number] ?? 'Q' . $this->quarter_number;
     }
 
     /**
