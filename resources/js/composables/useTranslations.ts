@@ -524,7 +524,7 @@ const translations = {
         'landing.progress_text': 'تتبع تقدمك عبر المواسم',
         'landing.community_title': 'انضم إلى مجتمع الصحة العالمي',
         'landing.season_label': 'الموسم (Q1-Q4)',
-        'landing.rank_example': 'تتبع ترتيبك: "2025 Q1 #11".',
+        'landing.rank_example': 'تتبع ترتيبك: "2025 الربع الأول #11".',
         'landing.quarterly_rank': 'ترتيب ربع سنوي',
         'landing.climb_rankings': 'تسلق التصنيفات',
         'landing.compete_description': 'تنافس يومياً وموسمياً وسنوياً.',
@@ -536,7 +536,7 @@ const translations = {
         'quarter.q4': 'الربع الرابع',
 
         // Points
-        'points.short': 'نقاط',
+        'points.short': 'نقطة',
         'points.long': 'نقاط',
 
         // Achievement badges
@@ -554,8 +554,8 @@ const translations = {
         'landing.nutrition_title': '🥗 التغذية',
         'landing.nutrition_description':
             'الوجبات الصحية، الخضروات، الفواكه، الترطيب، أهداف البروتين، المكملات الغذائية، والطبخ المنزلي.',
-        'landing.workout_stats': '30 نشاط | 10-60 نقاط',
-        'landing.nutrition_stats': '15 نشاط | 10-30 نقاط',
+        'landing.workout_stats': '30 نشاط | 10-60 نقطة',
+        'landing.nutrition_stats': '15 نشاط | 10-30 نقطة',
         'landing.streak_bonus_title': '🔥 نظام مكافآت السلسلة',
         'landing.streak_bonus_description':
             'الاستمرارية هي المفتاح. ابني سلاسل يومية واضرب نقاطك بمكافآت متدرجة تصل إلى',
@@ -598,10 +598,10 @@ const translations = {
         'landing.step3_description':
             'احصل على 10-50 نقطة لكل نشاط. ابني سلاسل يومية. شاهد إحصائياتك تنمو.',
         'landing.step4_description':
-            'تنافس في التصنيفات اليومية والموسمية والسنوية. تتبع ترتيبك: "2025 Q1 #11".',
+            'تنافس في التصنيفات اليومية والموسمية والسنوية. تتبع ترتيبك: "2025 الربع الأول #11".',
         'landing.ready_to_compete_title': 'مستعد للتنافس في الرفاهية؟',
         'landing.ready_to_compete_description':
-            'انضم إلى IOMeH اليوم وحول "يجب أن أولي الأولوية للصحة" إلى "أتنافس في الصحة." تتبع، تنافس، واكتسب ترتيبك.',
+            'انضم إلى IOMeH اليوم، وحوّل "يجب أن أولي الأولوية للصحة" إلى "أُنافِس في  الصحة". تتبع، تنافس، واكتسب ترتيبك.',
         'landing.start_journey': 'ابدأ رحلتك',
 
         // Streak tier names
