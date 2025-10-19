@@ -68,7 +68,8 @@ class SocialAuthController extends Controller
             
             // Validate required data from Google
             if (!$googleUser->getEmail()) {
-                return redirect('/login')->with('error', __('social.unable_retrieve_email'));
+                $errorMessage = $this->getTranslatedMessage('social.unable_retrieve_email');
+                return redirect('/login')->with('error', $errorMessage);
             }
             
             // Check if user already has a social login with this provider
@@ -99,7 +100,8 @@ class SocialAuthController extends Controller
             if ($existingUser) {
                 // If trying to sign up with an existing email, inform them to login instead
                 if ($context === 'register') {
-                    return redirect('/login')->with('error', __('social.account_exists_login'));
+                    $errorMessage = $this->getTranslatedMessage('social.account_exists_login');
+                    return redirect('/login')->with('error', $errorMessage);
                 }
                 
                 // Link the Google account to existing user
@@ -153,14 +155,18 @@ class SocialAuthController extends Controller
         } catch (\Laravel\Socialite\Two\InvalidStateException $e) {
             $redirectTo = $context === 'register' ? '/register' : '/login';
             $action = $context === 'register' ? 'signing up' : 'logging in';
-            return redirect($redirectTo)->with('error', __('social.session_expired', ['action' => $action]));
+            $errorMessage = $this->getTranslatedMessage('social.session_expired');
+            $errorMessage = str_replace(':action', $action, $errorMessage);
+            return redirect($redirectTo)->with('error', $errorMessage);
         } catch (\GuzzleHttp\Exception\ClientException $e) {
-            return redirect('/login')->with('error', __('social.auth_failed'));
+            $errorMessage = $this->getTranslatedMessage('social.auth_failed');
+            return redirect('/login')->with('error', $errorMessage);
         } catch (\Exception $e) {
             Log::error('Google OAuth Error: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString()
             ]);
-            return redirect('/login')->with('error', __('social.unable_login'));
+            $errorMessage = $this->getTranslatedMessage('social.unable_login');
+            return redirect('/login')->with('error', $errorMessage);
         }
     }
 
@@ -207,7 +213,8 @@ class SocialAuthController extends Controller
         }
 
         if ($provider !== 'google') {
-            return redirect()->back()->with('error', __('social.provider_not_supported'));
+            $errorMessage = $this->getTranslatedMessage('social.provider_not_supported');
+            return redirect()->back()->with('error', $errorMessage);
         }
 
         return Socialite::driver($provider)->redirect();
@@ -223,7 +230,8 @@ class SocialAuthController extends Controller
         }
 
         if ($provider !== 'google') {
-            return redirect()->back()->with('error', __('social.provider_not_supported'));
+            $errorMessage = $this->getTranslatedMessage('social.provider_not_supported');
+            return redirect()->back()->with('error', $errorMessage);
         }
 
         try {
@@ -237,7 +245,8 @@ class SocialAuthController extends Controller
                 ->first();
 
             if ($existingSocialLogin && $existingSocialLogin->user_id !== $user->id) {
-                return redirect()->back()->with('error', __('social.account_already_linked'));
+                $errorMessage = $this->getTranslatedMessage('social.account_already_linked');
+                return redirect()->back()->with('error', $errorMessage);
             }
 
             // Check if user already has this provider linked
@@ -258,10 +267,12 @@ class SocialAuthController extends Controller
                 'avatar' => $socialUser->getAvatar(),
             ]);
 
-            return redirect()->back()->with('success', __('success.social_linked'));
+            $successMessage = $this->getTranslatedMessage('success.social_linked');
+            return redirect()->back()->with('success', $successMessage);
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', __('social.unable_link'));
+            $errorMessage = $this->getTranslatedMessage('social.unable_link');
+            return redirect()->back()->with('error', $errorMessage);
         }
     }
 
@@ -275,7 +286,8 @@ class SocialAuthController extends Controller
         }
 
         if ($provider !== 'google') {
-            return redirect()->back()->with('error', __('social.provider_not_supported'));
+            $errorMessage = $this->getTranslatedMessage('social.provider_not_supported');
+            return redirect()->back()->with('error', $errorMessage);
         }
 
         /** @var User $user */
@@ -285,18 +297,21 @@ class SocialAuthController extends Controller
         $socialLoginsCount = $user->socialLogins()->count();
         
         if (!$user->hasPassword() && $socialLoginsCount <= 1) {
-            return redirect()->back()->with('error', __('social.cannot_unlink_only_method'));
+            $errorMessage = $this->getTranslatedMessage('social.cannot_unlink_only_method');
+            return redirect()->back()->with('error', $errorMessage);
         }
 
         $socialLogin = $user->socialLogins()->where('provider', $provider)->first();
 
         if (!$socialLogin) {
-            return redirect()->back()->with('error', __('social.no_linked_account'));
+            $errorMessage = $this->getTranslatedMessage('social.no_linked_account');
+            return redirect()->back()->with('error', $errorMessage);
         }
 
         $socialLogin->delete();
 
-        return redirect()->back()->with('success', __('success.social_unlinked'));
+        $successMessage = $this->getTranslatedMessage('success.social_unlinked');
+        return redirect()->back()->with('success', $successMessage);
     }
 
     /**
