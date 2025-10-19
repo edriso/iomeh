@@ -145,7 +145,7 @@ const changeLanguage = async (locale: string) => {
                 v-if="showDropdown"
                 :class="[
                     'absolute top-full z-50 mt-2 w-48 overflow-hidden rounded-lg border border-border bg-background shadow-lg',
-                    isRTL ? 'left-0' : 'right-0'
+                    isRTL ? 'left-0' : 'right-0',
                 ]"
             >
                 <div class="py-1">

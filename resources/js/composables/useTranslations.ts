@@ -314,7 +314,7 @@ const translations = {
 
         // Profile
         'profile.title': 'Profile Settings',
-        'profile.description': 'Update your account\'s profile information',
+        'profile.description': "Update your account's profile information",
         'profile.username': 'Username',
         'profile.name': 'Name',
         'profile.personal_website': 'Personal Website',
@@ -334,11 +334,14 @@ const translations = {
         'profile.cancel': 'Cancel',
         'profile.choose_username_placeholder': 'Choose your username',
         'profile.enter_name_placeholder': 'Enter your name',
-        'profile.bio_placeholder': 'Share a little about yourself and your interests...',
+        'profile.bio_placeholder':
+            'Share a little about yourself and your interests...',
         'profile.website_placeholder': 'Enter your website URL',
         'profile.avatar_placeholder': 'Enter URL for your profile picture',
-        'profile.avatar_help_text': 'Enter a direct URL to your profile picture',
-        'profile.heatmap_description': 'This affects how your activity heatmap displays weeks',
+        'profile.avatar_help_text':
+            'Enter a direct URL to your profile picture',
+        'profile.heatmap_description':
+            'This affects how your activity heatmap displays weeks',
         'profile.saturday': 'Saturday',
         'profile.sunday': 'Sunday',
         'profile.monday': 'Monday',
@@ -371,6 +374,8 @@ const translations = {
         'habits.notes_optional': 'Notes (optional)',
         'habits.notes_placeholder': 'Add any personal notes...',
         'habits.example_name': 'e.g., Morning Workout',
+        'habits.workout': 'Workout',
+        'habits.nutrition': 'Nutrition',
 
         // Rankings
         'rankings.title': 'Rankings',
@@ -794,7 +799,8 @@ const translations = {
         'profile.website_placeholder': 'أدخل رابط موقعك',
         'profile.avatar_placeholder': 'أدخل رابط صورة ملفك الشخصي',
         'profile.avatar_help_text': 'أدخل رابط مباشر لصورة ملفك الشخصي',
-        'profile.heatmap_description': 'هذا يؤثر على كيفية عرض خريطة الحرارة للأنشطة للأسبوع',
+        'profile.heatmap_description':
+            'هذا يؤثر على كيفية عرض خريطة الحرارة للأنشطة للأسبوع',
         'profile.saturday': 'السبت',
         'profile.sunday': 'الأحد',
         'profile.monday': 'الاثنين',
@@ -825,6 +831,8 @@ const translations = {
         'habits.notes_optional': 'ملاحظات (اختياري)',
         'habits.notes_placeholder': 'أضف أي ملاحظات شخصية...',
         'habits.example_name': 'مثال: تمرين الصباح',
+        'habits.workout': 'تمرين',
+        'habits.nutrition': 'تغذية',
 
         // Rankings
         'rankings.title': 'التصنيفات',

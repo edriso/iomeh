@@ -201,7 +201,7 @@ function validateForm() {
         if (habit.custom_icon && habit.custom_icon.length > 50) {
             errors.value[`habits.${index}.custom_icon`] = t(
                 'validation.max.string',
-                '50'
+                '50',
             );
         }
     });
@@ -239,7 +239,7 @@ function handleSubmit() {
 
 function getCategoryColor(category: string): string {
     const colors: Record<string, string> = {
-        workout: 'bg-red-500/10 text-red-500 border-red-500/20',
+        workout: 'bg-orange-500/10 text-orange-500 border-orange-500/20',
         nutrition: 'bg-green-500/10 text-green-500 border-green-500/20',
     };
     return colors[category.toLowerCase()] || 'bg-gray-500/10 text-gray-500';
@@ -270,7 +270,9 @@ function getCategoryColor(category: string): string {
                             }}</span>
                         </div>
                         <div>
-                            <p class="text-sm font-medium">{{ t('habits.current_habits') }}</p>
+                            <p class="text-sm font-medium">
+                                {{ t('habits.current_habits') }}
+                            </p>
                             <p class="text-xs text-muted-foreground">
                                 {{ t('habits.maximum_habits_allowed') }}
                             </p>
@@ -391,7 +393,9 @@ function getCategoryColor(category: string): string {
         <Dialog v-model:open="showAddDialog">
             <DialogContent class="max-h-[80vh] max-w-2xl">
                 <DialogHeader>
-                    <DialogTitle>{{ t('habits.add_new_activity') }}</DialogTitle>
+                    <DialogTitle>{{
+                        t('habits.add_new_activity')
+                    }}</DialogTitle>
                     <DialogDescription>
                         {{ t('habits.select_activity_type') }}
                     </DialogDescription>
@@ -423,7 +427,7 @@ function getCategoryColor(category: string): string {
                             }"
                             @click="selectedCategory = category"
                         >
-                            {{ category }}
+                            {{ t(`habits.${category}`) }}
                         </Button>
                     </div>
 
@@ -461,12 +465,13 @@ function getCategoryColor(category: string): string {
                                                     )
                                                 "
                                             >
-                                                {{ type.category }}
+                                                {{ t(`habits.${type.category}`) }}
                                             </Badge>
                                             <span
                                                 class="text-sm font-medium text-primary"
                                             >
-                                                {{ type.base_points }} {{ t('habits.points') }}
+                                                {{ type.base_points }}
+                                                {{ t('habits.points') }}
                                             </span>
                                         </div>
                                     </div>

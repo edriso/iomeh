@@ -339,6 +339,8 @@ return [
     'habits.custom' => 'مخصص',
     'habits.enter_emoji' => 'أدخل الرمز التعبيري...',
     'habits.add' => 'إضافة',
+    'habits.workout' => 'تمرين',
+    'habits.nutrition' => 'تغذية',
     'habits.notes_placeholder' => 'أضف أي ملاحظات شخصية...',
     'habits.example_name' => 'مثال: تمرين الصباح',
     'habits.points' => 'نقطة',

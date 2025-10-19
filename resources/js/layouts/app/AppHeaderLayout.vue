@@ -37,6 +37,7 @@ const habits = computed(() => (page.props.auth?.habits || []) as any[]);
 
         <!-- Global Log Activity Modal -->
         <LogActivityModal
+            v-if="habits.length > 0"
             v-model:open="showLogActivityModal"
             :habits="habits"
         />

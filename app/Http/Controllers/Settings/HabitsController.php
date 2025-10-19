@@ -34,7 +34,7 @@ class HabitsController extends Controller
                     'display_order' => $habit->display_order,
                     'activity_type' => [
                         'id' => $habit->activityType->id,
-                        'name' => $habit->activityType->name,
+                        'name' => $habit->activityType->translated_name,
                         'category' => $habit->activityType->category->value,
                         'base_points' => $habit->activityType->base_points,
                         'icon' => $habit->activityType->icon,
@@ -49,11 +49,11 @@ class HabitsController extends Controller
             ->map(function ($type) {
                 return [
                     'id' => $type->id,
-                    'name' => $type->name,
+                    'name' => $type->translated_name,
                     'category' => $type->category->value,
                     'base_points' => $type->base_points,
                     'icon' => $type->icon,
-                    'description' => $type->description,
+                    'description' => $type->translated_description,
                 ];
             })
             ->groupBy('category');

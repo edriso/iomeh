@@ -339,6 +339,8 @@ return [
     'habits.custom' => 'Custom',
     'habits.enter_emoji' => 'Enter emoji...',
     'habits.add' => 'Add',
+    'habits.workout' => 'Workout',
+    'habits.nutrition' => 'Nutrition',
     'habits.notes_placeholder' => 'Add any personal notes...',
     'habits.example_name' => 'e.g., Morning Workout',
     'habits.points' => 'pts',

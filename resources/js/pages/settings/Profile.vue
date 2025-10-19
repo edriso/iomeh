@@ -186,7 +186,9 @@ const handleSubmit = (event: Event) => {
                             name="username"
                             required
                             autocomplete="username"
-                            :placeholder="t('profile.choose_username_placeholder')"
+                            :placeholder="
+                                t('profile.choose_username_placeholder')
+                            "
                         />
                         <InputError
                             class="mt-2"
@@ -232,7 +234,8 @@ const handleSubmit = (event: Event) => {
                                     : 'text-muted-foreground'
                             "
                         >
-                            {{ bioCharCount }}/255 {{ t('profile.characters_count') }}
+                            {{ bioCharCount }}/255
+                            {{ t('profile.characters_count') }}
                         </p>
                         <InputError class="mt-2" :message="clientErrors.bio" />
                     </div>
@@ -266,9 +269,15 @@ const handleSubmit = (event: Event) => {
                                 <span>{{ selectedDayName }}</span>
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem :value="6">{{ t('profile.saturday') }}</SelectItem>
-                                <SelectItem :value="0">{{ t('profile.sunday') }}</SelectItem>
-                                <SelectItem :value="1">{{ t('profile.monday') }}</SelectItem>
+                                <SelectItem :value="6">{{
+                                    t('profile.saturday')
+                                }}</SelectItem>
+                                <SelectItem :value="0">{{
+                                    t('profile.sunday')
+                                }}</SelectItem>
+                                <SelectItem :value="1">{{
+                                    t('profile.monday')
+                                }}</SelectItem>
                             </SelectContent>
                         </Select>
                         <p class="text-xs text-muted-foreground">
@@ -282,7 +291,9 @@ const handleSubmit = (event: Event) => {
 
                     <!-- Avatar URL -->
                     <div class="grid gap-2">
-                        <Label for="avatar">{{ t('profile.profile_picture_url') }}</Label>
+                        <Label for="avatar">{{
+                            t('profile.profile_picture_url')
+                        }}</Label>
                         <Input
                             id="avatar"
                             v-model="avatar"

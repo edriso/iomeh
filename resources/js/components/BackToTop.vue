@@ -52,7 +52,7 @@ onUnmounted(() => {
         v-if="isAuthenticated"
         :class="[
             'fixed bottom-6 z-50 flex flex-col items-center gap-3',
-            isRTL ? 'left-6' : 'right-6'
+            isRTL ? 'left-6' : 'right-6',
         ]"
     >
         <!-- Back to Top Button (appears above) -->

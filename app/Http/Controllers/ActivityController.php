@@ -158,9 +158,9 @@ class ActivityController extends Controller
         $formattedActivities = $activities->map(function ($activity) {
             return [
                 'id' => $activity->id,
-                'activity_type_name' => $activity->habit->activityType->name,
+                'activity_type_name' => $activity->habit->activityType->translated_name,
                 'activity_type_icon' => $activity->habit->activityType->icon,
-                'custom_name' => $activity->habit->custom_name ?: $activity->habit->activityType->name,
+                'custom_name' => $activity->habit->custom_name ?: $activity->habit->activityType->translated_name,
                 'date' => $activity->date->format('Y-m-d'),
                 'points_earned' => $activity->points_earned,
                 'notes' => $activity->notes,

@@ -19,7 +19,6 @@ const breadcrumbItems: BreadcrumbItem[] = [
         href: edit().url,
     },
 ];
-
 </script>
 
 <template>

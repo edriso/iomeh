@@ -6,9 +6,9 @@ import { Card, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { useTranslations } from '@/composables/useTranslations';
 import { GripVertical, Trash2, X } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
-import { useTranslations } from '@/composables/useTranslations';
 
 interface ActivityType {
     id: number;
@@ -52,22 +52,92 @@ const customEmojiInput = ref('');
 
 // Emoji data
 const popularEmojis = [
-    '😀', '😊', '😎', '🤔', '😴', '🤗', '😍', '🥰',
-    '😘', '😉', '😋', '🤤', '😏', '😒', '😔', '😢'
+    '😀',
+    '😊',
+    '😎',
+    '🤔',
+    '😴',
+    '🤗',
+    '😍',
+    '🥰',
+    '😘',
+    '😉',
+    '😋',
+    '🤤',
+    '😏',
+    '😒',
+    '😔',
+    '😢',
 ];
 
 const fitnessEmojis = [
-    '🏃‍♂️', '🏃‍♀️', '🚴‍♂️', '🚴‍♀️', '🏊‍♂️', '🏊‍♀️', '🏋️‍♂️', '🏋️‍♀️',
-    '🤸‍♂️', '🤸‍♀️', '🤾‍♂️', '🤾‍♀️', '🤽‍♂️', '🤽‍♀️', '🤼‍♂️', '🤼‍♀️',
-    '🏌️‍♂️', '🏌️‍♀️', '🏇', '🤺', '🏄‍♂️', '🏄‍♀️', '🏊‍♂️', '🏊‍♀️',
-    '⛹️‍♂️', '⛹️‍♀️', '🏋️‍♂️', '🏋️‍♀️', '🚴‍♂️', '🚴‍♀️', '🏃‍♂️', '🏃‍♀️'
+    '🏃‍♂️',
+    '🏃‍♀️',
+    '🚴‍♂️',
+    '🚴‍♀️',
+    '🏊‍♂️',
+    '🏊‍♀️',
+    '🏋️‍♂️',
+    '🏋️‍♀️',
+    '🤸‍♂️',
+    '🤸‍♀️',
+    '🤾‍♂️',
+    '🤾‍♀️',
+    '🤽‍♂️',
+    '🤽‍♀️',
+    '🤼‍♂️',
+    '🤼‍♀️',
+    '🏌️‍♂️',
+    '🏌️‍♀️',
+    '🏇',
+    '🤺',
+    '🏄‍♂️',
+    '🏄‍♀️',
+    '🏊‍♂️',
+    '🏊‍♀️',
+    '⛹️‍♂️',
+    '⛹️‍♀️',
+    '🏋️‍♂️',
+    '🏋️‍♀️',
+    '🚴‍♂️',
+    '🚴‍♀️',
+    '🏃‍♂️',
+    '🏃‍♀️',
 ];
 
 const foodEmojis = [
-    '🍎', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🍈',
-    '🍒', '🍑', '🥭', '🍍', '🥥', '🥝', '🍅', '🥕',
-    '🌽', '🌶️', '🥒', '🥬', '🥦', '🧄', '🧅', '🍄',
-    '🥜', '🌰', '🍞', '🥐', '🥖', '🍯', '🥛', '🧀'
+    '🍎',
+    '🍊',
+    '🍋',
+    '🍌',
+    '🍉',
+    '🍇',
+    '🍓',
+    '🍈',
+    '🍒',
+    '🍑',
+    '🥭',
+    '🍍',
+    '🥥',
+    '🥝',
+    '🍅',
+    '🥕',
+    '🌽',
+    '🌶️',
+    '🥒',
+    '🥬',
+    '🥦',
+    '🧄',
+    '🧅',
+    '🍄',
+    '🥜',
+    '🌰',
+    '🍞',
+    '🥐',
+    '🥖',
+    '🍯',
+    '🥛',
+    '🧀',
 ];
 
 // Computed properties for better type safety
@@ -143,12 +213,13 @@ const selectCustomEmoji = () => {
                             <button
                                 type="button"
                                 @click="toggleEmojiPicker"
-                                class="text-2xl hover:bg-muted rounded p-1 transition-colors cursor-pointer"
+                                class="cursor-pointer rounded p-1 text-2xl transition-colors hover:bg-muted"
                                 :title="t('habits.change_icon')"
                             >
                                 {{ effectiveIcon }}
                             </button>
                             <Badge
+                                v-if="habit.activity_type"
                                 variant="outline"
                                 :class="
                                     getCategoryColor(
@@ -156,10 +227,11 @@ const selectCustomEmoji = () => {
                                     )
                                 "
                             >
-                                {{ habit.activity_type.category }}
+                                {{ t(`habits.${habit.activity_type.category}`) }}
                             </Badge>
-                            <span class="text-xs text-muted-foreground">
-                                {{ habit.activity_type.base_points }} {{ t('habits.points') }}
+                            <span v-if="habit.activity_type" class="text-xs text-muted-foreground">
+                                {{ habit.activity_type.base_points }}
+                                {{ t('habits.points') }}
                             </span>
                         </div>
                         <div class="space-y-3">
@@ -196,15 +268,17 @@ const selectCustomEmoji = () => {
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Emoji Picker Popup -->
                 <div
                     v-if="showEmojiPicker"
-                    class="absolute z-50 top-0 left-0 right-0 bg-background border border-border rounded-lg shadow-lg p-4"
+                    class="absolute top-0 right-0 left-0 z-50 rounded-lg border border-border bg-background p-4 shadow-lg"
                     @click.stop
                 >
-                    <div class="flex items-center justify-between mb-3">
-                        <h3 class="text-sm font-medium">{{ t('habits.choose_icon') }}</h3>
+                    <div class="mb-3 flex items-center justify-between">
+                        <h3 class="text-sm font-medium">
+                            {{ t('habits.choose_icon') }}
+                        </h3>
                         <Button
                             type="button"
                             variant="ghost"
@@ -219,7 +293,9 @@ const selectCustomEmoji = () => {
                     <div class="space-y-3">
                         <!-- Popular emojis -->
                         <div>
-                            <label class="text-xs font-medium text-muted-foreground mb-2 block">
+                            <label
+                                class="mb-2 block text-xs font-medium text-muted-foreground"
+                            >
                                 {{ t('habits.popular') }}
                             </label>
                             <div class="grid grid-cols-8 gap-1">
@@ -227,8 +303,10 @@ const selectCustomEmoji = () => {
                                     v-for="emoji in popularEmojis"
                                     :key="emoji"
                                     @click="selectEmoji(emoji)"
-                                    class="w-8 h-8 flex items-center justify-center rounded hover:bg-muted transition-colors"
-                                    :class="{ 'bg-muted': customIcon === emoji }"
+                                    class="flex h-8 w-8 items-center justify-center rounded transition-colors hover:bg-muted"
+                                    :class="{
+                                        'bg-muted': customIcon === emoji,
+                                    }"
                                 >
                                     <span class="text-lg">{{ emoji }}</span>
                                 </button>
@@ -237,7 +315,9 @@ const selectCustomEmoji = () => {
 
                         <!-- Fitness emojis -->
                         <div>
-                            <label class="text-xs font-medium text-muted-foreground mb-2 block">
+                            <label
+                                class="mb-2 block text-xs font-medium text-muted-foreground"
+                            >
                                 {{ t('habits.fitness') }}
                             </label>
                             <div class="grid grid-cols-8 gap-1">
@@ -245,8 +325,10 @@ const selectCustomEmoji = () => {
                                     v-for="emoji in fitnessEmojis"
                                     :key="emoji"
                                     @click="selectEmoji(emoji)"
-                                    class="w-8 h-8 flex items-center justify-center rounded hover:bg-muted transition-colors"
-                                    :class="{ 'bg-muted': customIcon === emoji }"
+                                    class="flex h-8 w-8 items-center justify-center rounded transition-colors hover:bg-muted"
+                                    :class="{
+                                        'bg-muted': customIcon === emoji,
+                                    }"
                                 >
                                     <span class="text-lg">{{ emoji }}</span>
                                 </button>
@@ -255,7 +337,9 @@ const selectCustomEmoji = () => {
 
                         <!-- Food emojis -->
                         <div>
-                            <label class="text-xs font-medium text-muted-foreground mb-2 block">
+                            <label
+                                class="mb-2 block text-xs font-medium text-muted-foreground"
+                            >
                                 {{ t('habits.food_health') }}
                             </label>
                             <div class="grid grid-cols-8 gap-1">
@@ -263,8 +347,10 @@ const selectCustomEmoji = () => {
                                     v-for="emoji in foodEmojis"
                                     :key="emoji"
                                     @click="selectEmoji(emoji)"
-                                    class="w-8 h-8 flex items-center justify-center rounded hover:bg-muted transition-colors"
-                                    :class="{ 'bg-muted': customIcon === emoji }"
+                                    class="flex h-8 w-8 items-center justify-center rounded transition-colors hover:bg-muted"
+                                    :class="{
+                                        'bg-muted': customIcon === emoji,
+                                    }"
                                 >
                                     <span class="text-lg">{{ emoji }}</span>
                                 </button>
@@ -273,7 +359,9 @@ const selectCustomEmoji = () => {
 
                         <!-- Custom input -->
                         <div>
-                            <label class="text-xs font-medium text-muted-foreground mb-2 block">
+                            <label
+                                class="mb-2 block text-xs font-medium text-muted-foreground"
+                            >
                                 {{ t('habits.custom') }}
                             </label>
                             <div class="flex gap-2">

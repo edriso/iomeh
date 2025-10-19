@@ -21,8 +21,8 @@ defineProps<{
     >
         <div class="flex w-full max-w-md flex-col gap-6">
             <Link href="/" class="flex items-center gap-2 self-center">
-                <div class="flex h-9 w-9 items-center justify-center">
-                    <AppLogo class="size-9" />
+                <div class="flex h-16 w-16 items-center justify-center">
+                    <AppLogo class="size-16" />
                 </div>
             </Link>
 
