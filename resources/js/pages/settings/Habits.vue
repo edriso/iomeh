@@ -408,7 +408,7 @@ function getCategoryColor(category: string): string {
                             variant="outline"
                             size="sm"
                             :class="{
-                                'bg-primary text-primary-foreground':
+                                'bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground':
                                     selectedCategory === null,
                             }"
                             @click="selectedCategory = null"
@@ -422,7 +422,7 @@ function getCategoryColor(category: string): string {
                             size="sm"
                             class="capitalize"
                             :class="{
-                                'bg-primary text-primary-foreground':
+                                'bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground':
                                     selectedCategory === category,
                             }"
                             @click="selectedCategory = category"

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { useCalendarData } from '@/composables/useCalendarData';
+import { useTranslations } from '@/composables/useTranslations';
 import { ChevronLeft, ChevronRight } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 
@@ -28,6 +29,9 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
     (e: 'day-click', date: string): void;
 }>();
+
+// Get RTL state for arrow direction
+const { isRTL } = useTranslations();
 
 const handleDayClick = (date: string, count: number) => {
     if (count > 0) {
@@ -297,7 +301,8 @@ const goToNextMonth = async () => {
                     "
                     class="h-8 w-8 p-0 transition-colors hover:bg-primary/10 disabled:opacity-50"
                 >
-                    <ChevronLeft class="h-4 w-4" />
+                    <ChevronRight v-if="isRTL" class="h-4 w-4" />
+                    <ChevronLeft v-else class="h-4 w-4" />
                 </Button>
             </div>
 
@@ -330,7 +335,8 @@ const goToNextMonth = async () => {
                     "
                     class="h-8 w-8 p-0 transition-colors hover:bg-primary/10 disabled:opacity-50"
                 >
-                    <ChevronRight class="h-4 w-4" />
+                    <ChevronLeft v-if="isRTL" class="h-4 w-4" />
+                    <ChevronRight v-else class="h-4 w-4" />
                 </Button>
             </div>
         </div>

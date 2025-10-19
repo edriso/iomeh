@@ -602,7 +602,7 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                                             <LinkIcon
                                                                 class="h-3 w-3"
                                                             />
-                                                            View proof
+                                                            View memory
                                                         </a>
                                                     </Button>
                                                 </div>
