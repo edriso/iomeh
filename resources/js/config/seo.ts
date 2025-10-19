@@ -96,14 +96,14 @@ export const createStructuredData = {
         },
     }),
 
-    foundation: (
+    platform: (
         name: string,
         description: string,
         url: string,
         logo: string,
     ) => ({
         '@context': 'https://schema.org',
-        '@type': 'Foundation',
+        '@type': 'WebApplication',
         name,
         description,
         url,

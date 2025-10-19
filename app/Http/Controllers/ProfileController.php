@@ -20,8 +20,8 @@ class ProfileController extends Controller
         
         if (!$user) {
             return Inertia::render('errors/404', [
-                'title' => 'Profile Not Found',
-                'message' => 'The profile you\'re looking for does not exist.',
+                'title' => __('profile.not_found'),
+                'message' => __('profile.not_found_message'),
             ]);
         }
         
@@ -51,7 +51,7 @@ class ProfileController extends Controller
      */
     private function formatUserData(User $user, $seasons, int $currentSeasonName): array
     {
-        $userSeason = $seasons->firstWhere('name', $currentSeasonName);
+        $userSeason = $seasons->firstWhere('quarter_number', $currentSeasonName);
         $yearSeason = $seasons->first();
         
         return [
@@ -123,7 +123,7 @@ class ProfileController extends Controller
             ->selectRaw('COUNT(*) as total_activities, COUNT(DISTINCT date) as active_days')
             ->first();
         
-        $userSeason = $seasons->firstWhere('name', $currentSeasonName);
+        $userSeason = $seasons->firstWhere('quarter_number', $currentSeasonName);
         $yearSeason = $seasons->first();
         
         return [

@@ -23,6 +23,7 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useTranslations } from '@/composables/useTranslations';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { edit, update } from '@/routes/habits';
@@ -40,11 +41,11 @@ interface ActivityType {
 
 interface Habit {
     id: number;
-    activity_type_id: number;
+    activity_type_id: number | null;
     custom_name: string;
     notes: string | null;
     display_order: number;
-    activity_type: ActivityType;
+    activity_type: ActivityType | null;
 }
 
 interface Props {
@@ -54,9 +55,12 @@ interface Props {
 
 const props = defineProps<Props>();
 
+// Use translations with reactive locale
+const { t, isRTL } = useTranslations();
+
 const breadcrumbItems: BreadcrumbItem[] = [
     {
-        title: 'My Activities settings',
+        title: t('habits.title'),
         href: edit().url,
     },
 ];
@@ -105,8 +109,7 @@ const categories = computed(() => {
 function addHabit(activityType: ActivityType) {
     // Check if user has reached the maximum number of habits
     if (localHabits.value.length >= 15) {
-        errors.value.habits =
-            'You can have a maximum of 15 habits. Please remove some habits before adding new ones.';
+        errors.value.habits = t('habits.maximum_reached');
         return;
     }
 
@@ -172,21 +175,25 @@ function validateForm() {
     errors.value = {};
 
     if (localHabits.value.length === 0) {
-        errors.value.habits = 'You must have at least one habit.';
+        errors.value.habits = t('validation.required');
         return false;
     }
 
     localHabits.value.forEach((habit, index) => {
         if (!habit.custom_name || habit.custom_name.trim().length === 0) {
-            errors.value[`habits.${index}.custom_name`] = 'Name is required.';
+            errors.value[`habits.${index}.custom_name`] = t(
+                'validation.required',
+            );
         } else if (habit.custom_name.length > 100) {
-            errors.value[`habits.${index}.custom_name`] =
-                'Name must be 100 characters or less.';
+            errors.value[`habits.${index}.custom_name`] = t(
+                'validation.habit_name.max',
+            );
         }
 
         if (habit.notes && habit.notes.length > 500) {
-            errors.value[`habits.${index}.notes`] =
-                'Notes must be 500 characters or less.';
+            errors.value[`habits.${index}.notes`] = t(
+                'validation.habit_notes.max',
+            );
         }
     });
 
@@ -230,14 +237,14 @@ function getCategoryColor(category: string): string {
 </script>
 
 <template>
-    <AppLayout :breadcrumbs="breadcrumbItems">
-        <Head title="My Activities settings" />
+    <AppLayout :breadcrumbs="breadcrumbItems" :dir="isRTL ? 'rtl' : 'ltr'">
+        <Head :title="t('habits.title')" />
 
         <SettingsLayout>
             <div class="space-y-6">
                 <HeadingSmall
-                    title="My Activities settings"
-                    description="Manage your health and wellness activities"
+                    :title="t('habits.title')"
+                    :description="t('habits.description')"
                 />
 
                 <!-- Habit Counter -->
@@ -350,7 +357,7 @@ function getCategoryColor(category: string): string {
                             :disabled="localHabits.length === 0"
                         >
                             <Save class="mr-2 h-4 w-4" />
-                            Save Changes
+                            {{ t('common.save') }}
                         </Button>
                         <Button
                             variant="outline"

@@ -7,6 +7,7 @@ use App\Http\Controllers\RankingsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\LanguageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +48,10 @@ Route::prefix('api')->middleware(['auth', 'verified'])->group(function () {
 Route::get('csrf-token', function () {
     return response()->json(['csrf_token' => csrf_token()]);
 })->middleware(['web']);
+
+// Language switching routes
+Route::post('language/switch', [LanguageController::class, 'switch'])->name('language.switch');
+Route::get('language/current', [LanguageController::class, 'current'])->name('language.current');
 
 // Authenticated routes
 Route::middleware(['auth', 'verified'])->group(function () {

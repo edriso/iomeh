@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { Badge } from '@/components/ui/badge';
 import { useNumberFormat } from '@/composables/useNumberFormat';
+import { useTranslations } from '@/composables/useTranslations';
 import { Link } from '@inertiajs/vue3';
 import { Activity, Award, Crown, Trophy } from 'lucide-vue-next';
+
+const { t, isRTL } = useTranslations();
 
 interface RankingsEntry {
     rank: number;
@@ -144,7 +147,7 @@ const getUserInitials = (name: string) => {
                             variant="outline"
                             class="text-xs"
                         >
-                            You
+                            {{ t('rankings.you') }}
                         </Badge>
                     </div>
                     <p class="truncate text-sm text-muted-foreground">
@@ -170,20 +173,26 @@ const getUserInitials = (name: string) => {
                     <Activity class="inline h-3 w-3" />
                     {{ entry.activities_count }}
                     {{
-                        entry.activities_count === 1 ? 'activity' : 'activities'
+                        entry.activities_count === 1
+                            ? t('rankings.activity')
+                            : t('rankings.activities')
                     }}
                 </p>
                 <p
                     v-if="showSeason && entry.season"
                     class="text-xs text-muted-foreground"
                 >
-                    {{ entry.season }} {{ entry.year }}
+                    {{
+                        isRTL
+                            ? `${t('rankings.q4_rankings')} ${entry.year}`
+                            : `${entry.season} ${entry.year}`
+                    }}
                 </p>
                 <p
                     v-if="showYear && entry.year && !entry.season"
                     class="text-xs text-muted-foreground"
                 >
-                    {{ entry.year }} Year
+                    {{ entry.year }} {{ t('rankings.year') }}
                 </p>
             </div>
         </div>

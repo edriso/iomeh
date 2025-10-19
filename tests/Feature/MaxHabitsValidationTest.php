@@ -42,7 +42,7 @@ test('user cannot exceed maximum of 15 habits', function () {
         ]);
     
     $response->assertSessionHasErrors(['habits']);
-    $response->assertSessionHasErrors(['habits' => 'You can have a maximum of 15 habits. Please remove some habits before adding new ones.']);
+    $response->assertSessionHasErrors(['habits' => 'habits.maximum_reached']);
 });
 
 test('user can have exactly 15 habits', function () {
@@ -67,7 +67,7 @@ test('user can have exactly 15 habits', function () {
     
     $response->assertSessionHasNoErrors();
     $response->assertRedirect();
-    $response->assertSessionHas('success', 'Habits updated successfully!');
+    $response->assertSessionHas('success', 'success.habits_updated');
     
     expect($user->habits()->count())->toBe(15);
 });
@@ -94,7 +94,7 @@ test('user can have less than 15 habits', function () {
     
     $response->assertSessionHasNoErrors();
     $response->assertRedirect();
-    $response->assertSessionHas('success', 'Habits updated successfully!');
+    $response->assertSessionHas('success', 'success.habits_updated');
     
     expect($user->habits()->count())->toBe(5);
 });

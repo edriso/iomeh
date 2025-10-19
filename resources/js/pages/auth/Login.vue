@@ -2,11 +2,13 @@
 import AuthenticatedSessionController from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
 import InputError from '@/components/InputError.vue';
 import ModalAlert from '@/components/ModalAlert.vue';
+import PasswordInput from '@/components/PasswordInput.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useTranslations } from '@/composables/useTranslations';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import { register } from '@/routes/index';
 import { request } from '@/routes/password';
@@ -23,6 +25,12 @@ defineProps<{
 const page = usePage();
 const flash = computed(() => (page.props.flash as any) || {});
 
+// Get current locale from shared Inertia data and initialize
+const initialLocale = (page.props.currentLocale as string) || 'en';
+
+// Use translations with reactive locale
+const { t, isRTL } = useTranslations(initialLocale);
+
 // Client-side validation
 const clientErrors = ref<Record<string, string>>({});
 
@@ -32,12 +40,12 @@ const validateForm = (formData: any) => {
     // Email or username validation
     const emailOrUsername = formData.email?.trim() || '';
     if (!emailOrUsername) {
-        errors.email = 'Email address or username is required.';
+        errors.email = t('validation.email_or_username.required');
     }
 
     // Password validation
     if (!formData.password || formData.password.length < 1) {
-        errors.password = 'Password is required.';
+        errors.password = t('validation.password.required');
     }
 
     return errors;
@@ -80,10 +88,11 @@ const handleGoogleLogin = () => {
 
 <template>
     <AuthBase
-        title="Log in to your account"
-        description="Enter your credentials below to log in"
+        :title="t('nav.login')"
+        :description="t('auth.login_description')"
+        :dir="isRTL ? 'rtl' : 'ltr'"
     >
-        <Head title="Log in" />
+        <Head :title="t('nav.login')" />
 
         <ModalAlert v-if="status" type="success" :message="status" />
 
@@ -98,7 +107,7 @@ const handleGoogleLogin = () => {
         >
             <div class="grid gap-6">
                 <div class="grid gap-2">
-                    <Label for="email">Email address or username</Label>
+                    <Label for="email">{{ t('auth.email_or_username') }}</Label>
                     <Input
                         id="email"
                         type="text"
@@ -107,31 +116,30 @@ const handleGoogleLogin = () => {
                         autofocus
                         :tabindex="1"
                         autocomplete="email"
-                        placeholder="Enter your email or username"
+                        :placeholder="t('auth.enter_email_or_username')"
                     />
                     <InputError :message="clientErrors.email || errors.email" />
                 </div>
 
                 <div class="grid gap-2">
                     <div class="flex items-center justify-between">
-                        <Label for="password">Password</Label>
+                        <Label for="password">{{ t('auth.password') }}</Label>
                         <TextLink
                             v-if="canResetPassword"
                             :href="request()"
                             class="text-sm"
                             :tabindex="5"
                         >
-                            Forgot password?
+                            {{ t('auth.forgot_password') }}
                         </TextLink>
                     </div>
-                    <Input
+                    <PasswordInput
                         id="password"
-                        type="password"
                         name="password"
                         required
                         :tabindex="2"
                         autocomplete="current-password"
-                        placeholder="Enter your password"
+                        :placeholder="t('auth.enter_password')"
                     />
                     <InputError
                         :message="clientErrors.password || errors.password"
@@ -141,7 +149,7 @@ const handleGoogleLogin = () => {
                 <div class="flex items-center justify-between">
                     <Label for="remember" class="flex items-center space-x-3">
                         <Checkbox id="remember" name="remember" :tabindex="3" />
-                        <span>Remember me</span>
+                        <span>{{ t('auth.remember_me') }}</span>
                     </Label>
                 </div>
 
@@ -157,7 +165,7 @@ const handleGoogleLogin = () => {
                         v-if="processing"
                         class="h-4 w-4 animate-spin"
                     />
-                    Log in
+                    {{ t('nav.login') }}
                 </Button>
             </div>
 
@@ -167,7 +175,7 @@ const handleGoogleLogin = () => {
                 </div>
                 <div class="relative flex justify-center text-xs uppercase">
                     <span class="bg-background px-2 text-muted-foreground">
-                        Or continue with
+                        {{ t('auth.or_continue_with') }}
                     </span>
                 </div>
             </div>
@@ -196,12 +204,14 @@ const handleGoogleLogin = () => {
                         fill="#EA4335"
                     />
                 </svg>
-                Continue with Google
+                {{ t('auth.continue_with_google') }}
             </Button>
 
             <div class="text-center text-sm text-muted-foreground">
-                Don't have an account?
-                <TextLink :href="register()" :tabindex="5">Sign up</TextLink>
+                {{ t('auth.dont_have_account') }}
+                <TextLink :href="register()" :tabindex="5">{{
+                    t('nav.register')
+                }}</TextLink>
             </div>
         </Form>
     </AuthBase>

@@ -24,4 +24,20 @@ class ProfileUpdateRequest extends FormRequest
             'week_starts_on' => ['nullable', 'integer', 'in:0,1,6'],
         ];
     }
+
+    /**
+     * Get custom validation messages.
+     */
+    public function messages(): array
+    {
+        return [
+            'username.min' => __('validation.username.min'),
+            'username.regex' => __('validation.username.regex'),
+            'name.min' => __('validation.name.min'),
+            'name.max' => __('validation.name.max'),
+            'bio.max' => __('validation.bio.max'),
+            'website_url.url' => __('validation.website_url.url'),
+            'week_starts_on.in' => __('validation.in'),
+        ];
+    }
 }

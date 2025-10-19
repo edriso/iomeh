@@ -15,6 +15,7 @@ import {
     SelectTrigger,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { useTranslations } from '@/composables/useTranslations';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { type BreadcrumbItem } from '@/types';
@@ -33,9 +34,12 @@ interface Props {
 
 const props = defineProps<Props>();
 
+// Use translations with reactive locale
+const { t, isRTL } = useTranslations();
+
 const breadcrumbItems: BreadcrumbItem[] = [
     {
-        title: 'Profile settings',
+        title: t('profile.title'),
         href: edit().url,
     },
 ];
@@ -76,24 +80,23 @@ const validateForm = (formData: any) => {
     // Username validation
     const username = formData.username?.trim() || '';
     if (!username || username.length < 3) {
-        errors.username = 'Username must be at least 3 characters long.';
+        errors.username = t('validation.username.min');
     } else if (!/^[a-zA-Z0-9_]+$/.test(username)) {
-        errors.username =
-            'Username can only contain letters, numbers, and underscores.';
+        errors.username = t('validation.username.regex');
     }
 
     // Name validation
     const name = formData.name?.trim() || '';
     if (!name || name.length < 2) {
-        errors.name = 'Name must be at least 2 characters long.';
+        errors.name = t('validation.name.min');
     } else if (name.length > 100) {
-        errors.name = 'Name must not exceed 100 characters.';
+        errors.name = t('validation.name.max');
     }
 
     // Bio validation (if provided)
     const bio = formData.bio?.trim() || '';
     if (bio && bio.length > 255) {
-        errors.bio = 'Bio must be 255 characters or less.';
+        errors.bio = t('validation.bio.max');
     }
 
     // Website URL validation (if provided)
@@ -102,8 +105,7 @@ const validateForm = (formData: any) => {
         try {
             new URL(websiteUrl);
         } catch {
-            errors.website_url =
-                'Please enter a valid URL (e.g., https://example.com).';
+            errors.website_url = t('validation.website_url.url');
         }
     }
 
@@ -113,8 +115,7 @@ const validateForm = (formData: any) => {
         try {
             new URL(avatar);
         } catch {
-            errors.avatar =
-                'Please enter a valid URL (e.g., https://example.com/image.jpg).';
+            errors.avatar = t('validation.avatar.url');
         }
     }
 
@@ -162,20 +163,22 @@ const handleSubmit = (event: Event) => {
 </script>
 
 <template>
-    <AppLayout :breadcrumbs="breadcrumbItems">
-        <Head title="Profile settings" />
+    <AppLayout :breadcrumbs="breadcrumbItems" :dir="isRTL ? 'rtl' : 'ltr'">
+        <Head :title="t('profile.title')" />
 
         <SettingsLayout>
             <div class="flex flex-col space-y-6">
                 <HeadingSmall
-                    title="Profile information"
-                    description="Update your profile details and settings"
+                    :title="t('profile.title')"
+                    :description="t('profile.description')"
                 />
 
                 <form @submit.prevent="handleSubmit" class="space-y-6">
                     <!-- Username -->
                     <div class="grid gap-2">
-                        <Label for="username">Username</Label>
+                        <Label for="username">{{
+                            t('profile.username')
+                        }}</Label>
                         <Input
                             id="username"
                             v-model="username"
@@ -193,7 +196,7 @@ const handleSubmit = (event: Event) => {
 
                     <!-- Name -->
                     <div class="grid gap-2">
-                        <Label for="name">Name</Label>
+                        <Label for="name">{{ t('profile.name') }}</Label>
                         <Input
                             id="name"
                             v-model="name"
@@ -209,7 +212,7 @@ const handleSubmit = (event: Event) => {
 
                     <!-- Bio -->
                     <div class="grid gap-2">
-                        <Label for="bio">Bio</Label>
+                        <Label for="bio">{{ t('profile.bio') }}</Label>
                         <Textarea
                             id="bio"
                             v-model="bio"
@@ -236,7 +239,9 @@ const handleSubmit = (event: Event) => {
 
                     <!-- Website URL -->
                     <div class="grid gap-2">
-                        <Label for="website_url">Personal Website</Label>
+                        <Label for="website_url">{{
+                            t('profile.website')
+                        }}</Label>
                         <Input
                             id="website_url"
                             v-model="websiteUrl"
@@ -253,7 +258,9 @@ const handleSubmit = (event: Event) => {
 
                     <!-- Week Start Setting -->
                     <div class="grid gap-2">
-                        <Label for="week_starts_on">Week Start Day</Label>
+                        <Label for="week_starts_on">{{
+                            t('profile.week_starts_on')
+                        }}</Label>
                         <Select v-model="weekStartsOn">
                             <SelectTrigger>
                                 <span>{{ selectedDayName }}</span>
@@ -299,7 +306,7 @@ const handleSubmit = (event: Event) => {
                             type="submit"
                             data-test="update-profile-button"
                             @click="handleSubmit"
-                            >Save</Button
+                            >{{ t('profile.save') }}</Button
                         >
 
                         <Transition

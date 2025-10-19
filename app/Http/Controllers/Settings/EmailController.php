@@ -29,6 +29,13 @@ class EmailController extends Controller
             'current_password' => ['required', 'current_password'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $request->user()->id],
             'email_confirmation' => ['required', 'same:email'],
+        ], [
+            'current_password.required' => __('validation.password.required'),
+            'email.required' => __('validation.email.required'),
+            'email.email' => __('validation.email.valid'),
+            'email.unique' => __('validation.email.unique'),
+            'email_confirmation.required' => __('validation.email.required'),
+            'email_confirmation.same' => __('validation.confirmed'),
         ]);
 
         $user = $request->user();

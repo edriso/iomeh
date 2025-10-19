@@ -4,12 +4,16 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 /**
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Habit> $habits
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SocialLogin> $socialLogins
  * @method \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Habit> habits()
+ * @method \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\SocialLogin> socialLogins()
+ * @method bool hasPassword()
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -35,6 +39,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'longest_streak',
         'last_activity_date',
         'is_active',
+        'locale',
     ];
 
     /**
@@ -69,7 +74,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Get the user's social logins.
      */
-    public function socialLogins()
+    public function socialLogins(): HasMany
     {
         return $this->hasMany(SocialLogin::class);
     }
@@ -240,7 +245,7 @@ class User extends Authenticatable implements MustVerifyEmail
             [
                 'user_id' => $this->id,
                 'year' => $year,
-                'name' => $seasonName,
+                'quarter_number' => $seasonName,
             ],
             [
                 'points' => 0,
@@ -280,7 +285,7 @@ class User extends Authenticatable implements MustVerifyEmail
         
         return $this->seasons()
             ->where('year', $currentYear)
-            ->where('name', $currentSeasonName)
+            ->where('quarter_number', $currentSeasonName)
             ->first();
     }
 

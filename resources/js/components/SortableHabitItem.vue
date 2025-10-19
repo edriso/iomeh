@@ -20,11 +20,11 @@ interface ActivityType {
 
 interface Habit {
     id: number;
-    activity_type_id: number;
+    activity_type_id: number | null;
     custom_name: string;
     notes: string | null;
     display_order: number;
-    activity_type: ActivityType;
+    activity_type: ActivityType | null;
 }
 
 interface Props {

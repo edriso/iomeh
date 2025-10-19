@@ -1,38 +1,37 @@
 <script setup lang="ts">
 import PasswordController from '@/actions/App/Http/Controllers/Settings/PasswordController';
 import InputError from '@/components/InputError.vue';
+import PasswordInput from '@/components/PasswordInput.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { edit } from '@/routes/password';
 import { Form, Head } from '@inertiajs/vue3';
-import { ref } from 'vue';
 
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useTranslations } from '@/composables/useTranslations';
 import { type BreadcrumbItem } from '@/types';
+
+const { t, isRTL } = useTranslations();
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
-        title: 'Password settings',
+        title: t('settings.password'),
         href: edit().url,
     },
 ];
-
-const passwordInput = ref<HTMLInputElement | null>(null);
-const currentPasswordInput = ref<HTMLInputElement | null>(null);
 </script>
 
 <template>
-    <AppLayout :breadcrumbs="breadcrumbItems">
-        <Head title="Password settings" />
+    <AppLayout :breadcrumbs="breadcrumbItems" :dir="isRTL ? 'rtl' : 'ltr'">
+        <Head :title="t('settings.password')" />
 
         <SettingsLayout>
             <div class="space-y-6">
                 <HeadingSmall
-                    title="Update password"
-                    description="Ensure your account is using a long, random password to stay secure"
+                    :title="t('password.update_password')"
+                    :description="t('password.update_description')"
                 />
 
                 <Form
@@ -59,44 +58,40 @@ const currentPasswordInput = ref<HTMLInputElement | null>(null);
                     />
 
                     <div class="grid gap-2">
-                        <Label for="current_password">Current password</Label>
-                        <Input
+                        <Label for="current_password">{{
+                            t('password.current_password')
+                        }}</Label>
+                        <PasswordInput
                             id="current_password"
-                            ref="currentPasswordInput"
                             name="current_password"
-                            type="password"
-                            class="mt-1 block w-full"
+                            :placeholder="t('password.enter_current_password')"
                             autocomplete="current-password"
-                            placeholder="Enter current password"
                         />
                         <InputError :message="errors.current_password" />
                     </div>
 
                     <div class="grid gap-2">
-                        <Label for="password">New password</Label>
-                        <Input
+                        <Label for="password">{{
+                            t('password.new_password')
+                        }}</Label>
+                        <PasswordInput
                             id="password"
-                            ref="passwordInput"
                             name="password"
-                            type="password"
-                            class="mt-1 block w-full"
+                            :placeholder="t('password.create_new_password')"
                             autocomplete="new-password"
-                            placeholder="Create a new password"
                         />
                         <InputError :message="errors.password" />
                     </div>
 
                     <div class="grid gap-2">
-                        <Label for="password_confirmation"
-                            >Confirm password</Label
-                        >
-                        <Input
+                        <Label for="password_confirmation">{{
+                            t('password.confirm_password')
+                        }}</Label>
+                        <PasswordInput
                             id="password_confirmation"
                             name="password_confirmation"
-                            type="password"
-                            class="mt-1 block w-full"
+                            :placeholder="t('password.confirm_new_password')"
                             autocomplete="new-password"
-                            placeholder="Confirm your new password"
                         />
                         <InputError :message="errors.password_confirmation" />
                     </div>
@@ -105,7 +100,7 @@ const currentPasswordInput = ref<HTMLInputElement | null>(null);
                         <Button
                             :disabled="processing"
                             data-test="update-password-button"
-                            >Save password</Button
+                            >{{ t('password.save_password') }}</Button
                         >
 
                         <Transition
@@ -118,7 +113,7 @@ const currentPasswordInput = ref<HTMLInputElement | null>(null);
                                 v-show="recentlySuccessful"
                                 class="text-sm text-muted-foreground"
                             >
-                                Saved.
+                                {{ t('password.saved') }}
                             </p>
                         </Transition>
                     </div>

@@ -44,7 +44,9 @@ class HomeController extends Controller
             'combined_streak' => User::sum('current_streak'),
         ];
 
-        return Inertia::render('Landing', ['stats' => $stats]);
+        return Inertia::render('Landing', [
+            'stats' => $stats,
+        ]);
     }
 
     /**
@@ -109,7 +111,7 @@ class HomeController extends Controller
         $currentSeasonName = ceil(now()->month / 3);
         $userSeason = $user->seasons()
             ->where('year', now()->year)
-            ->where('name', $currentSeasonName)
+            ->where('quarter_number', $currentSeasonName)
             ->first();
 
         $yearSeason = $user->seasons()

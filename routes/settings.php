@@ -36,4 +36,5 @@ Route::middleware('auth')->group(function () {
 
     Route::get('settings/habits', [HabitsController::class, 'edit'])->name('habits.edit');
     Route::put('settings/habits', [HabitsController::class, 'update'])->name('habits.update');
+
 });

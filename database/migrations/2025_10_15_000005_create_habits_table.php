@@ -14,14 +14,11 @@ return new class extends Migration
         Schema::create('habits', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('activity_type_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('activity_type_id')->nullable()->constrained('activity_types')->nullOnDelete();
             $table->string('custom_name');
             $table->text('notes')->nullable();
             $table->unsignedTinyInteger('display_order')->default(0);
             $table->timestamps();
-            
-            // Unique constraint: can't favorite the same activity type twice
-            $table->unique(['user_id', 'activity_type_id'], 'unique_user_activity_type');
             
             // Index for user habits ordering
             $table->index(['user_id', 'display_order']);

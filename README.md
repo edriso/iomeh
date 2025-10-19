@@ -2,7 +2,7 @@
 
 > **Your Global Fitness Rank — Shaped by Your Daily Workouts and Nutrition.**
 
-A global fitness tracking and ranking platform that gamifies your workout and nutrition journey. Track your daily exercises and healthy eating while competing on seasonal leaderboards. Think of it as a sports foundation, but for your fitness.
+A global fitness tracking and ranking platform that gamifies your workout and nutrition journey. Track your daily exercises and healthy eating while competing on seasonal leaderboards. Think of it as a sports platform, but for your fitness.
 
 ---
 

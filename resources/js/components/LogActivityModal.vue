@@ -18,6 +18,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { useTranslations } from '@/composables/useTranslations';
 import { useForm, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
@@ -25,7 +26,7 @@ interface Habit {
     id: number;
     name: string;
     icon?: string;
-    activity_type_id: number;
+    activity_type_id: number | null;
     base_points: number;
     has_activity_today?: boolean;
 }
@@ -41,6 +42,9 @@ const emit = defineEmits<{
 }>();
 
 const page = usePage();
+
+// Get current locale and initialize translations
+const { t } = useTranslations();
 
 // Get user streak data from shared auth
 const userStreak = computed(() => {
@@ -104,19 +108,41 @@ const handleClose = () => {
     <Dialog :open="open" @update:open="handleClose">
         <DialogContent class="sm:max-w-[500px]">
             <DialogHeader>
-                <DialogTitle>Log Activity</DialogTitle>
+                <DialogTitle>{{ t('modal.log_activity.title') }}</DialogTitle>
                 <DialogDescription>
-                    Track today's health activities and earn points
+                    {{ t('modal.log_activity.description') }}
                 </DialogDescription>
             </DialogHeader>
 
             <form @submit.prevent="handleSubmit" class="space-y-4">
+                <!-- Today's Date Info -->
+                <div
+                    class="rounded-lg border border-primary/20 bg-primary/5 p-3"
+                >
+                    <p class="text-sm text-muted-foreground">
+                        📅 {{ t('modal.log_activity.logging_for_today') }}
+                        {{
+                            new Date().toLocaleDateString('en-US', {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric',
+                            })
+                        }}
+                    </p>
+                </div>
+
                 <!-- Habit Selection -->
                 <div class="space-y-2">
-                    <Label for="habit_id">Activity Type</Label>
+                    <Label for="habit_id">{{
+                        t('modal.log_activity.activity_type')
+                    }}</Label>
                     <Select v-model="form.habit_id" required>
                         <SelectTrigger id="habit_id">
-                            <SelectValue placeholder="Select an activity">
+                            <SelectValue
+                                :placeholder="
+                                    t('modal.log_activity.select_activity')
+                                "
+                            >
                                 <span
                                     v-if="selectedHabit"
                                     class="flex items-center gap-2"
@@ -151,32 +177,51 @@ const handleClose = () => {
                         class="rounded-lg bg-muted/50 p-4 text-center"
                     >
                         <p class="text-sm text-muted-foreground">
-                            🎉 Great job! You've already logged all your
-                            activities for today.
+                            🎉
+                            {{ t('modal.log_activity.no_activities_subtitle') }}
                         </p>
                     </div>
                 </div>
 
-                <!-- Today's Date Info -->
-                <div
-                    class="rounded-lg border border-primary/20 bg-primary/5 p-3"
-                >
-                    <p class="text-sm text-muted-foreground">
-                        📅 Logging activity for
-                        <span class="font-semibold text-foreground">today</span>
-                        ({{
-                            new Date().toLocaleDateString('en-US', {
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric',
-                            })
-                        }})
+                <!-- Notes -->
+                <div class="space-y-2">
+                    <Label for="notes">{{
+                        t('modal.log_activity.notes')
+                    }}</Label>
+                    <Textarea
+                        id="notes"
+                        v-model="form.notes"
+                        :placeholder="t('modal.log_activity.notes_placeholder')"
+                        :rows="3"
+                        :maxlength="2000"
+                    />
+                    <InputError :message="form.errors.notes" />
+                </div>
+
+                <!-- Memory URL -->
+                <div class="space-y-2">
+                    <Label for="memory_url">{{
+                        t('modal.log_activity.memory_url')
+                    }}</Label>
+                    <Input
+                        id="memory_url"
+                        v-model="form.memory_url"
+                        type="url"
+                        :placeholder="
+                            t('modal.log_activity.memory_url_placeholder')
+                        "
+                    />
+                    <InputError :message="form.errors.memory_url" />
+                    <p class="text-xs text-muted-foreground">
+                        {{ t('modal.log_activity.memory_url_help') }}
                     </p>
                 </div>
 
                 <!-- Points Display (Read-only) -->
                 <div v-if="calculatedPoints" class="space-y-2">
-                    <Label>Points You'll Earn</Label>
+                    <Label>{{
+                        t('modal.log_activity.points_youll_earn')
+                    }}</Label>
                     <div
                         class="rounded-lg border border-border bg-gradient-to-br from-muted/30 to-muted/50 p-4"
                     >
@@ -187,7 +232,7 @@ const handleClose = () => {
                                     {{ calculatedPoints.base }}
                                 </span>
                                 <span class="text-sm text-muted-foreground">
-                                    pts
+                                    {{ t('modal.log_activity.pts') }}
                                 </span>
                             </div>
 
@@ -234,7 +279,7 @@ const handleClose = () => {
                                     {{ calculatedPoints.final }}
                                 </span>
                                 <span class="text-sm text-muted-foreground">
-                                    pts
+                                    {{ t('modal.log_activity.pts') }}
                                 </span>
                             </div>
                         </div>
@@ -242,43 +287,16 @@ const handleClose = () => {
                         <!-- Streak Info -->
                         <p class="mt-3 text-xs text-muted-foreground">
                             <span v-if="calculatedPoints.hasBonus">
-                                🔥 {{ userStreak.current_streak }}-day streak
-                                bonus applied!
+                                🔥 {{ userStreak.current_streak
+                                }}{{
+                                    t('modal.log_activity.streak_bonus_applied')
+                                }}
                             </span>
                             <span v-else>
-                                Base points • Build a streak to multiply your
-                                rewards
+                                {{ t('modal.log_activity.base_points_info') }}
                             </span>
                         </p>
                     </div>
-                </div>
-
-                <!-- Notes -->
-                <div class="space-y-2">
-                    <Label for="notes">Notes (Optional)</Label>
-                    <Textarea
-                        id="notes"
-                        v-model="form.notes"
-                        placeholder="Add any notes about this activity..."
-                        :rows="3"
-                        :maxlength="2000"
-                    />
-                    <InputError :message="form.errors.notes" />
-                </div>
-
-                <!-- Memory URL -->
-                <div class="space-y-2">
-                    <Label for="memory_url">Memory URL (Optional)</Label>
-                    <Input
-                        id="memory_url"
-                        v-model="form.memory_url"
-                        type="url"
-                        placeholder="https://..."
-                    />
-                    <InputError :message="form.errors.memory_url" />
-                    <p class="text-xs text-muted-foreground">
-                        Link to memory (workout screenshot, meal photo, etc.)
-                    </p>
                 </div>
 
                 <!-- Actions -->
@@ -289,7 +307,7 @@ const handleClose = () => {
                         @click="handleClose"
                         :disabled="form.processing"
                     >
-                        Cancel
+                        {{ t('modal.log_activity.cancel') }}
                     </Button>
                     <Button
                         type="submit"
@@ -299,7 +317,11 @@ const handleClose = () => {
                             availableHabits.length === 0
                         "
                     >
-                        {{ form.processing ? 'Logging...' : 'Log Activity' }}
+                        {{
+                            form.processing
+                                ? t('modal.log_activity.logging')
+                                : t('modal.log_activity.log_activity')
+                        }}
                     </Button>
                 </div>
             </form>

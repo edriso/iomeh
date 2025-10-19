@@ -9,6 +9,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useTranslations } from '@/composables/useTranslations';
 import type { User } from '@/types';
 import { Link, router, usePage } from '@inertiajs/vue3';
 import { ChevronDown, Crown, Home, LogOut, Settings } from 'lucide-vue-next';
@@ -17,20 +18,24 @@ import { computed } from 'vue';
 const page = usePage();
 const user = computed(() => page.props.auth?.user as User | undefined);
 
+// Get current locale from shared Inertia data and initialize
+const initialLocale = (page.props.currentLocale as string) || 'en';
+const { t } = useTranslations(initialLocale);
+
 const appName = import.meta.env.VITE_APP_NAME || 'IOMeH';
 
-const navLinks = [
+const navLinks = computed(() => [
     {
-        name: 'Home',
+        name: t('nav.home'),
         href: '/',
         icon: Home,
     },
     {
-        name: 'Rankings',
+        name: t('nav.rankings'),
         href: '/rankings',
         icon: Crown,
     },
-];
+]);
 
 // Handle scroll to top
 const scrollToTop = () => {
@@ -174,8 +179,9 @@ const shouldShowNavButton = (href: string) => {
                                         class="truncate text-sm font-medium text-ellipsis"
                                         >{{ user.name || user.username }}</span
                                     >
-                                    <span class="text-xs text-muted-foreground"
-                                        >View profile</span
+                                    <span
+                                        class="text-xs text-muted-foreground"
+                                        >{{ t('nav.view_profile') }}</span
                                     >
                                 </div>
                             </Link>
@@ -187,7 +193,7 @@ const shouldShowNavButton = (href: string) => {
                                 class="flex w-full cursor-pointer items-center gap-2 px-2 py-1.5 hover:[&_svg]:!text-primary-foreground"
                             >
                                 <Settings class="h-4 w-4" />
-                                <span>Settings</span>
+                                <span>{{ t('nav.settings') }}</span>
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem
@@ -195,7 +201,7 @@ const shouldShowNavButton = (href: string) => {
                             class="flex w-full cursor-pointer items-center gap-2 px-2 py-1.5 hover:[&_svg]:!text-primary-foreground"
                         >
                             <LogOut class="h-4 w-4" />
-                            <span>Logout</span>
+                            <span>{{ t('nav.logout') }}</span>
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
@@ -204,10 +210,10 @@ const shouldShowNavButton = (href: string) => {
             <!-- Right: Auth Links (for guests) -->
             <div v-else class="flex items-center gap-2">
                 <Link href="/login">
-                    <Button variant="ghost">Log in</Button>
+                    <Button variant="ghost">{{ t('nav.login') }}</Button>
                 </Link>
                 <Link href="/register">
-                    <Button variant="default">Sign up</Button>
+                    <Button variant="default">{{ t('nav.register') }}</Button>
                 </Link>
             </div>
         </div>
