@@ -121,7 +121,8 @@ class SocialAuthController extends Controller
             // Handle based on context
             if ($context === 'login') {
                 // For login: Don't create new user, show error
-                return redirect('/login')->with('error', __('social.no_account_found'));
+                $errorMessage = $this->getTranslatedMessage('social.no_account_found');
+                return redirect('/login')->with('error', $errorMessage);
             }
 
             // For register: Create new user
@@ -296,5 +297,16 @@ class SocialAuthController extends Controller
         $socialLogin->delete();
 
         return redirect()->back()->with('success', __('success.social_unlinked'));
+    }
+
+    /**
+     * Get translated message manually since Laravel translation system is not working properly
+     */
+    private function getTranslatedMessage(string $key): string
+    {
+        $locale = app()->getLocale();
+        $translations = include lang_path("{$locale}/messages.php");
+        
+        return $translations[$key] ?? $key;
     }
 }
