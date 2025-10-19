@@ -85,7 +85,7 @@ class ProfileController extends Controller
             ->get()
             ->map(fn($activity) => [
                 'id' => $activity->id,
-                'activity_type_name' => $activity->habit->activityType->name,
+                'activity_type_name' => $activity->habit->activityType->getTranslatedName(),
                 'activity_type_icon' => $activity->habit->activityType->icon,
                 'custom_name' => $activity->habit->custom_name,
                 'date' => $activity->date->format('Y-m-d'),

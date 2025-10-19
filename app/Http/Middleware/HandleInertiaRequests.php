@@ -61,17 +61,22 @@ class HandleInertiaRequests extends Middleware
                 ] : null,
                 'habits' => $request->user() 
                     ? $request->user()->habits()
-                        ->with('activityType:id,name,icon,category,base_points')
+                        ->with(['activityType', 'activities' => function ($query) {
+                            $query->whereDate('date', now()->toDateString());
+                        }])
+                        ->orderBy('display_order')
                         ->get()
                         ->map(function ($habit) {
                             return [
                                 'id' => $habit->id,
-                                'name' => $habit->activityType->name,
-                                'icon' => $habit->activityType->icon,
+                                'name' => $habit->custom_name,
+                                'icon' => $habit->getEffectiveIcon(),
+                                'custom_icon' => $habit->custom_icon,
+                                'category' => $habit->activityType->category->value,
                                 'activity_type_id' => $habit->activity_type_id,
                                 'base_points' => $habit->activityType->base_points,
-                                'category' => $habit->activityType->category,
-                                'has_activity_today' => $habit->hasActivityToday(),
+                                'has_activity_today' => $habit->activities->isNotEmpty(),
+                                'notes' => $habit->notes,
                             ];
                         })
                     : [],
@@ -80,6 +85,8 @@ class HandleInertiaRequests extends Middleware
                 'expires_at' => $request->session()->get('login_web_' . sha1('web')) 
                     ? time() + (config('session.lifetime', 120) * 60) 
                     : null,
+                'is_valid' => $request->session()->has('login_web_' . sha1('web')),
+                'csrf_token' => csrf_token(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'flash' => function () use ($request) {

@@ -27,9 +27,14 @@ beforeEach(function () {
 test('it allows activity for today only', function () {
     $this->actingAs($this->user);
 
+    // Get CSRF token
+    $this->get('/');
+    $csrfToken = $this->app['session']->token();
+
     $response = $this->post('/activities', [
         'habit_id' => $this->habit->id,
         'notes' => 'Test activity',
+        '_token' => $csrfToken,
     ]);
 
     $response->assertSessionHasNoErrors();
@@ -47,9 +52,14 @@ test('it allows activity for today only', function () {
 test('it creates activity with today date when no date provided', function () {
     $this->actingAs($this->user);
 
+    // Get CSRF token
+    $this->get('/');
+    $csrfToken = $this->app['session']->token();
+
     $response = $this->post('/activities', [
         'habit_id' => $this->habit->id,
         'notes' => 'Test activity',
+        '_token' => $csrfToken,
     ]);
 
     $response->assertSessionHasNoErrors();
@@ -67,11 +77,16 @@ test('it creates activity with today date when no date provided', function () {
 test('it ignores any date field sent from frontend', function () {
     $this->actingAs($this->user);
 
+    // Get CSRF token
+    $this->get('/');
+    $csrfToken = $this->app['session']->token();
+
     // Even if frontend sends a date, backend should ignore it and use today
     $response = $this->post('/activities', [
         'habit_id' => $this->habit->id,
         'date' => '2020-01-01', // Old date that should be ignored
         'notes' => 'Test activity',
+        '_token' => $csrfToken,
     ]);
 
     $response->assertSessionHasNoErrors();

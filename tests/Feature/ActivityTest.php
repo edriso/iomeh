@@ -223,11 +223,16 @@ test('activity notes can be up to 2000 characters', function () {
     
     $notes = str_repeat('A', 2000); // Exactly 2000 characters
     
+    // Get CSRF token
+    $this->get('/');
+    $csrfToken = $this->app['session']->token();
+
     $response = $this
         ->actingAs($user)
         ->post(route('activities.store'), [
             'habit_id' => $habit->id,
             'notes' => $notes,
+            '_token' => $csrfToken,
         ]);
     
     $response->assertSessionHasNoErrors();
@@ -247,11 +252,16 @@ test('activity notes cannot exceed 2000 characters', function () {
     
     $notes = str_repeat('A', 2001); // 2001 characters - should fail
     
+    // Get CSRF token
+    $this->get('/');
+    $csrfToken = $this->app['session']->token();
+
     $response = $this
         ->actingAs($user)
         ->post(route('activities.store'), [
             'habit_id' => $habit->id,
             'notes' => $notes,
+            '_token' => $csrfToken,
         ]);
     
     $response->assertSessionHasErrors(['notes']);

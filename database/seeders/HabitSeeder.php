@@ -29,7 +29,7 @@ class HabitSeeder extends Seeder
                         'activity_type_id' => $activityType->id,
                     ],
                     [
-                        'custom_name' => $activityType->name,
+                        'custom_name' => $activityType->getTranslatedName(),
                         'notes' => fake()->optional(0.3)->sentence(),
                         'display_order' => $order++,
                     ]

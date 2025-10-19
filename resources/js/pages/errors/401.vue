@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useTranslations } from '@/composables/useTranslations';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
-import { Clock, Home, RefreshCw } from 'lucide-vue-next';
+import { Home, Lock, LogIn, RefreshCw } from 'lucide-vue-next';
 
 interface Props {
     title?: string;
@@ -11,8 +11,8 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-    title: 'Session Expired',
-    message: 'Your session has expired. Please refresh the page to continue.',
+    title: 'Authentication Required',
+    message: 'You need to be logged in to access this page.',
 });
 
 const { t, isRTL } = useTranslations();
@@ -34,15 +34,15 @@ const refreshPage = () => {
                 <!-- Error Icon -->
                 <div class="mb-8">
                     <div
-                        class="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-yellow-500/10"
+                        class="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-red-500/10"
                     >
-                        <Clock class="h-12 w-12 text-yellow-500" />
+                        <Lock class="h-12 w-12 text-red-500" />
                     </div>
                 </div>
 
                 <!-- Error Message -->
                 <div class="mb-8">
-                    <h1 class="mb-4 text-6xl text-yellow-500">419</h1>
+                    <h1 class="mb-4 text-6xl text-red-500">401</h1>
                     <h2 class="mb-4 text-2xl text-foreground">
                         {{ props.title }}
                     </h2>
@@ -54,6 +54,18 @@ const refreshPage = () => {
                 <!-- Action Buttons -->
                 <div class="flex flex-col gap-4 sm:flex-row sm:justify-center">
                     <Button as-child size="lg" class="w-full sm:w-auto">
+                        <Link href="/login">
+                            <LogIn class="mr-2 h-5 w-5" />
+                            {{ t('errors.login') }}
+                        </Link>
+                    </Button>
+
+                    <Button
+                        as-child
+                        variant="outline"
+                        size="lg"
+                        class="w-full sm:w-auto"
+                    >
                         <Link href="/">
                             <Home class="mr-2 h-5 w-5" />
                             {{ t('errors.go_home') }}

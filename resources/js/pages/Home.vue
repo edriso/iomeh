@@ -41,7 +41,6 @@ interface TodayActivity {
     habit_name: string;
     points_earned: number;
     notes?: string;
-    created_at: string;
 }
 
 interface RecentActivity {
@@ -173,6 +172,17 @@ const streakMessage = computed(() => {
 const navigateToRankings = () => router.visit('/rankings');
 const navigateToHabits = () => router.visit('/settings/habits');
 
+// Conditional navigation for activities
+const handleActivityAction = () => {
+    if (props.habits && props.habits.length > 0) {
+        // User has habits, open activity modal
+        handleLogActivity();
+    } else {
+        // User has no habits, go to habits settings
+        navigateToHabits();
+    }
+};
+
 // Modal Methods
 const openHabitModal = (habit: Habit) => {
     selectedHabit.value = habit;
@@ -188,12 +198,6 @@ const closeHabitModal = () => {
 const handleLogActivity = () => openLogActivityModal();
 
 // Helper Methods
-const formatActivityTime = (createdAt: string) => {
-    return new Date(createdAt).toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
-    });
-};
 </script>
 
 <template>
@@ -341,15 +345,6 @@ const formatActivityTime = (createdAt: string) => {
                                         >
                                             {{ activity.notes }}
                                         </p>
-                                        <p
-                                            class="mt-1 text-xs text-muted-foreground"
-                                        >
-                                            {{
-                                                formatActivityTime(
-                                                    activity.created_at,
-                                                )
-                                            }}
-                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -366,8 +361,20 @@ const formatActivityTime = (createdAt: string) => {
                                 <p class="mb-4 text-sm">
                                     {{ t('home.start_tracking') }}
                                 </p>
-                                <Button size="sm" @click="navigateToHabits">
-                                    {{ t('home.edit_activities') }}
+                                <Button
+                                    size="sm"
+                                    @click="handleActivityAction"
+                                    :variant="
+                                        props.habits && props.habits.length > 0
+                                            ? 'default'
+                                            : 'outline'
+                                    "
+                                >
+                                    {{
+                                        props.habits && props.habits.length > 0
+                                            ? t('home.add_activity')
+                                            : t('home.edit_activities')
+                                    }}
                                 </Button>
                             </div>
                         </CardContent>

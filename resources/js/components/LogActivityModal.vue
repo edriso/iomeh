@@ -20,7 +20,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { useTranslations } from '@/composables/useTranslations';
 import { useForm, usePage } from '@inertiajs/vue3';
-import { computed, watch } from 'vue';
+import { computed, nextTick, watch } from 'vue';
 
 interface Habit {
     id: number;
@@ -65,14 +65,22 @@ const form = useForm({
 
 // Filter out habits that already have activities today
 const availableHabits = computed(() => {
-    if (!props.habits || !Array.isArray(props.habits)) {
+    if (
+        !props.habits ||
+        !Array.isArray(props.habits) ||
+        props.habits.length === 0
+    ) {
         return [];
     }
     return props.habits.filter((habit) => !habit.has_activity_today);
 });
 
 const selectedHabit = computed(() => {
-    if (!props.habits || !Array.isArray(props.habits)) {
+    if (
+        !props.habits ||
+        !Array.isArray(props.habits) ||
+        props.habits.length === 0
+    ) {
         return null;
     }
     return props.habits.find((i) => i.id === Number(form.habit_id));
@@ -115,8 +123,11 @@ watch(
     (newValue) => {
         if (!newValue) {
             // Modal is closing, reset form and clear errors
-            form.reset();
-            form.clearErrors();
+            // Use nextTick to ensure DOM is stable before cleanup
+            nextTick(() => {
+                form.reset();
+                form.clearErrors();
+            });
         }
     },
 );
@@ -147,8 +158,12 @@ watch(
                                     month: 'short',
                                     day: 'numeric',
                                     year: 'numeric',
+                                    timeZone: 'Africa/Cairo',
                                 })
                             }}
+                        </p>
+                        <p class="mt-1 text-xs text-muted-foreground">
+                            🌍 {{ t('modal.log_activity.timezone_note') }}
                         </p>
                     </div>
 

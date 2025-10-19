@@ -184,7 +184,7 @@ function validateForm() {
     localHabits.value.forEach((habit, index) => {
         if (!habit.custom_name || habit.custom_name.trim().length === 0) {
             errors.value[`habits.${index}.custom_name`] = t(
-                'validation.required',
+                'validation.habit_name.required',
             );
         } else if (habit.custom_name.length > 100) {
             errors.value[`habits.${index}.custom_name`] = t(

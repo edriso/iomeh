@@ -13,7 +13,7 @@ return [
 
     // Landing Page
     'landing.title' => 'منصة التصنيف العالمي لللياقة البدنية',
-    'landing.subtitle' => 'IOMeH (أنا مدين لنفسي بالصحة) هي منصة التصنيف الشخصي لللياقة البدنية. تتبع التمارين وأنشطة التغذية أثناء التنافس في التصنيفات العالمية. حول اللياقة إلى منافسة.',
+    'landing.subtitle' => 'IOMeH (أنا مدين لنفسي بالصحة) هي منصتك الشخصية لتصنيف اللياقة البدنية. تتبع تمارينك وأنشطة التغذية وتنافس في التصنيفات العالمية. حول رحلتك الصحية إلى منافسة مثيرة!',
     'landing.get_started' => 'ابدأ الآن',
     'landing.learn_more' => 'اعرف المزيد',
     'landing.stats.active_users' => 'المستخدمون النشطون',
@@ -31,22 +31,22 @@ return [
     
     // Additional landing page sections
     'landing.fitness_journey_title' => 'تتبع رحلة اللياقة البدنية',
-    'landing.fitness_journey_description' => 'ركز على ما يهم أكثر لأهداف اللياقة البدنية. IOMeH يتتبع التمارين والتغذية مع العديد من الأنشطة للاختيار من بينها.',
+    'landing.fitness_journey_description' => 'ركز على ما يهم حقاً لأهدافك الصحية. IOMeH يتتبع تمارينك وتغذيتك مع مجموعة واسعة من الأنشطة للاختيار من بينها.',
     'landing.workout_title' => '💪 التمرين',
-    'landing.workout_description' => 'الجري، الجيم، HIIT، السباحة، ركوب الدراجات، الرياضة، الفنون القتالية، والمزيد. النقاط تعتمد على الشدة والمدة.',
+    'landing.workout_description' => 'الجري، الجيم، HIIT، السباحة، ركوب الدراجات، الرياضة، الفنون القتالية، وأكثر. النقاط تُحسب حسب الشدة والمدة الزمنية.',
     'landing.nutrition_title' => '🥗 التغذية',
-    'landing.nutrition_description' => 'الوجبات الصحية، الخضروات، الفواكه، الترطيب، أهداف البروتين، المكملات، والطبخ في المنزل.',
+    'landing.nutrition_description' => 'الوجبات الصحية، الخضروات، الفواكه، الترطيب، أهداف البروتين، المكملات الغذائية، والطبخ المنزلي.',
     'landing.workout_stats' => '30 نشاط | 10-60 نقاط',
     'landing.nutrition_stats' => '15 نشاط | 10-30 نقاط',
     'landing.streak_bonus_title' => '🔥 نظام مكافآت السلسلة',
-    'landing.streak_bonus_description' => 'الاتساق هو المفتاح. ابني سلاسل يومية واضرب نقاطك بمكافآت متدرجة تصل إلى',
+    'landing.streak_bonus_description' => 'الاستمرارية هي المفتاح. ابني سلاسل يومية واضرب نقاطك بمكافآت متدرجة تصل إلى',
     'landing.how_it_works_title' => 'كيف يعمل',
     'landing.build_streaks_title' => 'ابني السلاسل',
-    'landing.build_streaks_description' => 'سجل الأنشطة يومياً للحفاظ على سلسلتك. تفويت يوم واحد وستعيد إلى 1.',
+    'landing.build_streaks_description' => 'سجل أنشطتك يومياً للحفاظ على سلسلتك. تفويت يوم واحد وستعود إلى 1.',
     'landing.multiply_points_title' => 'اضرب النقاط',
-    'landing.multiply_points_description' => 'مستوى سلسلتك يضرب جميع نقاط الأنشطة.',
+    'landing.multiply_points_description' => 'مستوى سلسلتك يضاعف جميع نقاط أنشطتك.',
     'landing.milestone_bonuses_title' => 'مكافآت المعالم',
-    'landing.milestone_bonuses_description' => 'احقق المعالم (7، 30، 100، 365 يوم) للحصول على نقاط مكافأة إضافية على رأس المضاعفات!',
+    'landing.milestone_bonuses_description' => 'احقق المعالم (7، 30، 100، 365 يوم) للحصول على نقاط مكافأة إضافية فوق المضاعفات!',
     'landing.example_calculation_title' => '📊 مثال: سلسلة 30 يوم',
     'landing.base_activity_points' => 'نقاط النشاط الأساسية',
     'landing.dedicated_tier' => 'مستوى المتفانين (30 يوم)',
@@ -54,7 +54,7 @@ return [
     'landing.milestone_bonus' => 'مكافأة المعلم',
     'landing.total_points_earned' => 'إجمالي النقاط المكتسبة',
     'landing.global_rankings_title' => 'تنافس في التصنيفات العالمية',
-    'landing.global_rankings_description' => 'مثل منصة رياضية، ولكن للصحة. شاهد أين ترتيبك اليوم، هذا الموسم، وعلى الإطلاق.',
+    'landing.global_rankings_description' => 'مثل منصة رياضية، ولكن للصحة. شاهد أين ترتيبك اليوم، هذا الموسم، وعلى مدار التاريخ.',
     'landing.today_title' => 'اليوم',
     'landing.today_description' => 'تصنيفات يومية في الوقت الفعلي',
     'landing.yesterday_title' => 'أمس',
@@ -104,7 +104,7 @@ return [
     // Settings
     'settings.title' => 'الإعدادات',
     'settings.profile' => 'الملف الشخصي',
-    'settings.habits' => 'أنشطتي',
+    'settings.habits' => 'عاداتي',
     'settings.password' => 'كلمة المرور',
     'settings.email' => 'البريد الإلكتروني',
     'settings.appearance' => 'المظهر',
@@ -132,7 +132,7 @@ return [
     'profile.cancel' => 'إلغاء',
 
     // Habits Settings
-    'habits.title' => 'أنشطتي',
+    'habits.title' => 'عاداتي',
     'habits.description' => 'إدارة أنشطة اللياقة البدنية والعادات',
     'habits.add_habit' => 'إضافة نشاط',
     'habits.edit_habit' => 'تعديل النشاط',
@@ -246,6 +246,7 @@ return [
     'validation.email_or_username.required' => 'عنوان البريد الإلكتروني أو اسم المستخدم مطلوب.',
     'validation.auth.failed' => 'هذه البيانات لا تطابق سجلاتنا.',
     'validation.auth.throttle' => 'محاولات تسجيل دخول كثيرة جداً. يرجى المحاولة مرة أخرى خلال :minutes دقائق.',
+    'validation.habit_name.required' => 'الاسم مطلوب.',
     'validation.habit_name.max' => 'يجب ألا يتجاوز الاسم 100 حرف.',
     'validation.habit_notes.max' => 'يجب ألا تتجاوز الملاحظات 500 حرف.',
     
@@ -275,6 +276,8 @@ return [
     // Log Activity Modal
     'modal.log_activity.title' => 'تسجيل النشاط',
     'modal.log_activity.description' => 'تتبع أنشطة الصحة اليومية وكسب النقاط',
+    'modal.log_activity.logging_for_today' => 'تسجيل لليوم',
+    'modal.log_activity.timezone_note' => 'توقيت المنصة هو توقيت القاهرة',
     'modal.log_activity.activity_type' => 'نوع النشاط',
     'modal.log_activity.select_activity' => 'اختر نشاطاً',
     'modal.log_activity.no_activities' => 'تم إكمال جميع الأنشطة اليوم!',
@@ -287,6 +290,10 @@ return [
     'modal.log_activity.cancel' => 'إلغاء',
     'modal.log_activity.logging' => 'جاري التسجيل...',
     'modal.log_activity.log_activity' => 'تسجيل النشاط',
+    'modal.log_activity.points_youll_earn' => 'النقاط التي ستحصل عليها',
+    'modal.log_activity.pts' => 'نقطة',
+    'modal.log_activity.streak_bonus_applied' => ' يوم مكافأة السلسلة مطبقة',
+    'modal.log_activity.base_points_info' => 'النقاط الأساسية (بدون مكافأة السلسلة)',
     'success.activity_updated' => 'تم تحديث النشاط بنجاح!',
     'success.activity_deleted' => 'تم حذف النشاط بنجاح!',
     'success.habits_updated' => 'تم تحديث العادات بنجاح!',
@@ -344,7 +351,7 @@ return [
     'habits.notes_placeholder' => 'أضف أي ملاحظات شخصية...',
     'habits.example_name' => 'مثال: تمرين الصباح',
     'habits.points' => 'نقطة',
-    'habits.custom_name' => 'الاسم المخصص',
+    'habits.custom_name' => 'الاسم',
     'habits.notes_optional' => 'ملاحظات (اختياري)',
     
     // Rankings
@@ -399,4 +406,13 @@ return [
     'account.actions_description' => 'إدارة جلسة حسابك وأمانه',
     'account.sign_out' => 'تسجيل الخروج',
     'account.sign_out_description' => 'تسجيل الخروج من حسابك على هذا الجهاز',
+    
+    // Error Pages
+    'errors.go_home' => 'الذهاب للصفحة الرئيسية',
+    'errors.refresh_page' => 'تحديث الصفحة',
+    'errors.login' => 'تسجيل الدخول',
+    'errors.session_expired' => 'انتهت صلاحية الجلسة',
+    'errors.session_expired_message' => 'انتهت صلاحية جلستك. يرجى تحديث الصفحة للمتابعة.',
+    'errors.authentication_required' => 'مطلوب المصادقة',
+    'errors.authentication_required_message' => 'تحتاج إلى تسجيل الدخول للوصول إلى هذه الصفحة.',
 ];

@@ -104,7 +104,7 @@ return [
     // Settings
     'settings.title' => 'Settings',
     'settings.profile' => 'Profile',
-    'settings.habits' => 'My Activities',
+    'settings.habits' => 'My Habits',
     'settings.password' => 'Password',
     'settings.email' => 'Email',
     'settings.appearance' => 'Appearance',
@@ -132,7 +132,7 @@ return [
     'profile.cancel' => 'Cancel',
 
     // Habits Settings
-    'habits.title' => 'My Activities',
+    'habits.title' => 'My Habits',
     'habits.description' => 'Manage your fitness activities and habits',
     'habits.add_habit' => 'Add Activity',
     'habits.edit_habit' => 'Edit Activity',
@@ -246,6 +246,7 @@ return [
     'validation.email_or_username.required' => 'Email address or username is required.',
     'validation.auth.failed' => 'These credentials do not match our records.',
     'validation.auth.throttle' => 'Too many login attempts. Please try again in :minutes minutes.',
+    'validation.habit_name.required' => 'Name is required.',
     'validation.habit_name.max' => 'Name must be 100 characters or less.',
     'validation.habit_notes.max' => 'Notes must be 500 characters or less.',
     
@@ -275,6 +276,8 @@ return [
     // Log Activity Modal
     'modal.log_activity.title' => 'Log Activity',
     'modal.log_activity.description' => 'Track today\'s health activities and earn points',
+    'modal.log_activity.logging_for_today' => 'Logging for today',
+    'modal.log_activity.timezone_note' => 'Platform timezone is Cairo time',
     'modal.log_activity.activity_type' => 'Activity Type',
     'modal.log_activity.select_activity' => 'Select an activity',
     'modal.log_activity.no_activities' => 'All activities completed for today!',
@@ -287,6 +290,10 @@ return [
     'modal.log_activity.cancel' => 'Cancel',
     'modal.log_activity.logging' => 'Logging...',
     'modal.log_activity.log_activity' => 'Log Activity',
+    'modal.log_activity.points_youll_earn' => 'Points You\'ll Earn',
+    'modal.log_activity.pts' => 'pts',
+    'modal.log_activity.streak_bonus_applied' => ' day streak bonus applied',
+    'modal.log_activity.base_points_info' => 'Base points (no streak bonus)',
     'success.activity_updated' => 'Activity updated successfully!',
     'success.activity_deleted' => 'Activity deleted successfully!',
     'success.habits_updated' => 'Habits updated successfully!',
@@ -344,7 +351,7 @@ return [
     'habits.notes_placeholder' => 'Add any personal notes...',
     'habits.example_name' => 'e.g., Morning Workout',
     'habits.points' => 'pts',
-    'habits.custom_name' => 'Custom Name',
+    'habits.custom_name' => 'Name',
     'habits.notes_optional' => 'Notes (optional)',
     
     // Rankings
@@ -399,4 +406,13 @@ return [
     'account.actions_description' => 'Manage your account session and security',
     'account.sign_out' => 'Sign out',
     'account.sign_out_description' => 'Sign out of your account on this device',
+    
+    // Error Pages
+    'errors.go_home' => 'Go Home',
+    'errors.refresh_page' => 'Refresh Page',
+    'errors.login' => 'Login',
+    'errors.session_expired' => 'Session Expired',
+    'errors.session_expired_message' => 'Your session has expired. Please refresh the page to continue.',
+    'errors.authentication_required' => 'Authentication Required',
+    'errors.authentication_required_message' => 'You need to be logged in to access this page.',
 ];

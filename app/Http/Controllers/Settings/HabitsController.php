@@ -8,6 +8,7 @@ use App\Models\Habit;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 
 class HabitsController extends Controller
@@ -101,6 +102,10 @@ class HabitsController extends Controller
                 'display_order' => $index,
             ]);
         }
+
+        // Clear the home page cache for this user
+        $cacheKey = "home_data_user_{$user->id}";
+        Cache::forget($cacheKey);
 
         return back()->with('success', __('success.habits_updated'));
     }

@@ -324,7 +324,7 @@ class User extends Authenticatable implements MustVerifyEmail
                         return [
                             'id' => $activity->id,
                             'habit_name' => $activity->habit->custom_name,
-                            'activity_type' => $activity->habit->activityType->name,
+                            'activity_type' => $activity->habit->activityType->getTranslatedName(),
                             'points_earned' => $activity->points_earned,
                             'notes' => $activity->notes,
                         ];

@@ -104,7 +104,6 @@ class HomeController extends Controller
                     'habit_name' => $activity->habit->custom_name,
                     'points_earned' => $activity->points_earned,
                     'notes' => $activity->notes,
-                    'created_at' => $activity->created_at->format('g:i A'),
                 ];
             });
 

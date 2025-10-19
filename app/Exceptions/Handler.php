@@ -51,6 +51,28 @@ class Handler extends ExceptionHandler
             return Inertia::render('errors/404');
         }
 
+        // Handle CSRF token mismatch (419)
+        if ($e instanceof \Illuminate\Session\TokenMismatchException) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json(['message' => 'CSRF token mismatch'], 419);
+            }
+            return Inertia::render('errors/419', [
+                'title' => 'Session Expired',
+                'message' => 'Your session has expired. Please refresh the page to continue.',
+            ]);
+        }
+
+        // Handle authentication errors (401)
+        if ($e instanceof \Illuminate\Auth\AuthenticationException) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json(['message' => 'Unauthenticated'], 401);
+            }
+            return Inertia::render('errors/401', [
+                'title' => 'Authentication Required',
+                'message' => 'You need to be logged in to access this page.',
+            ]);
+        }
+
         $response = parent::render($request, $e);
         $status = $response->getStatusCode();
 
@@ -59,8 +81,22 @@ class Handler extends ExceptionHandler
         }
 
         // Handle specific error pages
+        if ($status === 401) {
+            return Inertia::render('errors/401', [
+                'title' => 'Authentication Required',
+                'message' => 'You need to be logged in to access this page.',
+            ]);
+        }
+
         if ($status === 404) {
             return Inertia::render('errors/404');
+        }
+
+        if ($status === 419) {
+            return Inertia::render('errors/419', [
+                'title' => 'Session Expired',
+                'message' => 'Your session has expired. Please refresh the page to continue.',
+            ]);
         }
 
         if ($status === 500) {

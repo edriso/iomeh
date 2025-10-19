@@ -7,12 +7,17 @@ test('registration screen can be rendered', function () {
 });
 
 test('new users can register', function () {
+    // Get CSRF token
+    $this->get(route('register'));
+    $csrfToken = $this->app['session']->token();
+
     $response = $this->post(route('register.store'), [
         'username' => 'testuser',
         'name' => 'Test User',
         'email' => 'test@example.com',
         'password' => 'password',
         'password_confirmation' => 'password',
+        '_token' => $csrfToken,
     ]);
 
     $this->assertAuthenticated();
@@ -20,6 +25,10 @@ test('new users can register', function () {
 });
 
 test('new users can register with profile picture', function () {
+    // Get CSRF token
+    $this->get(route('register'));
+    $csrfToken = $this->app['session']->token();
+
     $response = $this->post(route('register.store'), [
         'username' => 'testuser',
         'name' => 'Test User',
@@ -27,6 +36,7 @@ test('new users can register with profile picture', function () {
         'password' => 'password',
         'password_confirmation' => 'password',
         'avatar' => 'https://example.com/profile.jpg',
+        '_token' => $csrfToken,
     ]);
 
     $this->assertAuthenticated();
@@ -39,6 +49,10 @@ test('new users can register with profile picture', function () {
 });
 
 test('username must be unique case-insensitively', function () {
+    // Get CSRF token for first user
+    $this->get(route('register'));
+    $csrfToken = $this->app['session']->token();
+
     // Create first user with username 'TestUser'
     $firstResponse = $this->post(route('register.store'), [
         'name' => 'Test User',
@@ -46,6 +60,7 @@ test('username must be unique case-insensitively', function () {
         'password' => 'password',
         'password_confirmation' => 'password',
         'username' => 'TestUser',
+        '_token' => $csrfToken,
     ]);
 
     // Verify first user was created successfully
@@ -55,6 +70,10 @@ test('username must be unique case-insensitively', function () {
     // Logout the first user
     auth()->logout();
 
+    // Get CSRF token for second user
+    $this->get(route('register'));
+    $csrfToken = $this->app['session']->token();
+
     // Try to create second user with username 'testuser' (lowercase)
     $response = $this->post(route('register.store'), [
         'name' => 'Test User 2',
@@ -62,12 +81,17 @@ test('username must be unique case-insensitively', function () {
         'password' => 'password',
         'password_confirmation' => 'password',
         'username' => 'testuser',
+        '_token' => $csrfToken,
     ]);
 
     $response->assertSessionHasErrors(['username']);
 });
 
 test('username must be unique case-insensitively (uppercase)', function () {
+    // Get CSRF token for first user
+    $this->get(route('register'));
+    $csrfToken = $this->app['session']->token();
+
     // Create first user with username 'testuser'
     $firstResponse = $this->post(route('register.store'), [
         'name' => 'Test User',
@@ -75,6 +99,7 @@ test('username must be unique case-insensitively (uppercase)', function () {
         'password' => 'password',
         'password_confirmation' => 'password',
         'username' => 'testuser',
+        '_token' => $csrfToken,
     ]);
 
     // Verify first user was created successfully
@@ -84,6 +109,10 @@ test('username must be unique case-insensitively (uppercase)', function () {
     // Logout the first user
     auth()->logout();
 
+    // Get CSRF token for second user
+    $this->get(route('register'));
+    $csrfToken = $this->app['session']->token();
+
     // Try to create second user with username 'TESTUSER' (uppercase)
     $response = $this->post(route('register.store'), [
         'name' => 'Test User 2',
@@ -91,6 +120,7 @@ test('username must be unique case-insensitively (uppercase)', function () {
         'password' => 'password',
         'password_confirmation' => 'password',
         'username' => 'TESTUSER',
+        '_token' => $csrfToken,
     ]);
 
     $response->assertSessionHasErrors(['username']);

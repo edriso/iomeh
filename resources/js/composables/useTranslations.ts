@@ -170,7 +170,7 @@ const translations = {
         'settings.title': 'Settings',
         'settings.description': 'Manage your profile and account settings',
         'settings.profile': 'Profile',
-        'settings.habits': 'My Activities',
+        'settings.habits': 'My Habits',
         'settings.password': 'Password',
         'settings.email': 'Email',
         'settings.appearance': 'Appearance',
@@ -269,6 +269,7 @@ const translations = {
         'validation.auth.failed': 'These credentials do not match our records.',
         'validation.auth.throttle':
             'Too many login attempts. Please try again in :minutes minutes.',
+        'validation.habit_name.required': 'Name is required.',
         'validation.habit_name.max': 'Name must be 100 characters or less.',
         'validation.habit_notes.max': 'Notes must be 500 characters or less.',
 
@@ -349,7 +350,7 @@ const translations = {
         'profile.characters_count': 'characters',
 
         // Habits
-        'habits.title': 'My Activities',
+        'habits.title': 'My Habits',
         'habits.description': 'Manage your fitness activities and habits',
         'habits.current_habits': 'Current Habits',
         'habits.maximum_habits_allowed': 'Maximum of 15 habits allowed',
@@ -370,12 +371,20 @@ const translations = {
         'habits.no_available_types':
             'No available activity types in this category',
         'habits.points': 'pts',
-        'habits.custom_name': 'Custom Name',
+        'habits.custom_name': 'Name',
         'habits.notes_optional': 'Notes (optional)',
         'habits.notes_placeholder': 'Add any personal notes...',
         'habits.example_name': 'e.g., Morning Workout',
         'habits.workout': 'Workout',
         'habits.nutrition': 'Nutrition',
+        'habits.change_icon': 'Change icon',
+        'habits.choose_icon': 'Choose Icon',
+        'habits.popular': 'Popular',
+        'habits.fitness': 'Fitness',
+        'habits.food_health': 'Food & Health',
+        'habits.custom': 'Custom',
+        'habits.enter_emoji': 'Enter emoji...',
+        'habits.add': 'Add',
 
         // Rankings
         'rankings.title': 'Rankings',
@@ -452,6 +461,17 @@ const translations = {
         'account.sign_out_description':
             'Sign out of your account on this device',
 
+        // Error Pages
+        'errors.go_home': 'Go Home',
+        'errors.refresh_page': 'Refresh Page',
+        'errors.login': 'Login',
+        'errors.session_expired': 'Session Expired',
+        'errors.session_expired_message':
+            'Your session has expired. Please refresh the page to continue.',
+        'errors.authentication_required': 'Authentication Required',
+        'errors.authentication_required_message':
+            'You need to be logged in to access this page.',
+
         // Modal - Log Activity
         'modal.log_activity.title': 'Log Activity',
         'modal.log_activity.description': 'Record your activity for today',
@@ -471,6 +491,7 @@ const translations = {
         'modal.log_activity.no_activities_subtitle':
             'All activities logged for today!',
         'modal.log_activity.logging_for_today': 'Logging activity for',
+        'modal.log_activity.timezone_note': 'Platform timezone is Cairo time',
         'modal.log_activity.today': 'today',
         'modal.log_activity.points_youll_earn': "Points You'll Earn",
         'modal.log_activity.pts': 'pts',
@@ -492,7 +513,7 @@ const translations = {
         // Landing Page
         'landing.title': 'منصة التصنيف العالمي لللياقة البدنية',
         'landing.subtitle':
-            'IOMeH (أنا مدين لنفسي بالصحة) هي منصة التصنيف الشخصي لللياقة البدنية. تتبع التمارين وأنشطة التغذية أثناء التنافس في التصنيفات العالمية. حول اللياقة إلى منافسة.',
+            'IOMeH (أنا مدين لنفسي بالصحة) هي منصتك الشخصية لتصنيف اللياقة البدنية. تتبع تمارينك وأنشطة التغذية وتنافس في التصنيفات العالمية. حول رحلتك الصحية إلى منافسة مثيرة!',
         'landing.badge': 'ترتيبك الصحي العالمي — يتشكل من عاداتك اليومية',
         'landing.hero_title': 'تتبع صحتك، احصل على ترتيبك',
         'landing.get_started': 'ابدأ الآن',
@@ -526,28 +547,28 @@ const translations = {
         // Additional landing page sections
         'landing.fitness_journey_title': 'تتبع رحلة اللياقة البدنية',
         'landing.fitness_journey_description':
-            'ركز على ما يهم أكثر لأهداف اللياقة البدنية. IOMeH يتتبع التمارين والتغذية مع العديد من الأنشطة للاختيار من بينها.',
+            'ركز على ما يهم حقاً لأهدافك الصحية. IOMeH يتتبع تمارينك وتغذيتك مع مجموعة واسعة من الأنشطة للاختيار من بينها.',
         'landing.workout_title': '💪 التمرين',
         'landing.workout_description':
-            'الجري، الجيم، HIIT، السباحة، ركوب الدراجات، الرياضة، الفنون القتالية، والمزيد. النقاط تعتمد على الشدة والمدة.',
+            'الجري، الجيم، HIIT، السباحة، ركوب الدراجات، الرياضة، الفنون القتالية، وأكثر. النقاط تُحسب حسب الشدة والمدة الزمنية.',
         'landing.nutrition_title': '🥗 التغذية',
         'landing.nutrition_description':
-            'الوجبات الصحية، الخضروات، الفواكه، الترطيب، أهداف البروتين، المكملات، والطبخ في المنزل.',
+            'الوجبات الصحية، الخضروات، الفواكه، الترطيب، أهداف البروتين، المكملات الغذائية، والطبخ المنزلي.',
         'landing.workout_stats': '30 نشاط | 10-60 نقاط',
         'landing.nutrition_stats': '15 نشاط | 10-30 نقاط',
         'landing.streak_bonus_title': '🔥 نظام مكافآت السلسلة',
         'landing.streak_bonus_description':
-            'الاتساق هو المفتاح. ابني سلاسل يومية واضرب نقاطك بمكافآت متدرجة تصل إلى',
+            'الاستمرارية هي المفتاح. ابني سلاسل يومية واضرب نقاطك بمكافآت متدرجة تصل إلى',
         'landing.how_it_works_title': 'كيف يعمل',
         'landing.build_streaks_title': 'ابني السلاسل',
         'landing.build_streaks_description':
-            'سجل الأنشطة يومياً للحفاظ على سلسلتك. تفويت يوم واحد وستعيد إلى 1.',
+            'سجل أنشطتك يومياً للحفاظ على سلسلتك. تفويت يوم واحد وستعود إلى 1.',
         'landing.multiply_points_title': 'اضرب النقاط',
         'landing.multiply_points_description':
-            'مستوى سلسلتك يضرب جميع نقاط الأنشطة.',
+            'مستوى سلسلتك يضاعف جميع نقاط أنشطتك.',
         'landing.milestone_bonuses_title': 'مكافآت المعالم',
         'landing.milestone_bonuses_description':
-            'احقق المعالم (7، 30، 100، 365 يوم) للحصول على نقاط مكافأة إضافية على رأس المضاعفات!',
+            'احقق المعالم (7، 30، 100، 365 يوم) للحصول على نقاط مكافأة إضافية فوق المضاعفات!',
         'landing.example_calculation_title': '📊 مثال: سلسلة 30 يوم',
         'landing.base_activity_points': 'نقاط النشاط الأساسية',
         'landing.dedicated_tier': 'مستوى المتفانين (30 يوم)',
@@ -643,7 +664,7 @@ const translations = {
         'settings.title': 'الإعدادات',
         'settings.description': 'إدارة ملفك الشخصي وإعدادات الحساب',
         'settings.profile': 'الملف الشخصي',
-        'settings.habits': 'أنشطتي',
+        'settings.habits': 'عاداتي',
         'settings.password': 'كلمة المرور',
         'settings.email': 'البريد الإلكتروني',
         'settings.appearance': 'المظهر',
@@ -735,6 +756,7 @@ const translations = {
         'validation.auth.failed': 'هذه البيانات لا تطابق سجلاتنا.',
         'validation.auth.throttle':
             'محاولات تسجيل دخول كثيرة جداً. يرجى المحاولة مرة أخرى خلال :minutes دقائق.',
+        'validation.habit_name.required': 'الاسم مطلوب.',
         'validation.habit_name.max': 'يجب ألا يتجاوز الاسم 100 حرف.',
         'validation.habit_notes.max': 'يجب ألا تتجاوز الملاحظات 500 حرف.',
 
@@ -808,7 +830,7 @@ const translations = {
         'profile.characters_count': 'حرف',
 
         // Habits
-        'habits.title': 'أنشطتي',
+        'habits.title': 'عاداتي',
         'habits.description': 'إدارة أنشطة اللياقة البدنية والعادات',
         'habits.current_habits': 'العادات الحالية',
         'habits.maximum_habits_allowed': 'الحد الأقصى 15 عادة مسموح',
@@ -827,12 +849,20 @@ const translations = {
         'habits.all': 'الكل',
         'habits.no_available_types': 'لا توجد أنواع أنشطة متاحة في هذه الفئة',
         'habits.points': 'نقطة',
-        'habits.custom_name': 'الاسم المخصص',
+        'habits.custom_name': 'الاسم',
         'habits.notes_optional': 'ملاحظات (اختياري)',
         'habits.notes_placeholder': 'أضف أي ملاحظات شخصية...',
         'habits.example_name': 'مثال: تمرين الصباح',
         'habits.workout': 'تمرين',
         'habits.nutrition': 'تغذية',
+        'habits.change_icon': 'تغيير الأيقونة',
+        'habits.choose_icon': 'اختر الأيقونة',
+        'habits.popular': 'شائع',
+        'habits.fitness': 'اللياقة البدنية',
+        'habits.food_health': 'الطعام والصحة',
+        'habits.custom': 'مخصص',
+        'habits.enter_emoji': 'أدخل الرمز التعبيري...',
+        'habits.add': 'إضافة',
 
         // Rankings
         'rankings.title': 'التصنيفات',
@@ -905,6 +935,17 @@ const translations = {
         'account.sign_out': 'تسجيل الخروج',
         'account.sign_out_description': 'تسجيل الخروج من حسابك على هذا الجهاز',
 
+        // Error Pages
+        'errors.go_home': 'الذهاب للصفحة الرئيسية',
+        'errors.refresh_page': 'تحديث الصفحة',
+        'errors.login': 'تسجيل الدخول',
+        'errors.session_expired': 'انتهت صلاحية الجلسة',
+        'errors.session_expired_message':
+            'انتهت صلاحية جلستك. يرجى تحديث الصفحة للمتابعة.',
+        'errors.authentication_required': 'مطلوب المصادقة',
+        'errors.authentication_required_message':
+            'تحتاج إلى تسجيل الدخول للوصول إلى هذه الصفحة.',
+
         // Modal - Log Activity
         'modal.log_activity.title': 'تسجيل النشاط',
         'modal.log_activity.description': 'سجل نشاطك لهذا اليوم',
@@ -924,6 +965,7 @@ const translations = {
         'modal.log_activity.no_activities_subtitle':
             'تم تسجيل جميع الأنشطة لهذا اليوم!',
         'modal.log_activity.logging_for_today': 'تسجيل النشاط لـ',
+        'modal.log_activity.timezone_note': 'توقيت المنصة هو توقيت القاهرة',
         'modal.log_activity.today': 'اليوم',
         'modal.log_activity.points_youll_earn': 'النقاط التي ستحصل عليها',
         'modal.log_activity.pts': 'نقطة',
