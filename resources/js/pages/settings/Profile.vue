@@ -39,7 +39,7 @@ const { t, isRTL } = useTranslations();
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
-        title: t('profile.title'),
+        title: t('profile_settings.title'),
         href: edit().url,
     },
 ];
@@ -164,12 +164,12 @@ const handleSubmit = (event: Event) => {
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbItems" :dir="isRTL ? 'rtl' : 'ltr'">
-        <Head :title="t('profile.title')" />
+        <Head :title="t('profile_settings.title')" />
 
         <SettingsLayout>
             <div class="flex flex-col space-y-6">
                 <HeadingSmall
-                    :title="t('profile.title')"
+                    :title="t('profile_settings.title')"
                     :description="t('profile.description')"
                 />
 

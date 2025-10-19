@@ -58,7 +58,35 @@ class RankingHistory extends Model
             return "{$this->year} #{$this->rank}";
         }
         
-        return "{$this->year} Q{$this->season} #{$this->rank}";
+        $quarterName = $this->getTranslatedQuarterName();
+        return "{$this->year} {$quarterName} #{$this->rank}";
+    }
+
+    /**
+     * Get translated quarter name.
+     */
+    public function getTranslatedQuarterName($locale = null)
+    {
+        if ($locale === null) {
+            $locale = app()->getLocale();
+        }
+        
+        $translations = [
+            'en' => [
+                1 => 'Q1',
+                2 => 'Q2', 
+                3 => 'Q3',
+                4 => 'Q4',
+            ],
+            'ar' => [
+                1 => 'الربع الأول',
+                2 => 'الربع الثاني',
+                3 => 'الربع الثالث', 
+                4 => 'الربع الرابع',
+            ]
+        ];
+
+        return $translations[$locale][$this->season] ?? 'Q' . $this->season;
     }
 
     /**

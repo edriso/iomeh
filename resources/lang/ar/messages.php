@@ -121,7 +121,7 @@ return [
     'appearance.system' => 'النظام',
 
     // Profile Settings
-    'profile.title' => 'إعدادات الملف الشخصي',
+    'profile_settings.title' => 'إعدادات الملف الشخصي',
     'profile.description' => 'تحديث معلومات الملف الشخصي لحسابك',
     'profile.username' => 'اسم المستخدم',
     'profile.name' => 'الاسم',
@@ -320,6 +320,16 @@ return [
     'profile.monday' => 'الاثنين',
     'profile.saved' => 'تم الحفظ.',
     'profile.characters_count' => 'حرف',
+    'profile.title' => 'الملف الشخصي',
+    'profile.your_achievements' => 'إنجازاتك عبر المواسم',
+    'profile.achievements' => 'الإنجازات عبر المواسم',
+    'profile.edit_profile' => 'تعديل الملف الشخصي',
+    'profile.ranking_badges' => 'شارات التصنيف',
+    'profile.activity_streak' => 'سلسلة الأنشطة',
+    'profile.health_journey' => 'رحلتك الصحية - كل يوم مهم!',
+    'profile.longest_streak' => 'أطول سلسلة',
+    'profile.best_consecutive_record' => 'أفضل سجل أيام متتالية لك',
+    'profile.pts' => 'نقطة',
     
     // Test User (for testing purposes)
     'test' => 'مستخدم تجريبي',
@@ -415,4 +425,13 @@ return [
     'errors.session_expired_message' => 'انتهت صلاحية جلستك. يرجى تحديث الصفحة للمتابعة.',
     'errors.authentication_required' => 'مطلوب المصادقة',
     'errors.authentication_required_message' => 'تحتاج إلى تسجيل الدخول للوصول إلى هذه الصفحة.',
+    
+    // Activity View
+    'activity.loading' => 'جاري تحميل الأنشطة...',
+    'activity.view_memory' => 'عرض الذاكرة',
+    'activity.no_activities' => 'لم يتم العثور على أنشطة لهذا التاريخ.',
+    
+    // Days pluralization
+    'days.single' => 'يوم',
+    'days.plural' => 'أيام',
 ];

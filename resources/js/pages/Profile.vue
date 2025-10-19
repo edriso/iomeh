@@ -16,6 +16,7 @@ import {
     TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { useNumberFormat } from '@/composables/useNumberFormat';
+import { useTranslations } from '@/composables/useTranslations';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import {
@@ -122,6 +123,24 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const { formatNumber } = useNumberFormat();
+const { t, isRTL } = useTranslations();
+
+// Arabic pluralization for days
+const getDaysText = (count: number) => {
+    if (isRTL.value) {
+        // Arabic pluralization rules
+        if (count === 1) {
+            return t('days.single'); // يوم
+        } else if (count >= 3 && count <= 9) {
+            return t('days.plural'); // أيام
+        } else {
+            return t('days.plural'); // أيام (for 0, 2, 10+)
+        }
+    } else {
+        // English pluralization
+        return count === 1 ? t('days.single') : t('days.plural');
+    }
+};
 
 // Transform calendar data for heatmap
 const heatmapDays = computed(() => {
@@ -188,11 +207,13 @@ const handleDayClick = async (date: string) => {
 
 const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
+    const locale = isRTL.value ? 'ar-SA' : 'en-US';
+    return date.toLocaleDateString(locale, {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
         day: 'numeric',
+        calendar: 'gregory', // Force Gregorian calendar for Arabic
     });
 };
 
@@ -215,12 +236,13 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
 </script>
 
 <template>
-    <Head :title="user ? `${user.name} (@${user.username})` : 'Profile'" />
+    <Head :title="user ? `${user.name} (@${user.username})` : t('profile.title')" />
 
     <AppLayout>
         <TooltipProvider>
             <div
                 class="min-h-screen bg-gradient-to-br from-background via-muted/10 to-background"
+                :dir="isRTL ? 'rtl' : 'ltr'"
             >
                 <div
                     v-if="!user"
@@ -259,10 +281,13 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                         class="bg-grid-white/[0.02] absolute inset-0 bg-[size:60px_60px]"
                                     ></div>
 
-                                    <!-- Edit Profile Button (Top Right) -->
+                                    <!-- Edit Profile Button (Top Right/Left for RTL) -->
                                     <div
                                         v-if="is_own_profile"
-                                        class="absolute top-6 right-6 z-10"
+                                        :class="[
+                                            'absolute top-6 z-10',
+                                            isRTL ? 'left-6' : 'right-6'
+                                        ]"
                                     >
                                         <Button
                                             variant="outline"
@@ -272,7 +297,7 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                         >
                                             <Link href="/settings/profile">
                                                 <Edit class="mr-2 h-4 w-4" />
-                                                Edit Profile
+                                                {{ t('profile.edit_profile') }}
                                             </Link>
                                         </Button>
                                     </div>
@@ -354,6 +379,7 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                                                         8
                                                                     "
                                                                     class="max-w-xs rounded-lg border border-border/50 bg-popover px-3 py-2 text-popover-foreground shadow-lg"
+                                                                    :dir="isRTL ? 'rtl' : 'ltr'"
                                                                 >
                                                                     <div
                                                                         class="space-y-2"
@@ -366,18 +392,13 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                                                             />
                                                                             <span
                                                                                 class="text-sm font-semibold text-foreground"
-                                                                                >Longest
-                                                                                Streak</span
+                                                                                >{{ t('profile.longest_streak') }}</span
                                                                             >
                                                                         </div>
                                                                         <p
                                                                             class="text-xs text-muted-foreground"
                                                                         >
-                                                                            Your
-                                                                            best
-                                                                            consecutive
-                                                                            day
-                                                                            record:
+                                                                            {{ t('profile.best_consecutive_record') }}:
                                                                             <span
                                                                                 class="font-medium text-foreground"
                                                                             >
@@ -385,7 +406,7 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                                                                     user.longest_streak ||
                                                                                     0
                                                                                 }}
-                                                                                days
+                                                                                {{ getDaysText(user.longest_streak || 0) }}
                                                                             </span>
                                                                         </p>
                                                                     </div>
@@ -450,12 +471,12 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                             "
                         >
                             <CardHeader>
-                                <CardTitle>Ranking Badges</CardTitle>
+                                <CardTitle>{{ t('profile.ranking_badges') }}</CardTitle>
                                 <CardDescription>
                                     {{
                                         is_own_profile
-                                            ? 'Your achievements across seasons'
-                                            : 'Achievements across seasons'
+                                            ? t('profile.your_achievements')
+                                            : t('profile.achievements')
                                     }}
                                 </CardDescription>
                             </CardHeader>
@@ -501,9 +522,9 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                         <!-- Activity Streak -->
                         <Card>
                             <CardHeader>
-                                <CardTitle>Activity Streak</CardTitle>
+                                <CardTitle>{{ t('profile.activity_streak') }}</CardTitle>
                                 <CardDescription v-if="is_own_profile">
-                                    Your health journey - every day counts!
+                                    {{ t('profile.health_journey') }}
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
@@ -539,7 +560,7 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                         <div
                                             class="text-sm text-muted-foreground"
                                         >
-                                            Loading activities...
+                                            {{ t('activity.loading') }}
                                         </div>
                                     </div>
 
@@ -569,13 +590,13 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                                             activity.custom_name
                                                         }}
                                                     </p>
-                                                    <p
+                                                    <!-- <p
                                                         class="text-sm text-muted-foreground"
                                                     >
                                                         {{
                                                             activity.activity_type_name
                                                         }}
-                                                    </p>
+                                                    </p> -->
                                                     <p
                                                         v-if="activity.notes"
                                                         class="mt-1 text-xs text-muted-foreground italic"
@@ -602,7 +623,7 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                                             <LinkIcon
                                                                 class="h-3 w-3"
                                                             />
-                                                            View memory
+                                                            {{ t('activity.view_memory') }}
                                                         </a>
                                                     </Button>
                                                 </div>
@@ -612,7 +633,7 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                                 class="ml-2 flex-shrink-0"
                                             >
                                                 +{{ activity.points_earned }}
-                                                pts
+                                                {{ t('profile.pts') }}
                                             </Badge>
                                         </div>
                                     </div>
@@ -628,7 +649,7 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                         <p
                                             class="text-sm text-muted-foreground"
                                         >
-                                            No activities logged on this day
+                                            {{ t('activity.no_activities') }}
                                         </p>
                                     </div>
                                 </div>

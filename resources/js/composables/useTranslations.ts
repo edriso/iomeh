@@ -313,9 +313,9 @@ const translations = {
         'success.social_linked': 'Google account linked successfully.',
         'success.social_unlinked': 'Account unlinked successfully.',
 
-        // Profile
-        'profile.title': 'Profile Settings',
-        'profile.description': "Update your account's profile information",
+        // Profile Settings
+        'profile_settings.title': 'Profile Settings',
+        'profile_settings.description': "Update your account's profile information",
         'profile.username': 'Username',
         'profile.name': 'Name',
         'profile.personal_website': 'Personal Website',
@@ -348,6 +348,16 @@ const translations = {
         'profile.monday': 'Monday',
         'profile.saved': 'Saved.',
         'profile.characters_count': 'characters',
+        'profile.title': 'Profile',
+        'profile.your_achievements': 'Your achievements across seasons',
+        'profile.achievements': 'Achievements across seasons',
+        'profile.edit_profile': 'Edit Profile',
+        'profile.ranking_badges': 'Ranking Badges',
+        'profile.activity_streak': 'Activity Streak',
+        'profile.health_journey': 'Your health journey - every day counts!',
+        'profile.longest_streak': 'Longest Streak',
+        'profile.best_consecutive_record': 'Your best consecutive day record',
+        'profile.pts': 'pts',
 
         // Habits
         'habits.title': 'My Habits',
@@ -471,6 +481,15 @@ const translations = {
         'errors.authentication_required': 'Authentication Required',
         'errors.authentication_required_message':
             'You need to be logged in to access this page.',
+        
+        // Activity View
+        'activity.loading': 'Loading activities...',
+        'activity.view_memory': 'View memory',
+        'activity.no_activities': 'No activities found for this date.',
+        
+        // Days pluralization
+        'days.single': 'day',
+        'days.plural': 'days',
 
         // Modal - Log Activity
         'modal.log_activity.title': 'Log Activity',
@@ -797,9 +816,9 @@ const translations = {
         'success.social_linked': 'تم ربط حساب جوجل بنجاح.',
         'success.social_unlinked': 'تم إلغاء ربط الحساب بنجاح.',
 
-        // Profile
-        'profile.title': 'إعدادات الملف الشخصي',
-        'profile.description': 'تحديث معلومات الملف الشخصي لحسابك',
+        // Profile Settings
+        'profile_settings.title': 'إعدادات الملف الشخصي',
+        'profile_settings.description': 'تحديث معلومات الملف الشخصي لحسابك',
         'profile.username': 'اسم المستخدم',
         'profile.name': 'الاسم',
         'profile.personal_website': 'الموقع الشخصي',
@@ -828,6 +847,16 @@ const translations = {
         'profile.monday': 'الاثنين',
         'profile.saved': 'تم الحفظ.',
         'profile.characters_count': 'حرف',
+        'profile.title': 'الملف الشخصي',
+        'profile.your_achievements': 'إنجازاتك عبر المواسم',
+        'profile.achievements': 'الإنجازات عبر المواسم',
+        'profile.edit_profile': 'تعديل الملف الشخصي',
+        'profile.ranking_badges': 'شارات التصنيف',
+        'profile.activity_streak': 'سلسلة الأنشطة',
+        'profile.health_journey': 'رحلتك الصحية - كل يوم مهم!',
+        'profile.longest_streak': 'أطول سلسلة',
+        'profile.best_consecutive_record': 'أفضل سجل أيام متتالية لك',
+        'profile.pts': 'نقطة',
 
         // Habits
         'habits.title': 'عاداتي',
@@ -945,6 +974,15 @@ const translations = {
         'errors.authentication_required': 'مطلوب المصادقة',
         'errors.authentication_required_message':
             'تحتاج إلى تسجيل الدخول للوصول إلى هذه الصفحة.',
+        
+        // Activity View
+        'activity.loading': 'جاري تحميل الأنشطة...',
+        'activity.view_memory': 'عرض الذاكرة',
+        'activity.no_activities': 'لم يتم العثور على أنشطة لهذا التاريخ.',
+        
+        // Days pluralization
+        'days.single': 'يوم',
+        'days.plural': 'أيام',
 
         // Modal - Log Activity
         'modal.log_activity.title': 'تسجيل النشاط',

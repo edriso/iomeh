@@ -31,7 +31,7 @@ const emit = defineEmits<{
 }>();
 
 // Get RTL state for arrow direction
-const { isRTL } = useTranslations();
+const { isRTL, t } = useTranslations();
 
 const handleDayClick = (date: string, count: number) => {
     if (count > 0) {
@@ -77,31 +77,62 @@ function intensityClass(count: number) {
     return 'bg-primary text-primary-foreground';
 }
 
-const monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-];
+const monthNames = {
+    en: [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December',
+    ],
+    ar: [
+        'يناير',
+        'فبراير',
+        'مارس',
+        'أبريل',
+        'مايو',
+        'يونيو',
+        'يوليو',
+        'أغسطس',
+        'سبتمبر',
+        'أكتوبر',
+        'نوفمبر',
+        'ديسمبر',
+    ],
+};
+
 
 const dayNames = computed(() => {
-    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    if (props.week_starts_on === 1) {
-        // Monday start
-        return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    } else if (props.week_starts_on === 6) {
-        // Saturday start
-        return ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+    if (isRTL.value) {
+        // Arabic day names
+        const days = ['أحد', 'اثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت'];
+        if (props.week_starts_on === 1) {
+            // Monday start
+            return ['اثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت', 'أحد'];
+        } else if (props.week_starts_on === 6) {
+            // Saturday start
+            return ['سبت', 'أحد', 'اثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة'];
+        }
+        return days; // Sunday start
+    } else {
+        // English day names
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        if (props.week_starts_on === 1) {
+            // Monday start
+            return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        } else if (props.week_starts_on === 6) {
+            // Saturday start
+            return ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+        }
+        return days; // Sunday start
     }
-    return days; // Sunday start
 });
 
 const calendarData = computed(() => {
@@ -201,7 +232,8 @@ const calendarData = computed(() => {
 });
 
 const monthYearDisplay = computed(() => {
-    return `${monthNames[currentMonth.value]} ${currentYear.value}`;
+    const locale = isRTL.value ? 'ar' : 'en';
+    return `${monthNames[locale][currentMonth.value]} ${currentYear.value}`;
 });
 
 // Navigation state computed properties

@@ -121,7 +121,7 @@ return [
     'appearance.system' => 'System',
 
     // Profile Settings
-    'profile.title' => 'Profile Settings',
+    'profile_settings.title' => 'Profile Settings',
     'profile.description' => 'Update your account\'s profile information',
     'profile.username' => 'Username',
     'profile.name' => 'Name',
@@ -320,6 +320,16 @@ return [
     'profile.monday' => 'Monday',
     'profile.saved' => 'Saved.',
     'profile.characters_count' => 'characters',
+    'profile.title' => 'Profile',
+    'profile.your_achievements' => 'Your achievements across seasons',
+    'profile.achievements' => 'Achievements across seasons',
+    'profile.edit_profile' => 'Edit Profile',
+    'profile.ranking_badges' => 'Ranking Badges',
+    'profile.activity_streak' => 'Activity Streak',
+    'profile.health_journey' => 'Your health journey - every day counts!',
+    'profile.longest_streak' => 'Longest Streak',
+    'profile.best_consecutive_record' => 'Your best consecutive day record',
+    'profile.pts' => 'pts',
     
     // Test User (for testing purposes)
     'test' => 'Test User',
@@ -415,4 +425,13 @@ return [
     'errors.session_expired_message' => 'Your session has expired. Please refresh the page to continue.',
     'errors.authentication_required' => 'Authentication Required',
     'errors.authentication_required_message' => 'You need to be logged in to access this page.',
+    
+    // Activity View
+    'activity.loading' => 'Loading activities...',
+    'activity.view_memory' => 'View memory',
+    'activity.no_activities' => 'No activities found for this date.',
+    
+    // Days pluralization
+    'days.single' => 'day',
+    'days.plural' => 'days',
 ];
