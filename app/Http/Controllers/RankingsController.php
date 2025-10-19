@@ -170,7 +170,7 @@ class RankingsController extends Controller
         $currentSeasonName = ceil(now()->month / 3);
         
         $seasons = Season::where('year', $currentYear)
-            ->where('name', $currentSeasonName)
+            ->where('quarter_number', $currentSeasonName)
             ->with('user:id,username,name,avatar')
             ->orderBy('points', 'desc')
             ->limit($limit)
@@ -186,7 +186,7 @@ class RankingsController extends Controller
                     'avatar' => $season->user->avatar,
                 ],
                 'points' => $season->points,
-                'season' => 'Q' . $season->name,
+                'season' => 'Q' . $season->quarter_number,
                 'year' => $season->year,
             ];
         });
@@ -297,7 +297,7 @@ class RankingsController extends Controller
         
         $season = $user->seasons()
             ->where('year', $currentYear)
-            ->where('name', $currentSeasonName)
+            ->where('quarter_number', $currentSeasonName)
             ->first();
 
         return $season ? [

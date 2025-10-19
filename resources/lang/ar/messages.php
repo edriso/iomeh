@@ -333,7 +333,7 @@ return [
     'habits.youve_added_all' => 'لقد أضفت جميع أنواع الأنشطة المتاحة!',
     'habits.maximum_reached' => 'تم الوصول للحد الأقصى من العادات. احذف بعض العادات لإضافة عادات جديدة.',
     'habits.reset' => 'إعادة تعيين',
-    'habits.saved_successfully' => 'تم الحفظ بنجاح!',
+    'habits.saved_successfully' => 'تم تحديث العادات بنجاح!',
     'habits.add_new_activity' => 'إضافة نشاط جديد',
     'habits.select_activity_type' => 'اختر نوع النشاط لإضافته إلى أنشطتك',
     'habits.all' => 'الكل',

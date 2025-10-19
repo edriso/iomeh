@@ -333,7 +333,7 @@ return [
     'habits.youve_added_all' => 'You\'ve added all available activity types!',
     'habits.maximum_reached' => 'Maximum of 15 habits reached. Remove some habits to add new ones.',
     'habits.reset' => 'Reset',
-    'habits.saved_successfully' => 'Saved successfully!',
+    'habits.saved_successfully' => 'Habits updated successfully!',
     'habits.add_new_activity' => 'Add New Activity',
     'habits.select_activity_type' => 'Select an activity type to add to your activities',
     'habits.all' => 'All',

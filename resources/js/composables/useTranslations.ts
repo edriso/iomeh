@@ -363,7 +363,7 @@ const translations = {
         'habits.maximum_reached':
             'Maximum of 15 habits reached. Remove some habits to add new ones.',
         'habits.reset': 'Reset',
-        'habits.saved_successfully': 'Saved successfully!',
+        'habits.saved_successfully': 'Habits updated successfully!',
         'habits.add_new_activity': 'Add New Activity',
         'habits.select_activity_type':
             'Select an activity type to add to your activities',
@@ -843,7 +843,7 @@ const translations = {
         'habits.maximum_reached':
             'تم الوصول للحد الأقصى من العادات. احذف بعض العادات لإضافة عادات جديدة.',
         'habits.reset': 'إعادة تعيين',
-        'habits.saved_successfully': 'تم الحفظ بنجاح!',
+        'habits.saved_successfully': 'تم تحديث العادات بنجاح!',
         'habits.add_new_activity': 'إضافة نشاط جديد',
         'habits.select_activity_type': 'اختر نوع النشاط لإضافته إلى أنشطتك',
         'habits.all': 'الكل',
