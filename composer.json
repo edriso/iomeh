@@ -67,6 +67,10 @@
         "test": [
             "@php artisan config:clear --ansi",
             "@php artisan test"
+        ],
+        "production:seed": [
+            "php artisan migrate --force",
+            "php artisan db:seed --class=ActivityTypeSeeder"
         ]
     },
     "extra": {
