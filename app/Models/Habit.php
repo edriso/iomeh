@@ -13,6 +13,7 @@ class Habit extends Model
         'user_id',
         'activity_type_id',
         'custom_name',
+        'custom_icon',
         'notes',
         'display_order',
     ];
@@ -84,6 +85,19 @@ class Habit extends Model
     public function getTotalPoints()
     {
         return $this->activities()->sum('points_earned');
+    }
+
+    /**
+     * Get the effective icon for this habit.
+     * Returns custom_icon if set, otherwise activity_type icon.
+     */
+    public function getEffectiveIcon(): string
+    {
+        if ($this->custom_icon) {
+            return $this->custom_icon;
+        }
+
+        return $this->activityType?->icon ?? '🏃‍♂️';
     }
 }
 

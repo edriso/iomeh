@@ -57,6 +57,7 @@ interface Habit {
     id: number;
     name: string;
     icon: string;
+    custom_icon?: string | null;
     category: string;
     activity_type_id: number | null;
     base_points: number;

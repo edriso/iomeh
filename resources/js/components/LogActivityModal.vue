@@ -44,7 +44,7 @@ const emit = defineEmits<{
 const page = usePage();
 
 // Get current locale and initialize translations
-const { t } = useTranslations();
+const { t, isRTL } = useTranslations();
 
 // Get user streak data from shared auth
 const userStreak = computed(() => {
@@ -107,14 +107,15 @@ const handleClose = () => {
 <template>
     <Dialog :open="open" @update:open="handleClose">
         <DialogContent class="sm:max-w-[500px]">
-            <DialogHeader>
-                <DialogTitle>{{ t('modal.log_activity.title') }}</DialogTitle>
-                <DialogDescription>
-                    {{ t('modal.log_activity.description') }}
-                </DialogDescription>
-            </DialogHeader>
+            <div :dir="isRTL ? 'rtl' : 'ltr'">
+                <DialogHeader>
+                    <DialogTitle>{{ t('modal.log_activity.title') }}</DialogTitle>
+                    <DialogDescription>
+                        {{ t('modal.log_activity.description') }}
+                    </DialogDescription>
+                </DialogHeader>
 
-            <form @submit.prevent="handleSubmit" class="space-y-4">
+                <form @submit.prevent="handleSubmit" class="space-y-4">
                 <!-- Today's Date Info -->
                 <div
                     class="rounded-lg border border-primary/20 bg-primary/5 p-3"
@@ -324,7 +325,8 @@ const handleClose = () => {
                         }}
                     </Button>
                 </div>
-            </form>
+                </form>
+            </div>
         </DialogContent>
     </Dialog>
 </template>

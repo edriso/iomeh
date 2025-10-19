@@ -50,13 +50,13 @@ The suggested daily target is **90-100 points**, achieved through:
 19. **Elliptical Machine** - Elliptical trainer for 30+ minutes
 20. **Brisk Walking** - Fast walking at 6+ km/h (4+ mph) for 30+ minutes
 21. **Circuit Training** - Mixed circuit exercises for 30+ minutes
-22. **Power Yoga** - Dynamic yoga practice for 30+ minutes
+22. **Home Workout** - Home workout with bodyweight exercises for 30+ minutes
 23. **Bodyweight Exercise** - Push-ups, sit-ups, squats for 20+ minutes
 
 #### Light to Moderate (10-20 points)
 24. **Walking** - Regular walking for 30+ minutes
 25. **Pilates** - Pilates core exercises for 30+ minutes
-26. **Gentle Yoga** - Relaxing yoga practice for 30+ minutes
+26. **Meditation** - Meditation practice for 30+ minutes
 27. **Stretching** - Full body stretching for 15+ minutes
 28. **Light Walk** - Casual walking for 20+ minutes
 29. **Stair Climbing** - Regular stair climbing for 15+ minutes

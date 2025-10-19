@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('activity_type_id')->nullable()->constrained('activity_types')->nullOnDelete();
             $table->string('custom_name');
+            $table->string('custom_icon', 50)->nullable();
             $table->text('notes')->nullable();
             $table->unsignedTinyInteger('display_order')->default(0);
             $table->timestamps();

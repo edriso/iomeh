@@ -55,11 +55,11 @@ const weekStartsOn = ref(props.user.week_starts_on || 6);
 // Computed property to show the selected day name
 const selectedDayName = computed(() => {
     const dayNames: Record<number, string> = {
-        0: 'Sunday',
-        1: 'Monday',
-        6: 'Saturday',
+        0: t('profile.sunday'),
+        1: t('profile.monday'),
+        6: t('profile.saturday'),
     };
-    return dayNames[weekStartsOn.value] || 'Sunday';
+    return dayNames[weekStartsOn.value] || t('profile.sunday');
 });
 
 // Bio character counter
@@ -186,7 +186,7 @@ const handleSubmit = (event: Event) => {
                             name="username"
                             required
                             autocomplete="username"
-                            placeholder="Choose your username"
+                            :placeholder="t('profile.choose_username_placeholder')"
                         />
                         <InputError
                             class="mt-2"
@@ -204,7 +204,7 @@ const handleSubmit = (event: Event) => {
                             name="name"
                             required
                             autocomplete="name"
-                            placeholder="Enter your name"
+                            :placeholder="t('profile.enter_name_placeholder')"
                             maxlength="100"
                         />
                         <InputError class="mt-2" :message="clientErrors.name" />
@@ -219,7 +219,7 @@ const handleSubmit = (event: Event) => {
                             class="mt-1 block w-full"
                             name="bio"
                             @input="bioCharCount = bio.length"
-                            placeholder="Share a little about yourself and your interests..."
+                            :placeholder="t('profile.bio_placeholder')"
                             :rows="4"
                             maxlength="255"
                         />
@@ -232,7 +232,7 @@ const handleSubmit = (event: Event) => {
                                     : 'text-muted-foreground'
                             "
                         >
-                            {{ bioCharCount }}/255 characters
+                            {{ bioCharCount }}/255 {{ t('profile.characters_count') }}
                         </p>
                         <InputError class="mt-2" :message="clientErrors.bio" />
                     </div>
@@ -248,7 +248,7 @@ const handleSubmit = (event: Event) => {
                             type="url"
                             class="mt-1 block w-full"
                             name="website_url"
-                            placeholder="Enter your website URL"
+                            :placeholder="t('profile.website_placeholder')"
                         />
                         <InputError
                             class="mt-2"
@@ -266,14 +266,13 @@ const handleSubmit = (event: Event) => {
                                 <span>{{ selectedDayName }}</span>
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem :value="6">Saturday</SelectItem>
-                                <SelectItem :value="0">Sunday</SelectItem>
-                                <SelectItem :value="1">Monday</SelectItem>
+                                <SelectItem :value="6">{{ t('profile.saturday') }}</SelectItem>
+                                <SelectItem :value="0">{{ t('profile.sunday') }}</SelectItem>
+                                <SelectItem :value="1">{{ t('profile.monday') }}</SelectItem>
                             </SelectContent>
                         </Select>
                         <p class="text-xs text-muted-foreground">
-                            This affects how your activity heatmap displays
-                            weeks
+                            {{ t('profile.heatmap_description') }}
                         </p>
                         <InputError
                             class="mt-2"
@@ -283,17 +282,17 @@ const handleSubmit = (event: Event) => {
 
                     <!-- Avatar URL -->
                     <div class="grid gap-2">
-                        <Label for="avatar">Profile Picture URL</Label>
+                        <Label for="avatar">{{ t('profile.profile_picture_url') }}</Label>
                         <Input
                             id="avatar"
                             v-model="avatar"
                             type="url"
                             class="mt-1 block w-full"
                             name="avatar"
-                            placeholder="Enter URL for your profile picture"
+                            :placeholder="t('profile.avatar_placeholder')"
                         />
                         <p class="text-xs text-muted-foreground">
-                            Enter a direct URL to your profile picture
+                            {{ t('profile.avatar_help_text') }}
                         </p>
                         <InputError
                             class="mt-2"
@@ -319,7 +318,7 @@ const handleSubmit = (event: Event) => {
                                 v-show="recentlySuccessful"
                                 class="text-sm text-muted-foreground"
                             >
-                                Saved.
+                                {{ t('profile.saved') }}
                             </p>
                         </Transition>
                     </div>

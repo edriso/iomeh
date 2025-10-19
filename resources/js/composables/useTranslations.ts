@@ -313,6 +313,8 @@ const translations = {
         'success.social_unlinked': 'Account unlinked successfully.',
 
         // Profile
+        'profile.title': 'Profile Settings',
+        'profile.description': 'Update your account\'s profile information',
         'profile.username': 'Username',
         'profile.name': 'Name',
         'profile.personal_website': 'Personal Website',
@@ -325,8 +327,27 @@ const translations = {
             'Enter a direct URL to your profile picture',
         'profile.heatmap_weeks_description':
             'This affects how your activity heatmap displays weeks',
+        'profile.bio': 'Bio',
+        'profile.website': 'Website',
+        'profile.week_starts_on': 'Week starts on',
+        'profile.save': 'Save Changes',
+        'profile.cancel': 'Cancel',
+        'profile.choose_username_placeholder': 'Choose your username',
+        'profile.enter_name_placeholder': 'Enter your name',
+        'profile.bio_placeholder': 'Share a little about yourself and your interests...',
+        'profile.website_placeholder': 'Enter your website URL',
+        'profile.avatar_placeholder': 'Enter URL for your profile picture',
+        'profile.avatar_help_text': 'Enter a direct URL to your profile picture',
+        'profile.heatmap_description': 'This affects how your activity heatmap displays weeks',
+        'profile.saturday': 'Saturday',
+        'profile.sunday': 'Sunday',
+        'profile.monday': 'Monday',
+        'profile.saved': 'Saved.',
+        'profile.characters_count': 'characters',
 
         // Habits
+        'habits.title': 'My Activities',
+        'habits.description': 'Manage your fitness activities and habits',
         'habits.current_habits': 'Current Habits',
         'habits.maximum_habits_allowed': 'Maximum of 15 habits allowed',
         'habits.add_activities_description':
@@ -345,6 +366,11 @@ const translations = {
         'habits.all': 'All',
         'habits.no_available_types':
             'No available activity types in this category',
+        'habits.points': 'pts',
+        'habits.custom_name': 'Custom Name',
+        'habits.notes_optional': 'Notes (optional)',
+        'habits.notes_placeholder': 'Add any personal notes...',
+        'habits.example_name': 'e.g., Morning Workout',
 
         // Rankings
         'rankings.title': 'Rankings',
@@ -436,6 +462,7 @@ const translations = {
             'Optional: Share a photo or link to remember this moment',
         'modal.log_activity.cancel': 'Cancel',
         'modal.log_activity.log_activity': 'Log Activity',
+        'modal.log_activity.logging': 'Logging...',
         'modal.log_activity.no_activities_subtitle':
             'All activities logged for today!',
         'modal.log_activity.logging_for_today': 'Logging activity for',
@@ -744,6 +771,8 @@ const translations = {
         'success.social_unlinked': 'تم إلغاء ربط الحساب بنجاح.',
 
         // Profile
+        'profile.title': 'إعدادات الملف الشخصي',
+        'profile.description': 'تحديث معلومات الملف الشخصي لحسابك',
         'profile.username': 'اسم المستخدم',
         'profile.name': 'الاسم',
         'profile.personal_website': 'الموقع الشخصي',
@@ -754,8 +783,27 @@ const translations = {
         'profile.enter_direct_url': 'أدخل رابط مباشر لصورة ملفك الشخصي',
         'profile.heatmap_weeks_description':
             'هذا يؤثر على كيفية عرض خريطة الحرارة للأنشطة للأسبوع',
+        'profile.bio': 'السيرة الذاتية',
+        'profile.website': 'الموقع الإلكتروني',
+        'profile.week_starts_on': 'يبدأ الأسبوع في',
+        'profile.save': 'حفظ التغييرات',
+        'profile.cancel': 'إلغاء',
+        'profile.choose_username_placeholder': 'اختر اسم المستخدم',
+        'profile.enter_name_placeholder': 'أدخل اسمك',
+        'profile.bio_placeholder': 'شارك قليلاً عن نفسك واهتماماتك...',
+        'profile.website_placeholder': 'أدخل رابط موقعك',
+        'profile.avatar_placeholder': 'أدخل رابط صورة ملفك الشخصي',
+        'profile.avatar_help_text': 'أدخل رابط مباشر لصورة ملفك الشخصي',
+        'profile.heatmap_description': 'هذا يؤثر على كيفية عرض خريطة الحرارة للأنشطة للأسبوع',
+        'profile.saturday': 'السبت',
+        'profile.sunday': 'الأحد',
+        'profile.monday': 'الاثنين',
+        'profile.saved': 'تم الحفظ.',
+        'profile.characters_count': 'حرف',
 
         // Habits
+        'habits.title': 'أنشطتي',
+        'habits.description': 'إدارة أنشطة اللياقة البدنية والعادات',
         'habits.current_habits': 'العادات الحالية',
         'habits.maximum_habits_allowed': 'الحد الأقصى 15 عادة مسموح',
         'habits.add_activities_description':
@@ -772,6 +820,11 @@ const translations = {
         'habits.select_activity_type': 'اختر نوع النشاط لإضافته إلى أنشطتك',
         'habits.all': 'الكل',
         'habits.no_available_types': 'لا توجد أنواع أنشطة متاحة في هذه الفئة',
+        'habits.points': 'نقطة',
+        'habits.custom_name': 'الاسم المخصص',
+        'habits.notes_optional': 'ملاحظات (اختياري)',
+        'habits.notes_placeholder': 'أضف أي ملاحظات شخصية...',
+        'habits.example_name': 'مثال: تمرين الصباح',
 
         // Rankings
         'rankings.title': 'التصنيفات',
@@ -859,12 +912,13 @@ const translations = {
             'اختياري: شارك صورة أو رابط لتذكر هذه اللحظة',
         'modal.log_activity.cancel': 'إلغاء',
         'modal.log_activity.log_activity': 'تسجيل النشاط',
+        'modal.log_activity.logging': 'جاري التسجيل...',
         'modal.log_activity.no_activities_subtitle':
             'تم تسجيل جميع الأنشطة لهذا اليوم!',
         'modal.log_activity.logging_for_today': 'تسجيل النشاط لـ',
         'modal.log_activity.today': 'اليوم',
         'modal.log_activity.points_youll_earn': 'النقاط التي ستحصل عليها',
-        'modal.log_activity.pts': 'نقاط',
+        'modal.log_activity.pts': 'نقطة',
         'modal.log_activity.streak_bonus_applied': 'يوم مكافأة السلسلة مطبقة!',
         'modal.log_activity.base_points_info':
             'النقاط الأساسية • أنشئ سلسلة لضرب مكافآتك',

@@ -27,7 +27,7 @@ withDefaults(defineProps<Props>(), {
 const page = usePage();
 const initialLocale = (page.props.currentLocale as string) || 'en';
 
-const { t, currentLocale } = useTranslations(initialLocale);
+const { t, currentLocale, isRTL } = useTranslations(initialLocale);
 const isLoading = ref(false);
 const showDropdown = ref(false);
 const dropdownRef = ref(null);
@@ -79,8 +79,7 @@ const changeLanguage = async (locale: string) => {
                 },
             },
         );
-    } catch (error) {
-        console.error('Language switch failed:', error);
+    } catch {
         isLoading.value = false;
     }
 };
@@ -144,7 +143,10 @@ const changeLanguage = async (locale: string) => {
             <!-- Dropdown Menu -->
             <div
                 v-if="showDropdown"
-                class="absolute top-full right-0 z-50 mt-2 w-48 overflow-hidden rounded-lg border border-border bg-background shadow-lg"
+                :class="[
+                    'absolute top-full z-50 mt-2 w-48 overflow-hidden rounded-lg border border-border bg-background shadow-lg',
+                    isRTL ? 'left-0' : 'right-0'
+                ]"
             >
                 <div class="py-1">
                     <button

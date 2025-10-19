@@ -86,7 +86,8 @@ class HomeController extends Controller
                 return [
                     'id' => $habit->id,
                     'name' => $habit->custom_name,
-                    'icon' => $habit->activityType->icon,
+                    'icon' => $habit->getEffectiveIcon(),
+                    'custom_icon' => $habit->custom_icon,
                     'category' => $habit->activityType->category->value,
                     'activity_type_id' => $habit->activity_type_id,
                     'base_points' => $habit->activityType->base_points,

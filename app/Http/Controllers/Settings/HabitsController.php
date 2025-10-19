@@ -73,6 +73,7 @@ class HabitsController extends Controller
             'habits' => ['required', 'array', 'min:1', 'max:15'],
             'habits.*.activity_type_id' => ['nullable', 'exists:activity_types,id'],
             'habits.*.custom_name' => ['required', 'string', 'max:100'],
+            'habits.*.custom_icon' => ['nullable', 'string', 'max:50'],
             'habits.*.notes' => ['nullable', 'string', 'max:500'],
         ], [
             'habits.required' => __('validation.required'),
@@ -80,6 +81,7 @@ class HabitsController extends Controller
             'habits.*.activity_type_id.exists' => __('validation.in'),
             'habits.*.custom_name.required' => __('validation.required'),
             'habits.*.custom_name.max' => __('validation.max.string', ['max' => 100]),
+            'habits.*.custom_icon.max' => __('validation.max.string', ['max' => 50]),
             'habits.*.notes.max' => __('validation.max.string', ['max' => 500]),
         ]);
 
@@ -94,6 +96,7 @@ class HabitsController extends Controller
             $user->habits()->create([
                 'activity_type_id' => $habitData['activity_type_id'],
                 'custom_name' => $habitData['custom_name'],
+                'custom_icon' => $habitData['custom_icon'] ?? null,
                 'notes' => $habitData['notes'] ?? null,
                 'display_order' => $index,
             ]);

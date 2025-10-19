@@ -43,6 +43,7 @@ interface Habit {
     id: number;
     activity_type_id: number | null;
     custom_name: string;
+    custom_icon: string | null;
     notes: string | null;
     display_order: number;
     activity_type: ActivityType | null;
@@ -117,6 +118,7 @@ function addHabit(activityType: ActivityType) {
         id: Date.now(), // Temporary ID for new habits
         activity_type_id: activityType.id,
         custom_name: activityType.name,
+        custom_icon: null,
         notes: null,
         display_order: localHabits.value.length,
         activity_type: activityType,
@@ -195,6 +197,13 @@ function validateForm() {
                 'validation.habit_notes.max',
             );
         }
+
+        if (habit.custom_icon && habit.custom_icon.length > 50) {
+            errors.value[`habits.${index}.custom_icon`] = t(
+                'validation.max.string',
+                '50'
+            );
+        }
     });
 
     return Object.keys(errors.value).length === 0;
@@ -209,6 +218,7 @@ function handleSubmit() {
         habits: localHabits.value.map((habit) => ({
             activity_type_id: habit.activity_type_id,
             custom_name: habit.custom_name,
+            custom_icon: habit.custom_icon || null,
             notes: habit.notes || null,
         })),
     };
@@ -260,9 +270,9 @@ function getCategoryColor(category: string): string {
                             }}</span>
                         </div>
                         <div>
-                            <p class="text-sm font-medium">Current Habits</p>
+                            <p class="text-sm font-medium">{{ t('habits.current_habits') }}</p>
                             <p class="text-xs text-muted-foreground">
-                                Maximum of 15 habits allowed
+                                {{ t('habits.maximum_habits_allowed') }}
                             </p>
                         </div>
                     </div>
@@ -284,8 +294,7 @@ function getCategoryColor(category: string): string {
                 <Alert>
                     <Info class="h-4 w-4" />
                     <AlertDescription>
-                        Add the activities that matter most to your health
-                        journey.
+                        {{ t('habits.add_activities_description') }}
                     </AlertDescription>
                 </Alert>
 
@@ -314,8 +323,7 @@ function getCategoryColor(category: string): string {
                         class="rounded-lg border-2 border-dashed py-12 text-center"
                     >
                         <p class="mb-4 text-muted-foreground">
-                            No habits added yet. Add your first habit to start
-                            tracking activities!
+                            {{ t('habits.no_habits_added') }}
                         </p>
                     </div>
 
@@ -332,22 +340,21 @@ function getCategoryColor(category: string): string {
                         "
                     >
                         <Plus class="mr-2 h-4 w-4" />
-                        Add Activity
+                        {{ t('habits.add_activity') }}
                     </Button>
 
                     <p
                         v-if="availableTypes.length === 0"
                         class="text-center text-sm text-muted-foreground"
                     >
-                        You've added all available activity types!
+                        {{ t('habits.youve_added_all') }}
                     </p>
 
                     <p
                         v-else-if="localHabits.length >= 15"
                         class="text-center text-sm text-muted-foreground"
                     >
-                        Maximum of 15 habits reached. Remove some habits to add
-                        new ones.
+                        {{ t('habits.maximum_reached') }}
                     </p>
 
                     <!-- Action Buttons -->
@@ -367,13 +374,13 @@ function getCategoryColor(category: string): string {
                                 )
                             "
                         >
-                            Reset
+                            {{ t('habits.reset') }}
                         </Button>
                         <span
                             v-if="recentlySuccessful"
                             class="text-sm text-muted-foreground"
                         >
-                            Saved successfully!
+                            {{ t('habits.saved_successfully') }}
                         </span>
                     </div>
                 </div>
@@ -384,9 +391,9 @@ function getCategoryColor(category: string): string {
         <Dialog v-model:open="showAddDialog">
             <DialogContent class="max-h-[80vh] max-w-2xl">
                 <DialogHeader>
-                    <DialogTitle>Add New Activity</DialogTitle>
+                    <DialogTitle>{{ t('habits.add_new_activity') }}</DialogTitle>
                     <DialogDescription>
-                        Select an activity type to add to your activities
+                        {{ t('habits.select_activity_type') }}
                     </DialogDescription>
                 </DialogHeader>
 
@@ -402,7 +409,7 @@ function getCategoryColor(category: string): string {
                             }"
                             @click="selectedCategory = null"
                         >
-                            All
+                            {{ t('habits.all') }}
                         </Button>
                         <Button
                             v-for="category in categories"
@@ -459,7 +466,7 @@ function getCategoryColor(category: string): string {
                                             <span
                                                 class="text-sm font-medium text-primary"
                                             >
-                                                {{ type.base_points }} pts
+                                                {{ type.base_points }} {{ t('habits.points') }}
                                             </span>
                                         </div>
                                     </div>
@@ -470,7 +477,7 @@ function getCategoryColor(category: string): string {
                                 v-if="filteredAvailableTypes.length === 0"
                                 class="py-8 text-center text-muted-foreground"
                             >
-                                No available activity types in this category
+                                {{ t('habits.no_available_types') }}
                             </div>
                         </div>
                     </ScrollArea>

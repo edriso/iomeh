@@ -30,8 +30,8 @@ export function useCsrfToken() {
                 csrfToken.value = token;
                 return token;
             }
-        } catch (error) {
-            console.warn('Failed to refresh CSRF token:', error);
+        } catch {
+            // Silent fail for CSRF token refresh
         }
 
         return token;

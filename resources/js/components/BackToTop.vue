@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { useLogActivity } from '@/composables/useLogActivity';
+import { useTranslations } from '@/composables/useTranslations';
 import { usePage } from '@inertiajs/vue3';
 import { ChevronUp, Plus } from 'lucide-vue-next';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 
 const page = usePage();
 const isAuthenticated = computed(() => !!page.props.auth?.user);
+
+// Get RTL state for positioning
+const { isRTL } = useTranslations();
 
 const { openLogActivityModal } = useLogActivity();
 
@@ -46,7 +50,10 @@ onUnmounted(() => {
 <template>
     <div
         v-if="isAuthenticated"
-        class="fixed right-6 bottom-6 z-50 flex flex-col items-center gap-3"
+        :class="[
+            'fixed bottom-6 z-50 flex flex-col items-center gap-3',
+            isRTL ? 'left-6' : 'right-6'
+        ]"
     >
         <!-- Back to Top Button (appears above) -->
         <Transition
@@ -105,8 +112,9 @@ onUnmounted(() => {
             @click="scrollToTop"
             size="icon"
             :class="[
-                'fixed right-6 bottom-6 z-50 h-12 w-12 rounded-full shadow-lg transition-all duration-300 hover:shadow-xl',
+                'fixed bottom-6 z-50 h-12 w-12 rounded-full shadow-lg transition-all duration-300 hover:shadow-xl',
                 'bg-primary hover:bg-primary hover:text-primary-foreground',
+                isRTL ? 'left-6' : 'right-6',
                 isScrolling ? 'scale-95' : 'scale-100',
             ]"
             aria-label="Back to top"

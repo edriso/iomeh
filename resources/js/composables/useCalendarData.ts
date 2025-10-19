@@ -80,8 +80,8 @@ export function useCalendarData(
                 // Mark month as loaded
                 loadedMonths.value.add(getMonthKey(year, month));
             }
-        } catch (error) {
-            console.error('Failed to load calendar data:', error);
+        } catch {
+            // Silent fail for calendar data loading
         } finally {
             loading.value = false;
         }
