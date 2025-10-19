@@ -465,7 +465,9 @@ function getCategoryColor(category: string): string {
                                                     )
                                                 "
                                             >
-                                                {{ t(`habits.${type.category}`) }}
+                                                {{
+                                                    t(`habits.${type.category}`)
+                                                }}
                                             </Badge>
                                             <span
                                                 class="text-sm font-medium text-primary"

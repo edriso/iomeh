@@ -227,9 +227,14 @@ const selectCustomEmoji = () => {
                                     )
                                 "
                             >
-                                {{ t(`habits.${habit.activity_type.category}`) }}
+                                {{
+                                    t(`habits.${habit.activity_type.category}`)
+                                }}
                             </Badge>
-                            <span v-if="habit.activity_type" class="text-xs text-muted-foreground">
+                            <span
+                                v-if="habit.activity_type"
+                                class="text-xs text-muted-foreground"
+                            >
                                 {{ habit.activity_type.base_points }}
                                 {{ t('habits.points') }}
                             </span>

@@ -1,4 +1,4 @@
-import { ref, nextTick } from 'vue';
+import { nextTick, ref } from 'vue';
 
 // Global state for log activity modal
 const showLogActivityModal = ref(false);

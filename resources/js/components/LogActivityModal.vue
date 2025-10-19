@@ -110,13 +110,16 @@ const handleClose = () => {
 };
 
 // Watch for modal state changes to handle cleanup
-watch(() => props.open, (newValue) => {
-    if (!newValue) {
-        // Modal is closing, reset form and clear errors
-        form.reset();
-        form.clearErrors();
-    }
-});
+watch(
+    () => props.open,
+    (newValue) => {
+        if (!newValue) {
+            // Modal is closing, reset form and clear errors
+            form.reset();
+            form.clearErrors();
+        }
+    },
+);
 </script>
 
 <template>
