@@ -28,7 +28,7 @@ import {
     Lock,
     Trophy,
 } from 'lucide-vue-next';
-import { computed, ref } from 'vue';
+import { computed, nextTick, ref } from 'vue';
 
 interface ProfileUser {
     id: number;
@@ -156,6 +156,7 @@ const heatmapDays = computed(() => {
 const selectedDate = ref<string | null>(null);
 const selectedDateActivities = ref<RecentActivity[]>([]);
 const loadingActivities = ref(false);
+const activitiesContainer = ref<HTMLElement | null>(null);
 
 // Cache for fetched activities by date
 const activitiesCache = ref<Record<string, RecentActivity[]>>({});
@@ -176,6 +177,12 @@ const handleDayClick = async (date: string) => {
     // Check if we have cached activities for this date
     if (activitiesCache.value[date]) {
         selectedDateActivities.value = activitiesCache.value[date];
+        // Scroll to activities after DOM update
+        await nextTick();
+        // Add a small delay to ensure the content is fully rendered
+        setTimeout(() => {
+            scrollToActivities();
+        }, 250);
         return;
     }
 
@@ -197,11 +204,33 @@ const handleDayClick = async (date: string) => {
             // Cache the activities
             activitiesCache.value[date] = activities;
             selectedDateActivities.value = activities;
+            
+            // Scroll to activities after DOM update
+            await nextTick();
+            // Add a small delay to ensure the content is fully rendered
+            setTimeout(() => {
+                scrollToActivities();
+            }, 100);
         }
     } catch {
         selectedDateActivities.value = [];
     } finally {
         loadingActivities.value = false;
+    }
+};
+
+// Function to scroll to activities container
+const scrollToActivities = () => {
+    if (activitiesContainer.value) {
+        // Get the element's position and add some offset to ensure full visibility
+        const elementRect = activitiesContainer.value.getBoundingClientRect();
+        const absoluteElementTop = elementRect.top + window.pageYOffset;
+        const offset = 20; // Add some padding from the top
+        
+        window.scrollTo({
+            top: absoluteElementTop - offset,
+            behavior: 'smooth'
+        });
     }
 };
 
@@ -540,6 +569,7 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                 <!-- Selected Date Activities (Only for own profile) -->
                                 <div
                                     v-if="is_own_profile && selectedDate"
+                                    ref="activitiesContainer"
                                     class="mt-6 space-y-4"
                                 >
                                     <div

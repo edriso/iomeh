@@ -31,7 +31,7 @@ const emit = defineEmits<{
 }>();
 
 // Get RTL state for arrow direction
-const { isRTL, t } = useTranslations();
+const { isRTL } = useTranslations();
 
 const handleDayClick = (date: string, count: number) => {
     if (count > 0) {
