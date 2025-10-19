@@ -108,11 +108,18 @@ const monthNames = {
     ],
 };
 
-
 const dayNames = computed(() => {
     if (isRTL.value) {
         // Arabic day names
-        const days = ['أحد', 'اثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت'];
+        const days = [
+            'أحد',
+            'اثنين',
+            'ثلاثاء',
+            'أربعاء',
+            'خميس',
+            'جمعة',
+            'سبت',
+        ];
         if (props.week_starts_on === 1) {
             // Monday start
             return ['اثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت', 'أحد'];

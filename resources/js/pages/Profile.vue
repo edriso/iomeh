@@ -204,7 +204,7 @@ const handleDayClick = async (date: string) => {
             // Cache the activities
             activitiesCache.value[date] = activities;
             selectedDateActivities.value = activities;
-            
+
             // Scroll to activities after DOM update
             await nextTick();
             // Add a small delay to ensure the content is fully rendered
@@ -226,10 +226,10 @@ const scrollToActivities = () => {
         const elementRect = activitiesContainer.value.getBoundingClientRect();
         const absoluteElementTop = elementRect.top + window.pageYOffset;
         const offset = 20; // Add some padding from the top
-        
+
         window.scrollTo({
             top: absoluteElementTop - offset,
-            behavior: 'smooth'
+            behavior: 'smooth',
         });
     }
 };
@@ -265,7 +265,9 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
 </script>
 
 <template>
-    <Head :title="user ? `${user.name} (@${user.username})` : t('profile.title')" />
+    <Head
+        :title="user ? `${user.name} (@${user.username})` : t('profile.title')"
+    />
 
     <AppLayout>
         <TooltipProvider>
@@ -315,7 +317,7 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                         v-if="is_own_profile"
                                         :class="[
                                             'absolute top-6 z-10',
-                                            isRTL ? 'left-6' : 'right-6'
+                                            isRTL ? 'left-6' : 'right-6',
                                         ]"
                                     >
                                         <Button
@@ -408,7 +410,11 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                                                         8
                                                                     "
                                                                     class="max-w-xs rounded-lg border border-border/50 bg-popover px-3 py-2 text-popover-foreground shadow-lg"
-                                                                    :dir="isRTL ? 'rtl' : 'ltr'"
+                                                                    :dir="
+                                                                        isRTL
+                                                                            ? 'rtl'
+                                                                            : 'ltr'
+                                                                    "
                                                                 >
                                                                     <div
                                                                         class="space-y-2"
@@ -421,13 +427,21 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                                                             />
                                                                             <span
                                                                                 class="text-sm font-semibold text-foreground"
-                                                                                >{{ t('profile.longest_streak') }}</span
+                                                                                >{{
+                                                                                    t(
+                                                                                        'profile.longest_streak',
+                                                                                    )
+                                                                                }}</span
                                                                             >
                                                                         </div>
                                                                         <p
                                                                             class="text-xs text-muted-foreground"
                                                                         >
-                                                                            {{ t('profile.best_consecutive_record') }}:
+                                                                            {{
+                                                                                t(
+                                                                                    'profile.best_consecutive_record',
+                                                                                )
+                                                                            }}:
                                                                             <span
                                                                                 class="font-medium text-foreground"
                                                                             >
@@ -435,7 +449,12 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                                                                     user.longest_streak ||
                                                                                     0
                                                                                 }}
-                                                                                {{ getDaysText(user.longest_streak || 0) }}
+                                                                                {{
+                                                                                    getDaysText(
+                                                                                        user.longest_streak ||
+                                                                                            0,
+                                                                                    )
+                                                                                }}
                                                                             </span>
                                                                         </p>
                                                                     </div>
@@ -500,7 +519,9 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                             "
                         >
                             <CardHeader>
-                                <CardTitle>{{ t('profile.ranking_badges') }}</CardTitle>
+                                <CardTitle>{{
+                                    t('profile.ranking_badges')
+                                }}</CardTitle>
                                 <CardDescription>
                                     {{
                                         is_own_profile
@@ -551,7 +572,9 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                         <!-- Activity Streak -->
                         <Card>
                             <CardHeader>
-                                <CardTitle>{{ t('profile.activity_streak') }}</CardTitle>
+                                <CardTitle>{{
+                                    t('profile.activity_streak')
+                                }}</CardTitle>
                                 <CardDescription v-if="is_own_profile">
                                     {{ t('profile.health_journey') }}
                                 </CardDescription>
@@ -653,7 +676,11 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                                             <LinkIcon
                                                                 class="h-3 w-3"
                                                             />
-                                                            {{ t('activity.view_memory') }}
+                                                            {{
+                                                                t(
+                                                                    'activity.view_memory',
+                                                                )
+                                                            }}
                                                         </a>
                                                     </Button>
                                                 </div>

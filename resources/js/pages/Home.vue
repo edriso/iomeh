@@ -243,7 +243,7 @@ const handleLogActivity = () => openLogActivityModal();
                                         @click="handleLogActivity"
                                     >
                                         <Plus class="h-4 w-4" />
-                                        {{ t('home.add_activity') }}
+                                        {{ t('home.log_activity') }}
                                     </Button>
                                 </div>
                             </div>
@@ -372,8 +372,8 @@ const handleLogActivity = () => openLogActivityModal();
                                 >
                                     {{
                                         props.habits && props.habits.length > 0
-                                            ? t('home.add_activity')
-                                            : t('home.edit_activities')
+                                            ? t('home.log_activity')
+                                            : t('common.edit')
                                     }}
                                 </Button>
                             </div>

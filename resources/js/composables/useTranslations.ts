@@ -135,6 +135,7 @@ const translations = {
         'home.today_activities': "Today's Activities",
         'home.recent_activities': 'Recent Activities',
         'home.add_activity': 'Add Activity',
+        'home.log_activity': 'Log Activity',
         'home.no_activities_today': 'No activities logged today',
         'home.no_recent_activities': 'No recent activities',
         'home.no_habits_selected': 'No habits selected yet',
@@ -315,7 +316,8 @@ const translations = {
 
         // Profile Settings
         'profile_settings.title': 'Profile Settings',
-        'profile_settings.description': "Update your account's profile information",
+        'profile_settings.description':
+            "Update your account's profile information",
         'profile.username': 'Username',
         'profile.name': 'Name',
         'profile.personal_website': 'Personal Website',
@@ -481,12 +483,12 @@ const translations = {
         'errors.authentication_required': 'Authentication Required',
         'errors.authentication_required_message':
             'You need to be logged in to access this page.',
-        
+
         // Activity View
         'activity.loading': 'Loading activities...',
         'activity.view_memory': 'View memory',
         'activity.no_activities': 'No activities found for this date.',
-        
+
         // Days pluralization
         'days.single': 'day',
         'days.plural': 'days',
@@ -648,6 +650,7 @@ const translations = {
         'home.today_activities': 'أنشطة اليوم',
         'home.recent_activities': 'الأنشطة الأخيرة',
         'home.add_activity': 'إضافة نشاط',
+        'home.log_activity': 'تسجيل نشاط',
         'home.no_activities_today': 'لم يتم تسجيل أي أنشطة اليوم',
         'home.no_recent_activities': 'لا توجد أنشطة حديثة',
         'home.no_habits_selected': 'لم يتم اختيار عادات بعد',
@@ -974,12 +977,12 @@ const translations = {
         'errors.authentication_required': 'مطلوب المصادقة',
         'errors.authentication_required_message':
             'تحتاج إلى تسجيل الدخول للوصول إلى هذه الصفحة.',
-        
+
         // Activity View
         'activity.loading': 'جاري تحميل الأنشطة...',
         'activity.view_memory': 'عرض الذاكرة',
         'activity.no_activities': 'لم يتم العثور على أنشطة لهذا التاريخ.',
-        
+
         // Days pluralization
         'days.single': 'يوم',
         'days.plural': 'أيام',
