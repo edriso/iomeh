@@ -74,7 +74,7 @@ const shouldShowNavButton = (href: string) => {
                     <Button
                         variant="ghost"
                         @click="scrollToTop"
-                        class="flex h-auto items-center gap-2 p-0 font-heading hover:bg-transparent"
+                        class="flex h-auto items-center gap-2 p-2 font-heading hover:bg-transparent"
                     >
                         <AppLogo />
                         <span class="text-xl font-medium text-foreground">{{
