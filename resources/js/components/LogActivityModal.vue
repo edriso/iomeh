@@ -135,23 +135,28 @@ watch(
 
 <template>
     <Dialog :open="open" @update:open="handleClose">
-        <DialogContent class="sm:max-w-[500px]">
+        <DialogContent
+            class="w-[calc(100%-2rem)] max-w-sm sm:mx-0 sm:max-w-[500px] lg:max-w-[600px]"
+        >
             <div :dir="isRTL ? 'rtl' : 'ltr'">
-                <DialogHeader>
-                    <DialogTitle>{{
+                <DialogHeader class="space-y-2 sm:space-y-3">
+                    <DialogTitle class="text-base sm:text-lg lg:text-xl">{{
                         t('modal.log_activity.title')
                     }}</DialogTitle>
-                    <DialogDescription>
+                    <DialogDescription class="text-xs sm:text-sm">
                         {{ t('modal.log_activity.description') }}
                     </DialogDescription>
                 </DialogHeader>
 
-                <form @submit.prevent="handleSubmit" class="space-y-4">
+                <form
+                    @submit.prevent="handleSubmit"
+                    class="space-y-3 sm:space-y-4"
+                >
                     <!-- Today's Date Info -->
                     <div
-                        class="rounded-lg border border-primary/20 bg-primary/5 p-3"
+                        class="rounded-lg border border-primary/20 bg-primary/5 p-2 sm:p-3"
                     >
-                        <p class="text-sm text-muted-foreground">
+                        <p class="text-xs text-muted-foreground sm:text-sm">
                             📅 {{ t('modal.log_activity.logging_for_today') }}
                             {{
                                 new Date().toLocaleDateString('en-US', {

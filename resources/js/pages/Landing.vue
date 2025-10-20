@@ -270,66 +270,82 @@ const seoData = {
         </section>
 
         <!-- Two Pillars of Fitness Section -->
-        <section class="container mx-auto px-4 py-16">
+        <section class="container mx-auto px-4 py-12 sm:py-16">
             <div class="mx-auto max-w-5xl">
-                <div class="mb-16 text-center">
+                <div class="mb-12 text-center sm:mb-16">
                     <h2
-                        class="mb-4 text-3xl font-bold text-foreground md:text-4xl"
+                        class="mb-4 text-2xl font-bold text-foreground sm:text-3xl md:text-4xl"
                     >
                         {{ t('landing.fitness_journey_title') }}
                     </h2>
-                    <p class="mx-auto max-w-2xl text-lg text-muted-foreground">
+                    <p
+                        class="mx-auto max-w-2xl text-base text-muted-foreground sm:text-lg"
+                    >
                         {{ t('landing.fitness_journey_description') }}
                     </p>
                 </div>
 
-                <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+                <div class="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2">
                     <!-- Workout -->
                     <div
-                        class="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 to-primary/5 p-8"
+                        class="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 to-primary/5 p-6 sm:p-8"
                     >
-                        <div class="mb-6 flex items-center gap-4">
+                        <div
+                            class="mb-4 flex items-center gap-3 sm:mb-6 sm:gap-4"
+                        >
                             <div
-                                class="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary"
+                                class="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary sm:h-14 sm:w-14"
                             >
                                 <Activity
-                                    class="h-7 w-7 text-primary-foreground"
+                                    class="h-6 w-6 text-primary-foreground sm:h-7 sm:w-7"
                                 />
                             </div>
                             <div>
-                                <h3 class="text-xl font-bold text-foreground">
+                                <h3
+                                    class="text-lg font-bold text-foreground sm:text-xl"
+                                >
                                     {{ t('landing.workout_title') }}
                                 </h3>
-                                <p class="text-sm text-muted-foreground">
+                                <p
+                                    class="text-xs text-muted-foreground sm:text-sm"
+                                >
                                     {{ t('landing.workout_stats') }}
                                 </p>
                             </div>
                         </div>
-                        <p class="text-muted-foreground">
+                        <p class="text-sm text-muted-foreground sm:text-base">
                             {{ t('landing.workout_description') }}
                         </p>
                     </div>
 
                     <!-- Nutrition -->
                     <div
-                        class="rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 p-8"
+                        class="rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 p-6 sm:p-8"
                     >
-                        <div class="mb-6 flex items-center gap-4">
+                        <div
+                            class="mb-4 flex items-center gap-3 sm:mb-6 sm:gap-4"
+                        >
                             <div
-                                class="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500"
+                                class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500 sm:h-14 sm:w-14"
                             >
-                                <Apple class="h-7 w-7 text-white" />
+                                <Apple
+                                    class="h-6 w-6 text-white sm:h-7 sm:w-7"
+                                />
                             </div>
                             <div>
-                                <h3 class="text-xl font-bold text-foreground">
+                                <h3
+                                    class="text-lg font-bold text-foreground sm:text-xl"
+                                >
                                     {{ t('landing.nutrition_title') }}
                                 </h3>
-                                <p class="text-sm text-muted-foreground">
+                                <p
+                                    class="text-xs text-muted-foreground sm:text-sm"
+                                >
                                     {{ t('landing.nutrition_stats') }}
                                 </p>
                             </div>
                         </div>
-                        <p class="text-muted-foreground">
+                        <p class="text-sm text-muted-foreground sm:text-base">
                             {{ t('landing.nutrition_description') }}
                         </p>
                     </div>
@@ -338,15 +354,17 @@ const seoData = {
         </section>
 
         <!-- Streak Bonus Section -->
-        <section class="container mx-auto px-4 py-20">
+        <section class="container mx-auto px-4 py-12 sm:py-16 md:py-20">
             <div class="mx-auto max-w-5xl">
-                <div class="mb-16 text-center">
+                <div class="mb-12 text-center sm:mb-16">
                     <h2
-                        class="mb-4 text-3xl font-bold text-foreground md:text-4xl"
+                        class="mb-4 text-2xl font-bold text-foreground sm:text-3xl md:text-4xl"
                     >
                         {{ t('landing.streak_bonus_title') }}
                     </h2>
-                    <p class="mx-auto max-w-2xl text-lg text-muted-foreground">
+                    <p
+                        class="mx-auto max-w-2xl text-base text-muted-foreground sm:text-lg"
+                    >
                         {{ t('landing.streak_bonus_description') }}
                         {{
                             STREAK_TIERS[
@@ -358,14 +376,16 @@ const seoData = {
 
                 <!-- Streak Tiers Grid -->
                 <div
-                    class="mb-12 grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-8"
+                    class="mb-8 grid grid-cols-2 gap-3 sm:mb-12 sm:gap-4 md:grid-cols-4 lg:grid-cols-8"
                 >
                     <!-- Newcomer -->
                     <div
-                        class="rounded-xl border border-border/50 bg-card/30 p-4 text-center transition-all hover:scale-105 hover:border-primary/50"
+                        class="rounded-xl border border-border/50 bg-card/30 p-3 text-center transition-all hover:scale-105 hover:border-primary/50 sm:p-4"
                     >
-                        <div class="mb-2 text-2xl">🌱</div>
-                        <h3 class="mb-1 text-sm font-bold text-foreground">
+                        <div class="mb-1 text-xl sm:mb-2 sm:text-2xl">🌱</div>
+                        <h3
+                            class="mb-1 text-xs font-bold text-foreground sm:text-sm"
+                        >
                             {{ t('landing.tier_newcomer') }}
                         </h3>
                         <p class="mb-2 text-xs text-muted-foreground">
@@ -380,10 +400,12 @@ const seoData = {
 
                     <!-- Beginner -->
                     <div
-                        class="rounded-xl border border-border/50 bg-card/30 p-4 text-center transition-all hover:scale-105 hover:border-primary/50"
+                        class="rounded-xl border border-border/50 bg-card/30 p-3 text-center transition-all hover:scale-105 hover:border-primary/50 sm:p-4"
                     >
-                        <div class="mb-2 text-2xl">🔥</div>
-                        <h3 class="mb-1 text-sm font-bold text-foreground">
+                        <div class="mb-1 text-xl sm:mb-2 sm:text-2xl">🔥</div>
+                        <h3
+                            class="mb-1 text-xs font-bold text-foreground sm:text-sm"
+                        >
                             {{ t('landing.tier_beginner') }}
                         </h3>
                         <p class="mb-2 text-xs text-muted-foreground">
@@ -398,10 +420,12 @@ const seoData = {
 
                     <!-- Regular -->
                     <div
-                        class="rounded-xl border border-border/50 bg-card/30 p-4 text-center transition-all hover:scale-105 hover:border-primary/50"
+                        class="rounded-xl border border-border/50 bg-card/30 p-3 text-center transition-all hover:scale-105 hover:border-primary/50 sm:p-4"
                     >
-                        <div class="mb-2 text-2xl">⚡</div>
-                        <h3 class="mb-1 text-sm font-bold text-foreground">
+                        <div class="mb-1 text-xl sm:mb-2 sm:text-2xl">⚡</div>
+                        <h3
+                            class="mb-1 text-xs font-bold text-foreground sm:text-sm"
+                        >
                             {{ t('landing.tier_regular') }}
                         </h3>
                         <p class="mb-2 text-xs text-muted-foreground">
@@ -416,10 +440,12 @@ const seoData = {
 
                     <!-- Committed -->
                     <div
-                        class="rounded-xl border border-border/50 bg-card/30 p-4 text-center transition-all hover:scale-105 hover:border-amber-500/50"
+                        class="rounded-xl border border-border/50 bg-card/30 p-3 text-center transition-all hover:scale-105 hover:border-amber-500/50 sm:p-4"
                     >
-                        <div class="mb-2 text-2xl">💪</div>
-                        <h3 class="mb-1 text-sm font-bold text-foreground">
+                        <div class="mb-1 text-xl sm:mb-2 sm:text-2xl">💪</div>
+                        <h3
+                            class="mb-1 text-xs font-bold text-foreground sm:text-sm"
+                        >
                             {{ t('landing.tier_committed') }}
                         </h3>
                         <p class="mb-2 text-xs text-muted-foreground">
@@ -434,10 +460,12 @@ const seoData = {
 
                     <!-- Dedicated -->
                     <div
-                        class="rounded-xl border border-border/50 bg-card/30 p-4 text-center transition-all hover:scale-105 hover:border-amber-500/50"
+                        class="rounded-xl border border-border/50 bg-card/30 p-3 text-center transition-all hover:scale-105 hover:border-amber-500/50 sm:p-4"
                     >
-                        <div class="mb-2 text-2xl">🚀</div>
-                        <h3 class="mb-1 text-sm font-bold text-foreground">
+                        <div class="mb-1 text-xl sm:mb-2 sm:text-2xl">🚀</div>
+                        <h3
+                            class="mb-1 text-xs font-bold text-foreground sm:text-sm"
+                        >
                             {{ t('landing.tier_dedicated') }}
                         </h3>
                         <p class="mb-2 text-xs text-muted-foreground">
@@ -456,10 +484,12 @@ const seoData = {
 
                     <!-- Expert -->
                     <div
-                        class="rounded-xl border border-border/50 bg-card/30 p-4 text-center transition-all hover:scale-105 hover:border-amber-500/50"
+                        class="rounded-xl border border-border/50 bg-card/30 p-3 text-center transition-all hover:scale-105 hover:border-amber-500/50 sm:p-4"
                     >
-                        <div class="mb-2 text-2xl">⭐</div>
-                        <h3 class="mb-1 text-sm font-bold text-foreground">
+                        <div class="mb-1 text-xl sm:mb-2 sm:text-2xl">⭐</div>
+                        <h3
+                            class="mb-1 text-xs font-bold text-foreground sm:text-sm"
+                        >
                             {{ t('landing.tier_expert') }}
                         </h3>
                         <p class="mb-2 text-xs text-muted-foreground">
@@ -474,10 +504,12 @@ const seoData = {
 
                     <!-- Master -->
                     <div
-                        class="rounded-xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-orange-500/10 p-4 text-center transition-all hover:scale-105 hover:border-amber-500/70"
+                        class="rounded-xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-orange-500/10 p-3 text-center transition-all hover:scale-105 hover:border-amber-500/70 sm:p-4"
                     >
-                        <div class="mb-2 text-2xl">👑</div>
-                        <h3 class="mb-1 text-sm font-bold text-foreground">
+                        <div class="mb-1 text-xl sm:mb-2 sm:text-2xl">👑</div>
+                        <h3
+                            class="mb-1 text-xs font-bold text-foreground sm:text-sm"
+                        >
                             {{ t('landing.tier_master') }}
                         </h3>
                         <p class="mb-2 text-xs text-muted-foreground">
@@ -492,10 +524,12 @@ const seoData = {
 
                     <!-- Legend -->
                     <div
-                        class="rounded-xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-orange-500/10 p-4 text-center transition-all hover:scale-105 hover:border-amber-500/70"
+                        class="rounded-xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-orange-500/10 p-3 text-center transition-all hover:scale-105 hover:border-amber-500/70 sm:p-4"
                     >
-                        <div class="mb-2 text-2xl">🏆</div>
-                        <h3 class="mb-1 text-sm font-bold text-foreground">
+                        <div class="mb-1 text-xl sm:mb-2 sm:text-2xl">🏆</div>
+                        <h3
+                            class="mb-1 text-xs font-bold text-foreground sm:text-sm"
+                        >
                             {{ t('landing.tier_legend') }}
                         </h3>
                         <p class="mb-2 text-xs text-muted-foreground">
@@ -511,39 +545,45 @@ const seoData = {
 
                 <!-- How it Works -->
                 <div
-                    class="mb-12 rounded-2xl border border-border/50 bg-card/30 p-8"
+                    class="mb-8 rounded-2xl border border-border/50 bg-card/30 p-6 sm:mb-12 sm:p-8"
                 >
                     <h3
-                        class="mb-6 text-center text-2xl font-bold text-foreground"
+                        class="mb-6 text-center text-xl font-bold text-foreground sm:text-2xl"
                     >
                         {{ t('landing.how_it_works_title') }}
                     </h3>
-                    <div class="grid gap-6 md:grid-cols-3">
+                    <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
                         <div class="text-center">
                             <div
-                                class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10"
+                                class="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 sm:mb-4 sm:h-12 sm:w-12"
                             >
-                                <Flame class="h-6 w-6 text-primary" />
+                                <Flame
+                                    class="h-5 w-5 text-primary sm:h-6 sm:w-6"
+                                />
                             </div>
-                            <h4 class="mb-2 font-bold text-foreground">
+                            <h4
+                                class="mb-2 text-sm font-bold text-foreground sm:text-base"
+                            >
                                 {{ t('landing.build_streaks_title') }}
                             </h4>
-                            <p class="text-sm text-muted-foreground">
+                            <p class="text-xs text-muted-foreground sm:text-sm">
                                 {{ t('landing.build_streaks_description') }}
                             </p>
                         </div>
                         <div class="text-center">
                             <div
-                                class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/10"
+                                class="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-amber-500/10 sm:mb-4 sm:h-12 sm:w-12"
                             >
                                 <TrendingUp
-                                    class="h-6 w-6 text-amber-600 dark:text-amber-500"
+                                    class="h-5 w-5 text-amber-600 sm:h-6 sm:w-6 dark:text-amber-500"
                                 />
                             </div>
-                            <h4 class="mb-2 font-bold text-foreground">
+                            <h4
+                                class="mb-2 text-sm font-bold text-foreground sm:text-base"
+                            >
                                 {{ t('landing.multiply_points_title') }}
                             </h4>
-                            <p class="text-sm text-muted-foreground">
+                            <p class="text-xs text-muted-foreground sm:text-sm">
                                 {{ t('landing.multiply_points_description') }}
                                 {{
                                     STREAK_TIERS.find(
@@ -557,16 +597,20 @@ const seoData = {
                                 }}× points!
                             </p>
                         </div>
-                        <div class="text-center">
+                        <div class="text-center sm:col-span-2 md:col-span-1">
                             <div
-                                class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-purple-500/10"
+                                class="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-purple-500/10 sm:mb-4 sm:h-12 sm:w-12"
                             >
-                                <Trophy class="h-6 w-6 text-purple-600" />
+                                <Trophy
+                                    class="h-5 w-5 text-purple-600 sm:h-6 sm:w-6"
+                                />
                             </div>
-                            <h4 class="mb-2 font-bold text-foreground">
+                            <h4
+                                class="mb-2 text-sm font-bold text-foreground sm:text-base"
+                            >
                                 {{ t('landing.milestone_bonuses_title') }}
                             </h4>
-                            <p class="text-sm text-muted-foreground">
+                            <p class="text-xs text-muted-foreground sm:text-sm">
                                 {{ t('landing.milestone_bonuses_description') }}
                             </p>
                         </div>
@@ -575,29 +619,33 @@ const seoData = {
 
                 <!-- Example Calculation -->
                 <div
-                    class="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/5 to-background p-8"
+                    class="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/5 to-background p-6 sm:p-8"
                 >
                     <h3
-                        class="mb-6 text-center text-xl font-bold text-foreground"
+                        class="mb-4 text-center text-lg font-bold text-foreground sm:mb-6 sm:text-xl"
                     >
                         {{ t('landing.example_calculation_title') }}
                     </h3>
-                    <div class="space-y-4 text-center">
+                    <div class="space-y-3 text-center sm:space-y-4">
                         <div>
-                            <p class="text-sm text-muted-foreground">
+                            <p class="text-xs text-muted-foreground sm:text-sm">
                                 {{ t('landing.base_activity_points') }}
                             </p>
-                            <p class="text-2xl font-bold text-foreground">
+                            <p
+                                class="text-xl font-bold text-foreground sm:text-2xl"
+                            >
                                 20 {{ t('points.short') }}
                             </p>
                         </div>
-                        <div class="text-2xl text-muted-foreground">×</div>
+                        <div class="text-xl text-muted-foreground sm:text-2xl">
+                            ×
+                        </div>
                         <div>
-                            <p class="text-sm text-muted-foreground">
+                            <p class="text-xs text-muted-foreground sm:text-sm">
                                 {{ t('landing.dedicated_tier') }}
                             </p>
                             <p
-                                class="text-2xl font-bold text-amber-600 dark:text-amber-500"
+                                class="text-xl font-bold text-amber-600 sm:text-2xl dark:text-amber-500"
                             >
                                 {{
                                     STREAK_TIERS.find(
@@ -606,20 +654,26 @@ const seoData = {
                                 }}× {{ t('landing.multiplier') }}
                             </p>
                         </div>
-                        <div class="text-2xl text-muted-foreground">+</div>
+                        <div class="text-xl text-muted-foreground sm:text-2xl">
+                            +
+                        </div>
                         <div>
-                            <p class="text-sm text-muted-foreground">
+                            <p class="text-xs text-muted-foreground sm:text-sm">
                                 {{ t('landing.milestone_bonus') }}
                             </p>
-                            <p class="text-2xl font-bold text-purple-600">
+                            <p
+                                class="text-xl font-bold text-purple-600 sm:text-2xl"
+                            >
                                 +200 {{ t('points.short') }}
                             </p>
                         </div>
-                        <div class="border-t border-border pt-4">
-                            <p class="text-sm text-muted-foreground">
+                        <div class="border-t border-border pt-3 sm:pt-4">
+                            <p class="text-xs text-muted-foreground sm:text-sm">
                                 {{ t('landing.total_points_earned') }}
                             </p>
-                            <p class="text-3xl font-bold text-primary">
+                            <p
+                                class="text-2xl font-bold text-primary sm:text-3xl"
+                            >
                                 250 {{ t('points.short') }} 🎉
                             </p>
                         </div>
@@ -629,76 +683,92 @@ const seoData = {
         </section>
 
         <!-- Rankings Section -->
-        <section class="container mx-auto px-4 py-20">
+        <section class="container mx-auto px-4 py-12 sm:py-16 md:py-20">
             <div class="mx-auto max-w-5xl">
-                <div class="mb-16 text-center">
+                <div class="mb-12 text-center sm:mb-16">
                     <h2
-                        class="mb-4 text-3xl font-bold text-foreground md:text-4xl"
+                        class="mb-4 text-2xl font-bold text-foreground sm:text-3xl md:text-4xl"
                     >
                         {{ t('landing.global_rankings_title') }}
                     </h2>
-                    <p class="mx-auto max-w-2xl text-lg text-muted-foreground">
+                    <p
+                        class="mx-auto max-w-2xl text-base text-muted-foreground sm:text-lg"
+                    >
                         {{ t('landing.global_rankings_description') }}
                     </p>
                 </div>
 
                 <div
-                    class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4"
+                    class="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-4"
                 >
                     <div
-                        class="rounded-xl border border-border/50 bg-card/50 p-6 text-center"
+                        class="rounded-xl border border-border/50 bg-card/50 p-4 text-center sm:p-6"
                     >
                         <div class="mb-2 flex justify-center">
-                            <Footprints class="h-8 w-8 text-primary" />
+                            <Footprints
+                                class="h-6 w-6 text-primary sm:h-8 sm:w-8"
+                            />
                         </div>
-                        <h3 class="mb-1 font-bold text-foreground">
+                        <h3
+                            class="mb-1 text-sm font-bold text-foreground sm:text-base"
+                        >
                             {{ t('landing.today_title') }}
                         </h3>
-                        <p class="text-sm text-muted-foreground">
+                        <p class="text-xs text-muted-foreground sm:text-sm">
                             {{ t('landing.today_description') }}
                         </p>
                     </div>
 
                     <div
-                        class="rounded-xl border border-border/50 bg-card/50 p-6 text-center"
+                        class="rounded-xl border border-border/50 bg-card/50 p-4 text-center sm:p-6"
                     >
                         <div class="mb-2 flex justify-center">
                             <CalendarCheck
-                                class="h-8 w-8 text-muted-foreground"
+                                class="h-6 w-6 text-muted-foreground sm:h-8 sm:w-8"
                             />
                         </div>
-                        <h3 class="mb-1 font-bold text-foreground">
+                        <h3
+                            class="mb-1 text-sm font-bold text-foreground sm:text-base"
+                        >
                             {{ t('landing.yesterday_title') }}
                         </h3>
-                        <p class="text-sm text-muted-foreground">
+                        <p class="text-xs text-muted-foreground sm:text-sm">
                             {{ t('landing.yesterday_description') }}
                         </p>
                     </div>
 
                     <div
-                        class="rounded-xl border border-border/50 bg-card/50 p-6 text-center"
+                        class="rounded-xl border border-border/50 bg-card/50 p-4 text-center sm:p-6"
                     >
                         <div class="mb-2 flex justify-center">
-                            <Award class="h-8 w-8 text-amber-500" />
+                            <Award
+                                class="h-6 w-6 text-amber-500 sm:h-8 sm:w-8"
+                            />
                         </div>
-                        <h3 class="mb-1 font-bold text-foreground">
+                        <h3
+                            class="mb-1 text-sm font-bold text-foreground sm:text-base"
+                        >
                             {{ t('landing.season_label') }}
                         </h3>
-                        <p class="text-sm text-muted-foreground">
+                        <p class="text-xs text-muted-foreground sm:text-sm">
                             {{ t('landing.quarterly_rank') }}
                         </p>
                     </div>
 
                     <div
-                        class="rounded-xl border border-border/50 bg-card/50 p-6 text-center"
+                        class="rounded-xl border border-border/50 bg-card/50 p-4 text-center sm:p-6"
                     >
                         <div class="mb-2 flex justify-center">
-                            <Trophy class="h-8 w-8 text-amber-500" />
+                            <Trophy
+                                class="h-6 w-6 text-amber-500 sm:h-8 sm:w-8"
+                            />
                         </div>
-                        <h3 class="mb-1 font-bold text-foreground">
+                        <h3
+                            class="mb-1 text-sm font-bold text-foreground sm:text-base"
+                        >
                             {{ t('landing.year_title') }}
                         </h3>
-                        <p class="text-sm text-muted-foreground">
+                        <p class="text-xs text-muted-foreground sm:text-sm">
                             {{ t('landing.year_description') }}
                         </p>
                     </div>
@@ -706,67 +776,82 @@ const seoData = {
 
                 <!-- Example Leaderboard -->
                 <div
-                    class="mt-12 rounded-2xl border border-border/50 bg-card/30 p-8"
+                    class="mt-8 rounded-2xl border border-border/50 bg-card/30 p-6 sm:mt-12 sm:p-8"
                 >
                     <h3
-                        class="mb-6 text-center text-xl font-bold text-foreground"
+                        class="mb-4 text-center text-lg font-bold text-foreground sm:mb-6 sm:text-xl"
                     >
                         {{ t('landing.todays_top3_title') }}
                     </h3>
-                    <div class="space-y-4">
+                    <div class="space-y-3 sm:space-y-4">
                         <div
-                            class="flex items-center justify-between rounded-lg bg-gradient-to-r from-yellow-500/10 to-transparent p-4"
+                            class="flex items-center justify-between rounded-lg bg-gradient-to-r from-yellow-500/10 to-transparent p-3 sm:p-4"
                         >
-                            <div class="flex items-center gap-3">
-                                <span class="text-2xl">🥇</span>
+                            <div class="flex items-center gap-2 sm:gap-3">
+                                <span class="text-xl sm:text-2xl">🥇</span>
                                 <div>
-                                    <p class="font-bold text-foreground">
+                                    <p
+                                        class="text-sm font-bold text-foreground sm:text-base"
+                                    >
                                         Sarah K.
                                     </p>
-                                    <p class="text-sm text-muted-foreground">
+                                    <p
+                                        class="text-xs text-muted-foreground sm:text-sm"
+                                    >
                                         HIIT, Healthy meals, Meditation
                                     </p>
                                 </div>
                             </div>
-                            <span class="text-xl font-bold text-primary"
+                            <span
+                                class="text-lg font-bold text-primary sm:text-xl"
                                 >180 {{ t('points.short') }}</span
                             >
                         </div>
 
                         <div
-                            class="flex items-center justify-between rounded-lg bg-gradient-to-r from-gray-300/10 to-transparent p-4"
+                            class="flex items-center justify-between rounded-lg bg-gradient-to-r from-gray-300/10 to-transparent p-3 sm:p-4"
                         >
-                            <div class="flex items-center gap-3">
-                                <span class="text-2xl">🥈</span>
+                            <div class="flex items-center gap-2 sm:gap-3">
+                                <span class="text-xl sm:text-2xl">🥈</span>
                                 <div>
-                                    <p class="font-bold text-foreground">
+                                    <p
+                                        class="text-sm font-bold text-foreground sm:text-base"
+                                    >
                                         Mike R.
                                     </p>
-                                    <p class="text-sm text-muted-foreground">
+                                    <p
+                                        class="text-xs text-muted-foreground sm:text-sm"
+                                    >
                                         Gym, Running, Meal prep
                                     </p>
                                 </div>
                             </div>
-                            <span class="text-xl font-bold text-primary"
+                            <span
+                                class="text-lg font-bold text-primary sm:text-xl"
                                 >165 {{ t('points.short') }}</span
                             >
                         </div>
 
                         <div
-                            class="flex items-center justify-between rounded-lg bg-gradient-to-r from-orange-500/10 to-transparent p-4"
+                            class="flex items-center justify-between rounded-lg bg-gradient-to-r from-orange-500/10 to-transparent p-3 sm:p-4"
                         >
-                            <div class="flex items-center gap-3">
-                                <span class="text-2xl">🥉</span>
+                            <div class="flex items-center gap-2 sm:gap-3">
+                                <span class="text-xl sm:text-2xl">🥉</span>
                                 <div>
-                                    <p class="font-bold text-foreground">
+                                    <p
+                                        class="text-sm font-bold text-foreground sm:text-base"
+                                    >
                                         Alex T.
                                     </p>
-                                    <p class="text-sm text-muted-foreground">
+                                    <p
+                                        class="text-xs text-muted-foreground sm:text-sm"
+                                    >
                                         Cycling, Yoga, Journaling
                                     </p>
                                 </div>
                             </div>
-                            <span class="text-xl font-bold text-primary"
+                            <span
+                                class="text-lg font-bold text-primary sm:text-xl"
                                 >155 {{ t('points.short') }}</span
                             >
                         </div>
@@ -776,79 +861,87 @@ const seoData = {
         </section>
 
         <!-- How It Works -->
-        <section class="container mx-auto px-4 py-16">
+        <section class="container mx-auto px-4 py-12 sm:py-16">
             <div class="mx-auto max-w-4xl">
-                <div class="mb-12 text-center">
+                <div class="mb-8 text-center sm:mb-12">
                     <h2
-                        class="mb-4 text-3xl font-bold text-foreground md:text-4xl"
+                        class="mb-4 text-2xl font-bold text-foreground sm:text-3xl md:text-4xl"
                     >
                         {{ t('landing.how_iomeh_works_title') }}
                     </h2>
-                    <p class="text-lg text-muted-foreground">
+                    <p class="text-base text-muted-foreground sm:text-lg">
                         {{ t('landing.how_iomeh_works_description') }}
                     </p>
                 </div>
 
-                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-                    <div class="flex gap-4">
+                <div class="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
+                    <div class="flex gap-3 sm:gap-4">
                         <div
-                            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary font-bold text-primary-foreground"
+                            class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground sm:h-10 sm:w-10 sm:text-base"
                         >
                             1
                         </div>
                         <div>
-                            <h3 class="mb-2 font-bold text-foreground">
+                            <h3
+                                class="mb-2 text-sm font-bold text-foreground sm:text-base"
+                            >
                                 {{ t('landing.step1_title') }}
                             </h3>
-                            <p class="text-muted-foreground">
+                            <p class="text-xs text-muted-foreground sm:text-sm">
                                 {{ t('landing.step1_description') }}
                             </p>
                         </div>
                     </div>
 
-                    <div class="flex gap-4">
+                    <div class="flex gap-3 sm:gap-4">
                         <div
-                            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary font-bold text-primary-foreground"
+                            class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground sm:h-10 sm:w-10 sm:text-base"
                         >
                             2
                         </div>
                         <div>
-                            <h3 class="mb-2 font-bold text-foreground">
+                            <h3
+                                class="mb-2 text-sm font-bold text-foreground sm:text-base"
+                            >
                                 {{ t('landing.step2_title') }}
                             </h3>
-                            <p class="text-muted-foreground">
+                            <p class="text-xs text-muted-foreground sm:text-sm">
                                 {{ t('landing.step2_description') }}
                             </p>
                         </div>
                     </div>
 
-                    <div class="flex gap-4">
+                    <div class="flex gap-3 sm:gap-4">
                         <div
-                            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary font-bold text-primary-foreground"
+                            class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground sm:h-10 sm:w-10 sm:text-base"
                         >
                             3
                         </div>
                         <div>
-                            <h3 class="mb-2 font-bold text-foreground">
+                            <h3
+                                class="mb-2 text-sm font-bold text-foreground sm:text-base"
+                            >
                                 {{ t('landing.step3_title') }}
                             </h3>
-                            <p class="text-muted-foreground">
+                            <p class="text-xs text-muted-foreground sm:text-sm">
                                 {{ t('landing.step3_description') }}
                             </p>
                         </div>
                     </div>
 
-                    <div class="flex gap-4">
+                    <div class="flex gap-3 sm:gap-4">
                         <div
-                            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary font-bold text-primary-foreground"
+                            class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground sm:h-10 sm:w-10 sm:text-base"
                         >
                             4
                         </div>
                         <div>
-                            <h3 class="mb-2 font-bold text-foreground">
+                            <h3
+                                class="mb-2 text-sm font-bold text-foreground sm:text-base"
+                            >
                                 {{ t('landing.climb_rankings') }}
                             </h3>
-                            <p class="text-muted-foreground">
+                            <p class="text-xs text-muted-foreground sm:text-sm">
                                 {{ t('landing.step4_description') }}
                             </p>
                         </div>
@@ -858,24 +951,28 @@ const seoData = {
         </section>
 
         <!-- Stats Section -->
-        <section class="container mx-auto px-4 py-16">
+        <section class="container mx-auto px-4 py-12 sm:py-16">
             <div
-                class="mx-auto max-w-4xl rounded-2xl bg-gradient-to-r from-primary/10 to-emerald-500/10 p-12 text-center"
+                class="mx-auto max-w-4xl rounded-2xl bg-gradient-to-r from-primary/10 to-emerald-500/10 p-6 text-center sm:p-8 md:p-12"
             >
-                <h2 class="mb-8 text-3xl font-bold text-foreground">
+                <h2
+                    class="mb-6 text-2xl font-bold text-foreground sm:mb-8 sm:text-3xl"
+                >
                     {{ t('landing.community_title') }}
                 </h2>
-                <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+                <div class="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-3">
                     <div>
                         <div
                             class="mb-2 flex items-center justify-center gap-2"
                         >
-                            <Heart class="h-6 w-6 text-primary" />
-                            <span class="text-4xl font-bold text-primary">
+                            <Heart class="h-5 w-5 text-primary sm:h-6 sm:w-6" />
+                            <span
+                                class="text-3xl font-bold text-primary sm:text-4xl"
+                            >
                                 {{ formatNumber(stats.active_users) }}
                             </span>
                         </div>
-                        <div class="text-muted-foreground">
+                        <div class="text-sm text-muted-foreground sm:text-base">
                             {{ t('landing.stats.active_users') }}
                         </div>
                     </div>
@@ -883,12 +980,16 @@ const seoData = {
                         <div
                             class="mb-2 flex items-center justify-center gap-2"
                         >
-                            <Activity class="h-6 w-6 text-primary" />
-                            <span class="text-4xl font-bold text-primary">
+                            <Activity
+                                class="h-5 w-5 text-primary sm:h-6 sm:w-6"
+                            />
+                            <span
+                                class="text-3xl font-bold text-primary sm:text-4xl"
+                            >
                                 {{ formatNumber(stats.total_activities) }}
                             </span>
                         </div>
-                        <div class="text-muted-foreground">
+                        <div class="text-sm text-muted-foreground sm:text-base">
                             {{ t('landing.stats.total_activities') }}
                         </div>
                     </div>
@@ -896,12 +997,16 @@ const seoData = {
                         <div
                             class="mb-2 flex items-center justify-center gap-2"
                         >
-                            <Flame class="h-6 w-6 text-orange-500" />
-                            <span class="text-4xl font-bold text-primary">
+                            <Flame
+                                class="h-5 w-5 text-orange-500 sm:h-6 sm:w-6"
+                            />
+                            <span
+                                class="text-3xl font-bold text-primary sm:text-4xl"
+                            >
                                 {{ formatNumber(stats.combined_streak) }}
                             </span>
                         </div>
-                        <div class="text-muted-foreground">
+                        <div class="text-sm text-muted-foreground sm:text-base">
                             {{ t('landing.stats.combined_streak') }}
                         </div>
                     </div>
@@ -910,17 +1015,24 @@ const seoData = {
         </section>
 
         <!-- CTA Section -->
-        <section class="container mx-auto px-4 py-20">
+        <section class="container mx-auto px-4 py-12 sm:py-16 md:py-20">
             <div class="mx-auto max-w-3xl text-center">
-                <h2 class="mb-4 text-3xl font-bold text-foreground md:text-4xl">
+                <h2
+                    class="mb-4 text-2xl font-bold text-foreground sm:text-3xl md:text-4xl"
+                >
                     {{ t('landing.ready_to_compete_title') }}
                 </h2>
-                <p class="mb-8 text-lg text-muted-foreground">
+                <p
+                    class="mb-6 text-base text-muted-foreground sm:mb-8 sm:text-lg"
+                >
                     {{ t('landing.ready_to_compete_description') }}
                 </p>
                 <Link href="/register">
-                    <Button size="lg" class="px-8 py-4 text-lg">
-                        <Trophy class="h-5 w-5" />
+                    <Button
+                        size="lg"
+                        class="w-full px-6 py-3 text-base sm:w-auto sm:px-8 sm:py-4 sm:text-lg"
+                    >
+                        <Trophy class="h-4 w-4 sm:h-5 sm:w-5" />
                         {{ t('landing.start_journey') }}
                     </Button>
                 </Link>
@@ -931,12 +1043,12 @@ const seoData = {
         <footer
             class="border-t border-border/40 bg-background/80 backdrop-blur-sm"
         >
-            <div class="container mx-auto px-4 py-8">
+            <div class="container mx-auto px-4 py-6 sm:py-8">
                 <div class="text-center text-muted-foreground">
-                    <p class="mb-2 font-medium">
+                    <p class="mb-2 text-sm font-medium sm:text-base">
                         {{ appName }} - I Owe Me Health
                     </p>
-                    <p class="text-sm">
+                    <p class="text-xs sm:text-sm">
                         &copy; {{ currentYear }} {{ appName }}. All rights
                         reserved.
                     </p>

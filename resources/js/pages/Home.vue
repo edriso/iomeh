@@ -204,42 +204,52 @@ const handleLogActivity = () => openLogActivityModal();
     <AppLayout :dir="isRTL ? 'rtl' : 'ltr'">
         <SEO v-bind="seoConfigs.home" />
 
-        <div class="container mx-auto px-4 py-8">
+        <div class="container mx-auto px-4 py-4 sm:py-6 lg:py-8">
             <!-- Welcome Header -->
-            <div class="mb-8">
-                <h1 class="mb-2 text-3xl font-bold text-foreground lg:text-4xl">
+            <div class="mb-6 sm:mb-8">
+                <h1
+                    class="mb-2 text-2xl font-bold text-foreground sm:text-3xl lg:text-4xl"
+                >
                     {{ t('home.welcome') }}, {{ user.name }}! 👋
                 </h1>
-                <p class="text-muted-foreground lg:text-lg">
+                <p
+                    class="text-sm text-muted-foreground sm:text-base lg:text-lg"
+                >
                     {{ t('home.description') }}
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+            <div
+                class="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-3 lg:gap-8"
+            >
                 <!-- Left Column: Today's Activities -->
-                <div class="space-y-6 lg:col-span-2">
+                <div class="space-y-4 sm:space-y-6 lg:col-span-2">
                     <!-- My Activities -->
                     <Card>
                         <CardHeader>
-                            <div class="flex items-center justify-between">
+                            <div
+                                class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+                            >
                                 <div>
-                                    <CardTitle>{{
+                                    <CardTitle class="text-lg sm:text-xl">{{
                                         t('settings.habits')
                                     }}</CardTitle>
-                                    <CardDescription>
+                                    <CardDescription class="text-sm">
                                         {{ t('home.activities_description') }}
                                     </CardDescription>
                                 </div>
-                                <div class="flex gap-2">
+                                <div class="flex flex-col gap-2 sm:flex-row">
                                     <Button
                                         size="sm"
                                         variant="outline"
+                                        class="w-full sm:w-auto"
                                         @click="navigateToHabits"
                                     >
                                         {{ t('common.edit') }}
                                     </Button>
                                     <Button
                                         size="sm"
+                                        class="w-full sm:w-auto"
                                         @click="handleLogActivity"
                                     >
                                         <Plus class="h-4 w-4" />
@@ -257,7 +267,7 @@ const handleLogActivity = () => openLogActivityModal();
                                     v-for="habit in habits"
                                     :key="habit.id"
                                     variant="outline"
-                                    class="border-secondary/20 bg-secondary px-3 py-1.5 text-sm text-secondary-foreground transition-colors hover:border-primary/30"
+                                    class="border-secondary/20 bg-secondary px-2 py-1 text-xs text-secondary-foreground transition-colors hover:border-primary/30 sm:px-3 sm:py-1.5 sm:text-sm"
                                     :class="{
                                         'cursor-pointer': habit.notes,
                                         'cursor-default': !habit.notes,
@@ -268,30 +278,36 @@ const handleLogActivity = () => openLogActivityModal();
                                             : null
                                     "
                                 >
-                                    <span class="mr-1.5">{{ habit.icon }}</span>
-                                    {{ habit.name }}
+                                    <span class="mr-1 sm:mr-1.5">{{
+                                        habit.icon
+                                    }}</span>
+                                    <span class="truncate">{{
+                                        habit.name
+                                    }}</span>
                                     <CheckCircle
                                         v-if="habit.has_activity_today"
-                                        class="ml-1.5 h-3 w-3"
+                                        class="ml-1 h-3 w-3 sm:ml-1.5"
                                     />
                                     <Info
                                         v-if="habit.notes"
-                                        class="ml-1.5 h-3 w-3"
+                                        class="ml-1 h-3 w-3 sm:ml-1.5"
                                     />
                                 </Badge>
                             </div>
                             <div
                                 v-else
-                                class="py-8 text-center text-muted-foreground"
+                                class="py-6 text-center text-muted-foreground sm:py-8"
                             >
                                 <Activity
-                                    class="mx-auto mb-3 h-12 w-12 opacity-50"
+                                    class="mx-auto mb-3 h-10 w-10 opacity-50 sm:h-12 sm:w-12"
                                 />
-                                <p>{{ t('home.no_habits_selected') }}</p>
+                                <p class="text-sm sm:text-base">
+                                    {{ t('home.no_habits_selected') }}
+                                </p>
                                 <Button
                                     size="sm"
                                     variant="outline"
-                                    class="mt-3"
+                                    class="mt-3 w-full sm:w-auto"
                                     @click="navigateToHabits"
                                 >
                                     {{ t('home.select_activities') }}
@@ -303,10 +319,10 @@ const handleLogActivity = () => openLogActivityModal();
                     <!-- Today's Activities -->
                     <Card>
                         <CardHeader>
-                            <CardTitle>{{
+                            <CardTitle class="text-lg sm:text-xl">{{
                                 t('home.today_activities')
                             }}</CardTitle>
-                            <CardDescription>
+                            <CardDescription class="text-sm">
                                 {{ today_activities.length }}
                                 {{ t('home.activities_count') }} •
                                 {{ todayPoints }} {{ t('home.points_count') }}
@@ -315,25 +331,25 @@ const handleLogActivity = () => openLogActivityModal();
                         <CardContent>
                             <div
                                 v-if="today_activities.length > 0"
-                                class="space-y-4"
+                                class="space-y-3 sm:space-y-4"
                             >
                                 <div
                                     v-for="activity in today_activities"
                                     :key="activity.id"
-                                    class="flex items-start justify-between gap-3 rounded-lg border border-border/50 bg-card/50 p-4 transition-colors hover:border-primary/30"
+                                    class="flex items-start justify-between gap-2 rounded-lg border border-border/50 bg-card/50 p-3 transition-colors hover:border-primary/30 sm:gap-3 sm:p-4"
                                 >
-                                    <div class="flex-1">
+                                    <div class="min-w-0 flex-1">
                                         <div
-                                            class="mb-1 flex items-center gap-2"
+                                            class="mb-1 flex flex-col gap-2 sm:flex-row sm:items-center"
                                         >
                                             <span
-                                                class="font-medium text-foreground"
+                                                class="truncate font-medium text-foreground"
                                             >
                                                 {{ activity.habit_name }}
                                             </span>
                                             <Badge
                                                 variant="secondary"
-                                                class="text-xs"
+                                                class="w-fit text-xs"
                                             >
                                                 +{{ activity.points_earned }}
                                                 {{ t('points.short') }}
@@ -341,7 +357,7 @@ const handleLogActivity = () => openLogActivityModal();
                                         </div>
                                         <p
                                             v-if="activity.notes"
-                                            class="text-sm text-muted-foreground"
+                                            class="text-xs text-muted-foreground sm:text-sm"
                                         >
                                             {{ activity.notes }}
                                         </p>
@@ -350,19 +366,20 @@ const handleLogActivity = () => openLogActivityModal();
                             </div>
                             <div
                                 v-else
-                                class="py-12 text-center text-muted-foreground"
+                                class="py-8 text-center text-muted-foreground sm:py-12"
                             >
                                 <Calendar
-                                    class="mx-auto mb-3 h-12 w-12 opacity-50"
+                                    class="mx-auto mb-3 h-10 w-10 opacity-50 sm:h-12 sm:w-12"
                                 />
-                                <p class="mb-2">
+                                <p class="mb-2 text-sm sm:text-base">
                                     {{ t('home.no_activities_today') }}
                                 </p>
-                                <p class="mb-4 text-sm">
+                                <p class="mb-4 text-xs sm:text-sm">
                                     {{ t('home.start_tracking') }}
                                 </p>
                                 <Button
                                     size="sm"
+                                    class="w-full sm:w-auto"
                                     @click="handleActivityAction"
                                     :variant="
                                         props.habits && props.habits.length > 0
@@ -382,25 +399,33 @@ const handleLogActivity = () => openLogActivityModal();
                 </div>
 
                 <!-- Right Column: Recent Activities & Quick Actions -->
-                <div class="space-y-6">
+                <div class="space-y-4 sm:space-y-6">
                     <!-- Streak Display -->
                     <Card>
                         <CardHeader>
-                            <CardTitle class="flex items-center gap-2">
-                                <Flame class="h-5 w-5 text-orange-500" />
+                            <CardTitle
+                                class="flex items-center gap-2 text-lg sm:text-xl"
+                            >
+                                <Flame
+                                    class="h-4 w-4 text-orange-500 sm:h-5 sm:w-5"
+                                />
                                 {{ t('home.your_streak') }}
                             </CardTitle>
                         </CardHeader>
-                        <CardContent class="space-y-4">
+                        <CardContent class="space-y-3 sm:space-y-4">
                             <!-- Current Streak -->
-                            <div class="flex items-center justify-between">
+                            <div
+                                class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+                            >
                                 <div>
                                     <div
-                                        class="text-2xl font-bold text-orange-600 dark:text-orange-500"
+                                        class="text-xl font-bold text-orange-600 sm:text-2xl dark:text-orange-500"
                                     >
                                         {{ user.current_streak }}
                                     </div>
-                                    <div class="text-sm text-muted-foreground">
+                                    <div
+                                        class="text-xs text-muted-foreground sm:text-sm"
+                                    >
                                         {{
                                             user.current_streak === 1
                                                 ? t('home.day')
@@ -409,12 +434,17 @@ const handleLogActivity = () => openLogActivityModal();
                                         {{ t('home.in_a_row') }}
                                     </div>
                                 </div>
-                                <div class="text-right">
+                                <div class="text-left sm:text-right">
                                     <div
                                         class="text-sm font-medium text-primary"
                                     >
                                         {{ user.streak_tier.icon }}
-                                        {{ translatedTierName }}
+                                        <span class="hidden sm:inline">{{
+                                            translatedTierName
+                                        }}</span>
+                                        <span class="sm:hidden">{{
+                                            translatedTierName
+                                        }}</span>
                                     </div>
                                     <div class="text-xs text-muted-foreground">
                                         {{ user.streak_tier.multiplier }}×
@@ -434,14 +464,17 @@ const handleLogActivity = () => openLogActivityModal();
                                     ></div>
                                 </div>
                                 <div
-                                    class="flex justify-between text-xs text-muted-foreground"
+                                    class="flex flex-col gap-1 text-xs text-muted-foreground sm:flex-row sm:justify-between"
                                 >
-                                    <span>{{ streakMessage }}</span>
+                                    <span class="truncate">{{
+                                        streakMessage
+                                    }}</span>
                                     <span
                                         v-if="
                                             user.longest_streak >
                                             user.current_streak
                                         "
+                                        class="text-xs"
                                     >
                                         {{ t('home.best') }}:
                                         {{ user.longest_streak }}
@@ -454,19 +487,28 @@ const handleLogActivity = () => openLogActivityModal();
                     <!-- Rankings Quick View -->
                     <Card>
                         <CardHeader>
-                            <CardTitle class="flex items-center gap-2">
-                                <TrendingUp class="h-5 w-5 text-primary" />
+                            <CardTitle
+                                class="flex items-center gap-2 text-lg sm:text-xl"
+                            >
+                                <TrendingUp
+                                    class="h-4 w-4 text-primary sm:h-5 sm:w-5"
+                                />
                                 {{ t('home.your_rankings') }}
                             </CardTitle>
                         </CardHeader>
-                        <CardContent class="space-y-3">
+                        <CardContent class="space-y-2 sm:space-y-3">
                             <div
                                 v-if="user.season_rank"
-                                class="flex items-center justify-between rounded-lg border border-border/50 bg-card/50 p-3"
+                                class="flex items-center justify-between rounded-lg border border-border/50 bg-card/50 p-2 sm:p-3"
                             >
-                                <div class="flex items-center gap-2">
-                                    <Award class="h-4 w-4 text-primary" />
-                                    <Badge variant="outline" class="text-xs">
+                                <div class="flex min-w-0 items-center gap-2">
+                                    <Award
+                                        class="h-3 w-3 text-primary sm:h-4 sm:w-4"
+                                    />
+                                    <Badge
+                                        variant="outline"
+                                        class="truncate text-xs"
+                                    >
                                         {{
                                             isRTL
                                                 ? `${t('rankings.q4_rankings')} ${user.season_rank.year}`
@@ -474,35 +516,41 @@ const handleLogActivity = () => openLogActivityModal();
                                         }}
                                     </Badge>
                                 </div>
-                                <span class="text-2xl font-bold text-primary">
+                                <span
+                                    class="text-lg font-bold text-primary sm:text-2xl"
+                                >
                                     #{{ user.season_rank.rank }}
                                 </span>
                             </div>
                             <div
                                 v-if="user.year_rank"
-                                class="flex items-center justify-between rounded-lg border border-border/50 bg-card/50 p-3"
+                                class="flex items-center justify-between rounded-lg border border-border/50 bg-card/50 p-2 sm:p-3"
                             >
-                                <div class="flex items-center gap-2">
+                                <div class="flex min-w-0 items-center gap-2">
                                     <Trophy
-                                        class="h-4 w-4 text-amber-600 dark:text-amber-500"
+                                        class="h-3 w-3 text-amber-600 sm:h-4 sm:w-4 dark:text-amber-500"
                                     />
-                                    <Badge variant="outline" class="text-xs">
+                                    <Badge
+                                        variant="outline"
+                                        class="truncate text-xs"
+                                    >
                                         {{ user.year_rank.year }}
                                         {{ t('home.year') }}
                                     </Badge>
                                 </div>
                                 <span
-                                    class="text-2xl font-bold text-amber-700 dark:text-amber-500"
+                                    class="text-lg font-bold text-amber-700 sm:text-2xl dark:text-amber-500"
                                 >
                                     #{{ user.year_rank.rank }}
                                 </span>
                             </div>
                             <Button
-                                class="mt-4 w-full"
+                                class="mt-3 w-full sm:mt-4"
                                 variant="outline"
+                                size="sm"
                                 @click="navigateToRankings"
                             >
-                                <TrendingUp class="h-4 w-4" />
+                                <TrendingUp class="h-3 w-3 sm:h-4 sm:w-4" />
                                 {{ t('home.view_all_rankings') }}
                             </Button>
                         </CardContent>
@@ -511,17 +559,17 @@ const handleLogActivity = () => openLogActivityModal();
                     <!-- Recent Activities -->
                     <Card>
                         <CardHeader>
-                            <CardTitle>{{
+                            <CardTitle class="text-lg sm:text-xl">{{
                                 t('home.recent_activities')
                             }}</CardTitle>
-                            <CardDescription>{{
+                            <CardDescription class="text-sm">{{
                                 t('home.last_7_days')
                             }}</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div
                                 v-if="recent_activities.length > 0"
-                                class="space-y-3"
+                                class="space-y-2 sm:space-y-3"
                             >
                                 <div
                                     v-for="activity in recent_activities.slice(
@@ -529,14 +577,15 @@ const handleLogActivity = () => openLogActivityModal();
                                         5,
                                     )"
                                     :key="activity.id"
-                                    class="flex items-center justify-between text-sm"
+                                    class="flex items-center justify-between text-xs sm:text-sm"
                                 >
                                     <div
                                         class="flex min-w-0 flex-1 items-center gap-2"
                                     >
-                                        <span class="flex-shrink-0 text-lg">{{
-                                            activity.icon
-                                        }}</span>
+                                        <span
+                                            class="flex-shrink-0 text-sm sm:text-lg"
+                                            >{{ activity.icon }}</span
+                                        >
                                         <div class="min-w-0 flex-1">
                                             <p
                                                 class="truncate font-medium text-foreground"
@@ -552,7 +601,7 @@ const handleLogActivity = () => openLogActivityModal();
                                     </div>
                                     <Badge
                                         variant="secondary"
-                                        class="ml-2 flex-shrink-0"
+                                        class="ml-1 flex-shrink-0 text-xs sm:ml-2"
                                     >
                                         +{{ activity.points }}
                                     </Badge>
@@ -560,9 +609,9 @@ const handleLogActivity = () => openLogActivityModal();
                             </div>
                             <div
                                 v-else
-                                class="py-8 text-center text-muted-foreground"
+                                class="py-6 text-center text-muted-foreground sm:py-8"
                             >
-                                <p class="text-sm">
+                                <p class="text-xs sm:text-sm">
                                     {{ t('home.no_recent_activities') }}
                                 </p>
                             </div>
@@ -574,20 +623,29 @@ const handleLogActivity = () => openLogActivityModal();
 
         <!-- Habit Notes Modal -->
         <Dialog v-model:open="showHabitModal" @update:open="closeHabitModal">
-            <DialogContent class="max-w-md">
-                <DialogHeader>
-                    <DialogTitle class="flex items-center gap-2">
-                        <span class="text-2xl">{{ selectedHabit?.icon }}</span>
-                        {{ selectedHabit?.name }}
+            <DialogContent
+                class="w-[calc(100%-2rem)] max-w-sm sm:mx-0 sm:max-w-md lg:max-w-lg"
+            >
+                <DialogHeader class="space-y-2 sm:space-y-3">
+                    <DialogTitle
+                        class="flex items-center gap-2 text-base sm:text-lg lg:text-xl"
+                    >
+                        <span
+                            class="flex-shrink-0 text-lg sm:text-xl lg:text-2xl"
+                            >{{ selectedHabit?.icon }}</span
+                        >
+                        <span class="min-w-0 truncate">{{
+                            selectedHabit?.name
+                        }}</span>
                     </DialogTitle>
-                    <DialogDescription>
+                    <DialogDescription class="text-xs sm:text-sm">
                         {{ t('home.personal_notes') }}
                     </DialogDescription>
                 </DialogHeader>
-                <div class="mt-4">
-                    <div class="rounded-lg bg-muted/50 p-4">
+                <div class="mt-2 sm:mt-3 lg:mt-4">
+                    <div class="rounded-lg bg-muted/50 p-3 sm:p-4 lg:p-5">
                         <p
-                            class="text-sm leading-relaxed text-muted-foreground"
+                            class="text-xs leading-relaxed text-muted-foreground sm:text-sm lg:text-base"
                         >
                             {{ selectedHabit?.notes }}
                         </p>

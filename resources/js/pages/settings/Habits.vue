@@ -391,22 +391,25 @@ function getCategoryColor(category: string): string {
 
         <!-- Add Activity Dialog -->
         <Dialog v-model:open="showAddDialog">
-            <DialogContent class="max-h-[80vh] max-w-2xl">
-                <DialogHeader>
-                    <DialogTitle>{{
+            <DialogContent
+                class="max-h-[80vh] w-[calc(100%-2rem)] max-w-sm sm:mx-0 sm:max-w-2xl lg:max-w-3xl"
+            >
+                <DialogHeader class="space-y-2 sm:space-y-3">
+                    <DialogTitle class="text-base sm:text-lg lg:text-xl">{{
                         t('habits.add_new_activity')
                     }}</DialogTitle>
-                    <DialogDescription>
+                    <DialogDescription class="text-xs sm:text-sm">
                         {{ t('habits.select_activity_type') }}
                     </DialogDescription>
                 </DialogHeader>
 
-                <div class="space-y-4">
+                <div class="space-y-3 sm:space-y-4">
                     <!-- Category Filter -->
-                    <div class="flex flex-wrap gap-2">
+                    <div class="flex flex-wrap gap-1.5 sm:gap-2">
                         <Button
                             variant="outline"
                             size="sm"
+                            class="text-xs sm:text-sm"
                             :class="{
                                 'bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground':
                                     selectedCategory === null,
@@ -420,7 +423,7 @@ function getCategoryColor(category: string): string {
                             :key="category"
                             variant="outline"
                             size="sm"
-                            class="capitalize"
+                            class="text-xs capitalize sm:text-sm"
                             :class="{
                                 'bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground':
                                     selectedCategory === category,
