@@ -294,6 +294,18 @@ return [
     'modal.log_activity.pts' => 'نقطة',
     'modal.log_activity.streak_bonus_applied' => ' يوم مكافأة السلسلة مطبقة',
     'modal.log_activity.base_points_info' => 'النقاط الأساسية (بدون مكافأة السلسلة)',
+    
+    // Edit Activity Modal
+    'modal.edit_activity.title' => 'تعديل النشاط',
+    'modal.edit_activity.description' => 'تحديث تفاصيل نشاطك',
+    'modal.edit_activity.notes' => 'ملاحظات (اختياري)',
+    'modal.edit_activity.notes_placeholder' => 'أضف أي ملاحظات حول هذا النشاط...',
+    'modal.edit_activity.memory_url' => 'رابط الذاكرة (اختياري)',
+    'modal.edit_activity.memory_url_placeholder' => 'https://...',
+    'modal.edit_activity.cancel' => 'إلغاء',
+    'modal.edit_activity.saving' => 'جاري الحفظ...',
+    'modal.edit_activity.save' => 'حفظ التغييرات',
+    
     'success.activity_updated' => 'تم تحديث النشاط بنجاح!',
     'success.activity_deleted' => 'تم حذف النشاط بنجاح!',
     'success.habits_updated' => 'تم تحديث العادات بنجاح!',

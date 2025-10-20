@@ -294,6 +294,18 @@ return [
     'modal.log_activity.pts' => 'pts',
     'modal.log_activity.streak_bonus_applied' => ' day streak bonus applied',
     'modal.log_activity.base_points_info' => 'Base points (no streak bonus)',
+    
+    // Edit Activity Modal
+    'modal.edit_activity.title' => 'Edit Activity',
+    'modal.edit_activity.description' => 'Update your activity details',
+    'modal.edit_activity.notes' => 'Notes (Optional)',
+    'modal.edit_activity.notes_placeholder' => 'Add any notes about this activity...',
+    'modal.edit_activity.memory_url' => 'Memory URL (Optional)',
+    'modal.edit_activity.memory_url_placeholder' => 'https://...',
+    'modal.edit_activity.cancel' => 'Cancel',
+    'modal.edit_activity.saving' => 'Saving...',
+    'modal.edit_activity.save' => 'Save Changes',
+    
     'success.activity_updated' => 'Activity updated successfully!',
     'success.activity_deleted' => 'Activity deleted successfully!',
     'success.habits_updated' => 'Habits updated successfully!',

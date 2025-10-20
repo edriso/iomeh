@@ -520,6 +520,18 @@ const translations = {
         'modal.log_activity.streak_bonus_applied': 'day streak bonus applied!',
         'modal.log_activity.base_points_info':
             'Base points • Build a streak to multiply your rewards',
+
+        // Edit Activity Modal
+        'modal.edit_activity.title': 'Edit Activity',
+        'modal.edit_activity.description': 'Update your activity details',
+        'modal.edit_activity.notes': 'Notes (Optional)',
+        'modal.edit_activity.notes_placeholder':
+            'Add any notes about this activity...',
+        'modal.edit_activity.memory_url': 'Memory URL (Optional)',
+        'modal.edit_activity.memory_url_placeholder': 'https://...',
+        'modal.edit_activity.cancel': 'Cancel',
+        'modal.edit_activity.saving': 'Saving...',
+        'modal.edit_activity.save': 'Save Changes',
     },
     ar: {
         // Navigation
@@ -1015,6 +1027,18 @@ const translations = {
         'modal.log_activity.streak_bonus_applied': 'يوم مكافأة السلسلة مطبقة!',
         'modal.log_activity.base_points_info':
             'النقاط الأساسية • أنشئ سلسلة لضرب مكافآتك',
+
+        // Edit Activity Modal
+        'modal.edit_activity.title': 'تعديل النشاط',
+        'modal.edit_activity.description': 'تحديث تفاصيل نشاطك',
+        'modal.edit_activity.notes': 'ملاحظات (اختياري)',
+        'modal.edit_activity.notes_placeholder':
+            'أضف أي ملاحظات حول هذا النشاط...',
+        'modal.edit_activity.memory_url': 'رابط الذاكرة (اختياري)',
+        'modal.edit_activity.memory_url_placeholder': 'https://...',
+        'modal.edit_activity.cancel': 'إلغاء',
+        'modal.edit_activity.saving': 'جاري الحفظ...',
+        'modal.edit_activity.save': 'حفظ التغييرات',
     },
 };
 

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ActivityCalendarHeatmap from '@/components/ActivityCalendarHeatmap.vue';
+import EditActivityModal from '@/components/EditActivityModal.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -162,6 +163,10 @@ const activitiesContainer = ref<HTMLElement | null>(null);
 // Cache for fetched activities by date
 const activitiesCache = ref<Record<string, RecentActivity[]>>({});
 
+// Edit activity modal state
+const showEditModal = ref(false);
+const selectedActivity = ref<RecentActivity | null>(null);
+
 const handleDayClick = async (date: string) => {
     if (!props.is_own_profile) return; // Only for own profile
 
@@ -262,6 +267,42 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
         class: 'inline-flex items-center gap-2 rounded-full border border-secondary/20 bg-secondary px-3 py-1.5 text-xs font-medium text-secondary-foreground',
         icon: 'award',
     };
+};
+
+// Edit activity function
+const editActivity = (activity: RecentActivity) => {
+    selectedActivity.value = activity;
+    showEditModal.value = true;
+};
+
+// Handle edit modal close
+const handleEditModalClose = () => {
+    showEditModal.value = false;
+    selectedActivity.value = null;
+};
+
+// Handle successful activity edit
+const handleActivityEditSuccess = (updatedActivity: RecentActivity) => {
+    // Update the activity in the current activities list
+    const activityIndex = selectedDateActivities.value.findIndex(
+        (activity) => activity.id === updatedActivity.id,
+    );
+
+    if (activityIndex !== -1) {
+        // Update the activity in the current list
+        selectedDateActivities.value[activityIndex] = updatedActivity;
+
+        // Also update the cache if it exists
+        if (selectedDate.value && activitiesCache.value[selectedDate.value]) {
+            const cacheIndex = activitiesCache.value[
+                selectedDate.value
+            ].findIndex((activity) => activity.id === updatedActivity.id);
+            if (cacheIndex !== -1) {
+                activitiesCache.value[selectedDate.value][cacheIndex] =
+                    updatedActivity;
+            }
+        }
+    }
 };
 </script>
 
@@ -664,6 +705,17 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                                                 activity.custom_name
                                                             }}
                                                         </p>
+                                                        <Badge
+                                                            variant="secondary"
+                                                            class="text-xs sm:text-sm"
+                                                        >
+                                                            +{{
+                                                                activity.points_earned
+                                                            }}
+                                                            {{
+                                                                t('profile.pts')
+                                                            }}
+                                                        </Badge>
                                                         <span
                                                             v-if="
                                                                 activity.is_inactive
@@ -677,13 +729,6 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                                             }}
                                                         </span>
                                                     </div>
-                                                    <!-- <p
-                                                        class="text-sm text-muted-foreground"
-                                                    >
-                                                        {{
-                                                            activity.activity_type_name
-                                                        }}
-                                                    </p> -->
                                                     <p
                                                         v-if="activity.notes"
                                                         class="mt-1 text-xs text-muted-foreground italic sm:text-sm"
@@ -719,13 +764,14 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                                     </Button>
                                                 </div>
                                             </div>
-                                            <Badge
-                                                variant="secondary"
-                                                class="ml-1 flex-shrink-0 text-xs sm:ml-2 sm:text-sm"
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                @click="editActivity(activity)"
+                                                class="h-8 w-8 p-0 hover:bg-muted"
                                             >
-                                                +{{ activity.points_earned }}
-                                                {{ t('profile.pts') }}
-                                            </Badge>
+                                                <Edit class="h-4 w-4" />
+                                            </Button>
                                         </div>
                                     </div>
 
@@ -750,5 +796,13 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                 </div>
             </div>
         </TooltipProvider>
+
+        <!-- Edit Activity Modal -->
+        <EditActivityModal
+            v-model:open="showEditModal"
+            :activity="selectedActivity"
+            @update:open="handleEditModalClose"
+            @activity-updated="handleActivityEditSuccess"
+        />
     </AppLayout>
 </template>
