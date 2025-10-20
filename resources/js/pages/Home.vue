@@ -50,6 +50,7 @@ interface RecentActivity {
     icon: string;
     points: number;
     notes?: string;
+    is_inactive?: boolean;
 }
 
 interface Habit {
@@ -577,7 +578,12 @@ const handleLogActivity = () => openLogActivityModal();
                                         5,
                                     )"
                                     :key="activity.id"
-                                    class="flex items-center justify-between text-xs sm:text-sm"
+                                    :class="[
+                                        'flex items-center justify-between text-xs sm:text-sm',
+                                        activity.is_inactive
+                                            ? 'opacity-75'
+                                            : '',
+                                    ]"
                                 >
                                     <div
                                         class="flex min-w-0 flex-1 items-center gap-2"
@@ -587,11 +593,25 @@ const handleLogActivity = () => openLogActivityModal();
                                             >{{ activity.icon }}</span
                                         >
                                         <div class="min-w-0 flex-1">
-                                            <p
-                                                class="truncate font-medium text-foreground"
+                                            <div
+                                                class="flex items-center gap-2"
                                             >
-                                                {{ activity.habit_name }}
-                                            </p>
+                                                <p
+                                                    class="truncate font-medium text-foreground"
+                                                >
+                                                    {{ activity.habit_name }}
+                                                </p>
+                                                <span
+                                                    v-if="activity.is_inactive"
+                                                    class="inline-flex items-center rounded-full bg-orange-100 px-1.5 py-0.5 text-xs font-medium text-orange-800 dark:bg-orange-900/30 dark:text-orange-300"
+                                                >
+                                                    {{
+                                                        t(
+                                                            'activity.inactive_habit',
+                                                        )
+                                                    }}
+                                                </span>
+                                            </div>
                                             <p
                                                 class="text-xs text-muted-foreground"
                                             >

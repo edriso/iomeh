@@ -11,7 +11,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useTranslations } from '@/composables/useTranslations';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head } from '@inertiajs/vue3';
-import { Award, CalendarCheck, Footprints, Trophy } from 'lucide-vue-next';
+import {
+    Award,
+    CalendarCheck,
+    Crown,
+    Footprints,
+    Trophy,
+} from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 
 interface RankingsEntry {
@@ -103,37 +109,41 @@ const onTabChange = (newTab: string) => {
     <AppLayout :dir="isRTL ? 'rtl' : 'ltr'">
         <Head :title="t('rankings.title')" />
 
-        <div class="container mx-auto px-4 py-8">
+        <div class="container mx-auto px-4 py-4 sm:py-6 lg:py-8">
             <!-- Header -->
-            <div class="mb-8">
+            <div class="mb-6 sm:mb-8">
                 <h1
-                    class="mb-2 flex items-center gap-3 text-3xl font-bold text-foreground"
+                    class="mb-2 flex items-center gap-2 text-2xl font-bold text-foreground sm:gap-3 sm:text-3xl"
                 >
-                    <Trophy class="h-8 w-8 text-primary" />
+                    <Crown class="h-6 w-6 text-primary sm:h-8 sm:w-8" />
                     {{ t('rankings.title') }}
                 </h1>
-                <p class="text-muted-foreground">
+                <p class="text-sm text-muted-foreground sm:text-base">
                     {{ t('rankings.description') }}
                 </p>
             </div>
 
             <!-- User Stats Card -->
             <Card
-                class="mb-6 border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10"
+                class="mb-4 border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10 sm:mb-6"
             >
                 <CardHeader>
-                    <CardTitle>{{ t('rankings.your_rankings') }}</CardTitle>
-                    <CardDescription>
+                    <CardTitle class="text-lg sm:text-xl">{{
+                        t('rankings.your_rankings')
+                    }}</CardTitle>
+                    <CardDescription class="text-sm">
                         {{ t('rankings.your_rankings_description') }}
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div class="grid grid-cols-2 gap-6 sm:grid-cols-4">
+                    <div class="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-6">
                         <div class="text-center">
                             <p class="mb-1 text-xs text-muted-foreground">
                                 {{ t('rankings.today') }}
                             </p>
-                            <p class="text-2xl font-bold text-primary">
+                            <p
+                                class="text-xl font-bold text-primary sm:text-2xl"
+                            >
                                 {{ getCurrentUserRankText('today') }}
                             </p>
                             <p class="text-xs text-muted-foreground">
@@ -144,7 +154,9 @@ const onTabChange = (newTab: string) => {
                             <p class="mb-1 text-xs text-muted-foreground">
                                 {{ t('rankings.yesterday') }}
                             </p>
-                            <p class="text-2xl font-bold text-primary">
+                            <p
+                                class="text-xl font-bold text-primary sm:text-2xl"
+                            >
                                 {{ getCurrentUserRankText('yesterday') }}
                             </p>
                             <p class="text-xs text-muted-foreground">
@@ -159,7 +171,9 @@ const onTabChange = (newTab: string) => {
                                         : current_season
                                 }}
                             </p>
-                            <p class="text-2xl font-bold text-primary">
+                            <p
+                                class="text-xl font-bold text-primary sm:text-2xl"
+                            >
                                 {{ getCurrentUserRankText('season') }}
                             </p>
                             <p class="text-xs text-muted-foreground">
@@ -170,7 +184,9 @@ const onTabChange = (newTab: string) => {
                             <p class="mb-1 text-xs text-muted-foreground">
                                 {{ current_year }}
                             </p>
-                            <p class="text-2xl font-bold text-primary">
+                            <p
+                                class="text-xl font-bold text-primary sm:text-2xl"
+                            >
                                 {{ getCurrentUserRankText('year') }}
                             </p>
                             <p class="text-xs text-muted-foreground">
@@ -183,30 +199,39 @@ const onTabChange = (newTab: string) => {
 
             <!-- Rankings Tabs -->
             <Tabs :default-value="activeTab" @update:model-value="onTabChange">
-                <TabsList class="grid w-full grid-cols-4">
-                    <TabsTrigger value="today" class="flex items-center gap-2">
-                        <Footprints class="h-4 w-4" />
+                <TabsList class="grid w-full grid-cols-4 gap-1 sm:gap-2">
+                    <TabsTrigger
+                        value="today"
+                        class="flex items-center gap-1 text-xs sm:gap-2 sm:text-sm"
+                    >
+                        <Footprints class="h-3 w-3 sm:h-4 sm:w-4" />
                         <span class="hidden sm:inline">{{
                             t('rankings.today')
                         }}</span>
                     </TabsTrigger>
                     <TabsTrigger
                         value="yesterday"
-                        class="flex items-center gap-2"
+                        class="flex items-center gap-1 text-xs sm:gap-2 sm:text-sm"
                     >
-                        <CalendarCheck class="h-4 w-4" />
+                        <CalendarCheck class="h-3 w-3 sm:h-4 sm:w-4" />
                         <span class="hidden sm:inline">{{
                             t('rankings.yesterday')
                         }}</span>
                     </TabsTrigger>
-                    <TabsTrigger value="season" class="flex items-center gap-2">
-                        <Award class="h-4 w-4" />
+                    <TabsTrigger
+                        value="season"
+                        class="flex items-center gap-1 text-xs sm:gap-2 sm:text-sm"
+                    >
+                        <Award class="h-3 w-3 sm:h-4 sm:w-4" />
                         <span class="hidden sm:inline">{{
                             t('rankings.season')
                         }}</span>
                     </TabsTrigger>
-                    <TabsTrigger value="year" class="flex items-center gap-2">
-                        <Trophy class="h-4 w-4" />
+                    <TabsTrigger
+                        value="year"
+                        class="flex items-center gap-1 text-xs sm:gap-2 sm:text-sm"
+                    >
+                        <Trophy class="h-3 w-3 sm:h-4 sm:w-4" />
                         <span class="hidden sm:inline">{{
                             t('rankings.year')
                         }}</span>
@@ -217,10 +242,10 @@ const onTabChange = (newTab: string) => {
                 <TabsContent value="today">
                     <Card>
                         <CardHeader>
-                            <CardTitle>{{
+                            <CardTitle class="text-lg sm:text-xl">{{
                                 t('rankings.todays_leaders')
                             }}</CardTitle>
-                            <CardDescription>
+                            <CardDescription class="text-sm">
                                 {{ t('rankings.todays_leaders_description') }}
                                 {{
                                     isRTL
@@ -251,10 +276,10 @@ const onTabChange = (newTab: string) => {
                 <TabsContent value="yesterday">
                     <Card>
                         <CardHeader>
-                            <CardTitle>{{
+                            <CardTitle class="text-lg sm:text-xl">{{
                                 t('rankings.yesterdays_champions')
                             }}</CardTitle>
-                            <CardDescription>
+                            <CardDescription class="text-sm">
                                 {{
                                     t(
                                         'rankings.yesterdays_champions_description',
@@ -293,8 +318,10 @@ const onTabChange = (newTab: string) => {
                 <TabsContent value="season">
                     <Card>
                         <CardHeader>
-                            <CardTitle>{{ seasonRankingsTitle }}</CardTitle>
-                            <CardDescription>
+                            <CardTitle class="text-lg sm:text-xl">{{
+                                seasonRankingsTitle
+                            }}</CardTitle>
+                            <CardDescription class="text-sm">
                                 {{ t('rankings.season_description') }}
                             </CardDescription>
                         </CardHeader>
@@ -315,8 +342,10 @@ const onTabChange = (newTab: string) => {
                 <TabsContent value="year">
                     <Card>
                         <CardHeader>
-                            <CardTitle>{{ annualRankingsTitle }}</CardTitle>
-                            <CardDescription>
+                            <CardTitle class="text-lg sm:text-xl">{{
+                                annualRankingsTitle
+                            }}</CardTitle>
+                            <CardDescription class="text-sm">
                                 {{ t('rankings.year_description') }}
                             </CardDescription>
                         </CardHeader>

@@ -430,6 +430,8 @@ return [
     'activity.loading' => 'جاري تحميل الأنشطة...',
     'activity.view_memory' => 'عرض الذاكرة',
     'activity.no_activities' => 'لم يتم العثور على أنشطة لهذا التاريخ.',
+    'activity.deleted_habit' => 'عادة محذوفة',
+    'activity.inactive_habit' => 'عادة غير نشطة',
     
     // Days pluralization
     'days.single' => 'يوم',

@@ -147,24 +147,49 @@ class ActivityController extends Controller
             'date' => ['nullable', 'date'],
         ]);
 
-        // Use the date from the route parameter
-        $activities = Activity::where('user_id', Auth::id())
-            ->whereDate('date', $date)
-            ->with(['habit.activityType'])
-            ->orderBy('created_at', 'desc')
+        // Get activities for the date - include both active and inactive habits
+        $activities = Activity::where('activities.user_id', Auth::id())
+            ->whereDate('activities.date', $date)
+            ->join('habits', 'activities.habit_id', '=', 'habits.id')
+            ->join('activity_types', 'habits.activity_type_id', '=', 'activity_types.id')
+            ->select([
+                'activities.id',
+                'activities.habit_id',
+                'activities.date',
+                'activities.points_earned',
+                'activities.notes',
+                'activities.memory_url',
+                'habits.custom_name',
+                'habits.is_active',
+                'activity_types.name as activity_type_name',
+                'activity_types.icon as activity_type_icon',
+            ])
+            ->orderBy('activities.created_at', 'desc')
             ->get();
 
         // Format activities for response
         $formattedActivities = $activities->map(function ($activity) {
+            // Parse activity type name
+            $activityTypeName = null;
+            if ($activity->activity_type_name) {
+                $nameData = is_string($activity->activity_type_name) 
+                    ? json_decode($activity->activity_type_name, true) 
+                    : $activity->activity_type_name;
+                $activityTypeName = $nameData[app()->getLocale()] ?? $nameData['en'] ?? 'Unknown Activity';
+            }
+
+            $isInactive = !$activity->is_active;
+
             return [
                 'id' => $activity->id,
-                'activity_type_name' => $activity->habit->activityType->translated_name,
-                'activity_type_icon' => $activity->habit->activityType->icon,
-                'custom_name' => $activity->habit->custom_name ?: $activity->habit->activityType->translated_name,
+                'activity_type_name' => $activityTypeName,
+                'activity_type_icon' => $activity->activity_type_icon,
+                'custom_name' => $activity->custom_name,
                 'date' => $activity->date->format('Y-m-d'),
                 'points_earned' => $activity->points_earned,
                 'notes' => $activity->notes,
                 'memory_url' => $activity->memory_url,
+                'is_inactive' => $isInactive,
             ];
         });
 

@@ -96,6 +96,22 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Get only active habits for the user.
+     */
+    public function activeHabits()
+    {
+        return $this->hasMany(Habit::class)->active()->orderBy('display_order');
+    }
+
+    /**
+     * Get only inactive habits for the user.
+     */
+    public function inactiveHabits()
+    {
+        return $this->hasMany(Habit::class)->inactive()->orderBy('display_order');
+    }
+
+    /**
      * Get all seasons for the user.
      */
     public function seasons()

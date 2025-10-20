@@ -91,19 +91,19 @@ const getUserInitials = (name: string) => {
 
 <template>
     <div
-        class="flex items-center justify-between gap-4 rounded-lg border p-4 transition-all duration-200"
+        class="flex items-center justify-between gap-2 rounded-lg border p-3 transition-all duration-200 sm:gap-4 sm:p-4"
         :class="[
             getRankBg(entry.rank),
             isCurrentUser() ? 'ring-2 ring-primary/50' : '',
         ]"
     >
-        <div class="flex max-w-full min-w-0 items-center gap-4">
+        <div class="flex max-w-full min-w-0 items-center gap-2 sm:gap-4">
             <!-- Rank Number -->
             <div
-                class="flex h-10 w-10 flex-shrink-0 items-center justify-center"
+                class="flex h-8 w-8 flex-shrink-0 items-center justify-center sm:h-10 sm:w-10"
             >
                 <span
-                    class="text-lg font-bold"
+                    class="text-sm font-bold sm:text-lg"
                     :class="getRankColor(entry.rank)"
                 >
                     #{{ entry.rank }}
@@ -113,33 +113,38 @@ const getUserInitials = (name: string) => {
             <!-- User Info -->
             <Link
                 :href="`/profile/${entry.user.username}`"
-                class="flex max-w-full min-w-0 cursor-pointer items-center gap-3 transition-opacity hover:opacity-80"
+                class="flex max-w-full min-w-0 cursor-pointer items-center gap-2 transition-opacity hover:opacity-80 sm:gap-3"
             >
                 <!-- Avatar -->
                 <div
-                    class="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary/10"
+                    class="flex h-8 w-8 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary/10 sm:h-10 sm:w-10"
                 >
                     <img
                         v-if="entry.user.avatar"
                         :src="entry.user.avatar"
                         :alt="entry.user.name"
-                        class="h-10 w-10 rounded-full object-cover"
+                        class="h-8 w-8 rounded-full object-cover sm:h-10 sm:w-10"
                     />
-                    <span v-else class="text-sm font-medium text-primary">
+                    <span
+                        v-else
+                        class="text-xs font-medium text-primary sm:text-sm"
+                    >
                         {{ getUserInitials(entry.user.name) }}
                     </span>
                 </div>
 
                 <!-- Name and Badges -->
                 <div class="min-w-0 overflow-hidden">
-                    <div class="flex items-center gap-2">
-                        <h4 class="truncate font-medium text-foreground">
+                    <div class="flex items-center gap-1 sm:gap-2">
+                        <h4
+                            class="truncate text-sm font-medium text-foreground sm:text-base"
+                        >
                             {{ entry.user.name }}
                         </h4>
                         <component
                             v-if="getRankIcon(entry.rank)"
                             :is="getRankIcon(entry.rank)"
-                            class="h-5 w-5 flex-shrink-0"
+                            class="h-4 w-4 flex-shrink-0 sm:h-5 sm:w-5"
                             :class="getRankColor(entry.rank)"
                         />
                         <Badge
@@ -150,7 +155,9 @@ const getUserInitials = (name: string) => {
                             {{ t('rankings.you') }}
                         </Badge>
                     </div>
-                    <p class="truncate text-sm text-muted-foreground">
+                    <p
+                        class="truncate text-xs text-muted-foreground sm:text-sm"
+                    >
                         @{{ entry.user.username }}
                     </p>
                 </div>
@@ -158,11 +165,11 @@ const getUserInitials = (name: string) => {
         </div>
 
         <!-- Points and Stats -->
-        <div class="flex flex-shrink-0 items-center gap-4 text-right">
+        <div class="flex flex-shrink-0 items-center gap-2 text-right sm:gap-4">
             <div>
-                <div class="flex items-center justify-end gap-2">
-                    <Trophy class="h-4 w-4 text-primary" />
-                    <p class="text-lg font-bold text-foreground">
+                <div class="flex items-center justify-end gap-1 sm:gap-2">
+                    <Trophy class="h-3 w-3 text-primary sm:h-4 sm:w-4" />
+                    <p class="text-sm font-bold text-foreground sm:text-lg">
                         {{ formatNumber(entry.points) }}
                     </p>
                 </div>
@@ -170,7 +177,7 @@ const getUserInitials = (name: string) => {
                     v-if="entry.activities_count"
                     class="text-xs text-muted-foreground"
                 >
-                    <Activity class="inline h-3 w-3" />
+                    <Activity class="inline h-2.5 w-2.5 sm:h-3 sm:w-3" />
                     {{ entry.activities_count }}
                     {{
                         entry.activities_count === 1

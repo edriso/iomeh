@@ -430,6 +430,8 @@ return [
     'activity.loading' => 'Loading activities...',
     'activity.view_memory' => 'View memory',
     'activity.no_activities' => 'No activities found for this date.',
+    'activity.deleted_habit' => 'Deleted Habit',
+    'activity.inactive_habit' => 'Inactive Habit',
     
     // Days pluralization
     'days.single' => 'day',

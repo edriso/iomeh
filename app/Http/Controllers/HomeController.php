@@ -75,12 +75,11 @@ class HomeController extends Controller
         // Get today's date for activity checking
         $today = now()->toDateString();
         
-        // Get user's habits with activity types and today's activities
-        $habits = $user->habits()
+        // Get user's active habits with activity types and today's activities
+        $habits = $user->activeHabits()
             ->with(['activityType', 'activities' => function ($query) use ($today) {
                 $query->whereDate('date', $today);
             }])
-            ->orderBy('display_order')
             ->get()
             ->map(function ($habit) {
                 return [
@@ -119,22 +118,36 @@ class HomeController extends Controller
             ->orderBy('season_year_points', 'desc')
             ->first();
 
-        // Get recent activities (last 7 days)
-        $recentActivities = Activity::where('user_id', $user->id)
-            ->with(['habit.activityType'])
-            ->whereDate('date', '>=', now()->subDays(7))
-            ->orderBy('date', 'desc')
-            ->orderBy('created_at', 'desc')
+        // Get recent activities (last 7 days) - include both active and inactive habits
+        $recentActivities = Activity::where('activities.user_id', $user->id)
+            ->join('habits', 'activities.habit_id', '=', 'habits.id')
+            ->join('activity_types', 'habits.activity_type_id', '=', 'activity_types.id')
+            ->select([
+                'activities.id',
+                'activities.habit_id',
+                'activities.date',
+                'activities.points_earned',
+                'activities.notes',
+                'habits.custom_name',
+                'habits.is_active',
+                'activity_types.icon as activity_type_icon',
+            ])
+            ->whereDate('activities.date', '>=', now()->subDays(7))
+            ->orderBy('activities.date', 'desc')
+            ->orderBy('activities.created_at', 'desc')
             ->limit(20)
             ->get()
             ->map(function ($activity) {
+                $isInactive = !$activity->is_active;
+                
                 return [
                     'id' => $activity->id,
                     'date' => $activity->date->format('M j'),
-                    'habit_name' => $activity->habit->custom_name,
-                    'icon' => $activity->habit->activityType->icon,
+                    'habit_name' => $activity->custom_name,
+                    'icon' => $activity->activity_type_icon,
                     'points' => $activity->points_earned,
                     'notes' => $activity->notes,
+                    'is_inactive' => $isInactive,
                 ];
             });
 
@@ -181,21 +194,36 @@ class HomeController extends Controller
         $user = $request->user();
         $days = $request->get('days', 7);
 
-        $activities = Activity::where('user_id', $user->id)
-            ->with(['habit.activityType'])
-            ->whereDate('date', '>=', now()->subDays($days))
-            ->orderBy('date', 'desc')
-            ->orderBy('created_at', 'desc')
+        $activities = Activity::where('activities.user_id', $user->id)
+            ->join('habits', 'activities.habit_id', '=', 'habits.id')
+            ->join('activity_types', 'habits.activity_type_id', '=', 'activity_types.id')
+            ->select([
+                'activities.id',
+                'activities.habit_id',
+                'activities.date',
+                'activities.points_earned',
+                'activities.notes',
+                'activities.memory_url',
+                'habits.custom_name',
+                'habits.is_active',
+                'activity_types.icon as activity_type_icon',
+            ])
+            ->whereDate('activities.date', '>=', now()->subDays($days))
+            ->orderBy('activities.date', 'desc')
+            ->orderBy('activities.created_at', 'desc')
             ->get()
             ->map(function ($activity) {
+                $isInactive = !$activity->is_active;
+                
                 return [
                     'id' => $activity->id,
                     'date' => $activity->date->format('M j, Y'),
-                    'habit_name' => $activity->habit->custom_name,
-                    'icon' => $activity->habit->activityType->icon,
+                    'habit_name' => $activity->custom_name,
+                    'icon' => $activity->activity_type_icon,
                     'points' => $activity->points_earned,
                     'notes' => $activity->notes,
                     'memory_url' => $activity->memory_url,
+                    'is_inactive' => $isInactive,
                 ];
             });
 

@@ -16,12 +16,14 @@ class Habit extends Model
         'custom_icon',
         'notes',
         'display_order',
+        'is_active',
     ];
 
     protected function casts(): array
     {
         return [
             'display_order' => 'integer',
+            'is_active' => 'boolean',
         ];
     }
 
@@ -98,6 +100,38 @@ class Habit extends Model
         }
 
         return $this->activityType?->icon ?? '🏃‍♂️';
+    }
+
+    /**
+     * Scope to get only active habits.
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    /**
+     * Scope to get only inactive habits.
+     */
+    public function scopeInactive($query)
+    {
+        return $query->where('is_active', false);
+    }
+
+    /**
+     * Soft delete a habit by setting is_active to false.
+     */
+    public function softDelete()
+    {
+        $this->update(['is_active' => false]);
+    }
+
+    /**
+     * Restore a habit by setting is_active to true.
+     */
+    public function restore()
+    {
+        $this->update(['is_active' => true]);
     }
 }
 

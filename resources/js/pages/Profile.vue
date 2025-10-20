@@ -56,6 +56,7 @@ interface RecentActivity {
     points_earned: number;
     notes?: string;
     memory_url?: string;
+    is_inactive?: boolean;
 }
 
 interface CalendarDay {
@@ -298,9 +299,9 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                     </Card>
                 </div>
 
-                <div v-else class="space-y-8">
+                <div v-else class="space-y-4 sm:space-y-6 lg:space-y-8">
                     <!-- Profile Header -->
-                    <div class="mb-8">
+                    <div class="mb-4 sm:mb-6 lg:mb-8">
                         <!-- Hero Section with Gradient Background -->
                         <Card
                             class="overflow-hidden border-primary/20 bg-gradient-to-br from-primary/5 via-background to-secondary/5"
@@ -333,25 +334,25 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                         </Button>
                                     </div>
 
-                                    <div class="relative p-8">
+                                    <div class="relative p-4 sm:p-6 lg:p-8">
                                         <div
-                                            class="flex flex-col gap-8 lg:flex-row lg:items-center"
+                                            class="flex flex-col gap-4 sm:gap-6 lg:flex-row lg:items-center lg:gap-8"
                                         >
                                             <!-- Profile Picture -->
                                             <div class="flex-shrink-0">
                                                 <div class="relative">
                                                     <div
-                                                        class="flex h-28 w-28 items-center justify-center rounded-full border-2 border-primary/20 bg-background shadow-md transition-transform duration-200 hover:scale-105"
+                                                        class="flex h-20 w-20 items-center justify-center rounded-full border-2 border-primary/20 bg-background shadow-md transition-transform duration-200 hover:scale-105 sm:h-24 sm:w-24 lg:h-28 lg:w-28"
                                                     >
                                                         <img
                                                             v-if="user.avatar"
                                                             :src="user.avatar"
                                                             :alt="user.name"
-                                                            class="h-28 w-28 rounded-full object-cover"
+                                                            class="h-20 w-20 rounded-full object-cover sm:h-24 sm:w-24 lg:h-28 lg:w-28"
                                                         />
                                                         <span
                                                             v-else
-                                                            class="text-3xl font-medium text-primary"
+                                                            class="text-xl font-medium text-primary sm:text-2xl lg:text-3xl"
                                                         >
                                                             {{
                                                                 user.name
@@ -368,16 +369,18 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
 
                                             <!-- Profile Info -->
                                             <div
-                                                class="flex-1 space-y-6 overflow-hidden"
+                                                class="flex-1 space-y-4 overflow-hidden sm:space-y-6"
                                             >
                                                 <!-- Name and Details -->
-                                                <div class="space-y-3">
+                                                <div
+                                                    class="space-y-2 sm:space-y-3"
+                                                >
                                                     <div class="space-y-2">
                                                         <div
-                                                            class="flex max-w-full min-w-0 items-center gap-4"
+                                                            class="flex max-w-full min-w-0 items-center gap-2 sm:gap-4"
                                                         >
                                                             <h1
-                                                                class="truncate text-4xl tracking-tight text-foreground"
+                                                                class="truncate text-2xl tracking-tight text-foreground sm:text-3xl lg:text-4xl"
                                                             >
                                                                 {{ user.name }}
                                                             </h1>
@@ -388,13 +391,13 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                                                     as-child
                                                                 >
                                                                     <div
-                                                                        class="flex items-center gap-2 rounded-full border border-secondary/30 bg-secondary px-3 py-1.5 text-secondary-foreground transition-colors hover:bg-secondary/80"
+                                                                        class="flex items-center gap-1.5 rounded-full border border-secondary/30 bg-secondary px-2 py-1 text-secondary-foreground transition-colors hover:bg-secondary/80 sm:gap-2 sm:px-3 sm:py-1.5"
                                                                     >
                                                                         <Flame
-                                                                            class="h-4 w-4"
+                                                                            class="h-3 w-3 sm:h-4 sm:w-4"
                                                                         />
                                                                         <span
-                                                                            class="text-sm font-medium"
+                                                                            class="text-xs font-medium sm:text-sm"
                                                                         >
                                                                             {{
                                                                                 user.longest_streak ||
@@ -465,7 +468,7 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
 
                                                     <p
                                                         v-if="user.bio"
-                                                        class="max-w-2xl leading-relaxed text-foreground/80"
+                                                        class="max-w-2xl text-sm leading-relaxed text-foreground/80 sm:text-base"
                                                     >
                                                         {{ user.bio }}
                                                     </p>
@@ -487,13 +490,13 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                                                 user.website_url
                                                             "
                                                             target="_blank"
-                                                            class="flex items-center gap-2 text-sm"
+                                                            class="flex items-center gap-1.5 text-xs sm:gap-2 sm:text-sm"
                                                         >
                                                             <LinkIcon
-                                                                class="h-4 w-4"
+                                                                class="h-3 w-3 sm:h-4 sm:w-4"
                                                             />
                                                             <span
-                                                                class="max-w-[250px] truncate"
+                                                                class="max-w-[200px] truncate sm:max-w-[250px]"
                                                                 >{{
                                                                     user.website_url
                                                                 }}</span
@@ -510,7 +513,7 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                     </div>
 
                     <!-- Main Content -->
-                    <div class="space-y-8">
+                    <div class="space-y-4 sm:space-y-6 lg:space-y-8">
                         <!-- Ranking Badges Section -->
                         <Card
                             v-if="
@@ -519,10 +522,10 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                             "
                         >
                             <CardHeader>
-                                <CardTitle>{{
+                                <CardTitle class="text-lg sm:text-xl">{{
                                     t('profile.ranking_badges')
                                 }}</CardTitle>
-                                <CardDescription>
+                                <CardDescription class="text-sm">
                                     {{
                                         is_own_profile
                                             ? t('profile.your_achievements')
@@ -531,9 +534,9 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <div class="space-y-4">
+                                <div class="space-y-3 sm:space-y-4">
                                     <div
-                                        class="flex cursor-default flex-wrap gap-2"
+                                        class="flex cursor-default flex-wrap gap-1.5 sm:gap-2"
                                     >
                                         <template
                                             v-for="history in ranking_histories.slice(
@@ -544,21 +547,25 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                         >
                                             <div
                                                 :title="`${history.display_name} - ${formatNumber(history.points)} points`"
-                                                :class="
+                                                :class="[
                                                     getRankingBadgeStyle(
                                                         history,
-                                                    ).class
-                                                "
+                                                    ).class,
+                                                    'text-xs sm:text-sm',
+                                                ]"
                                             >
                                                 <Trophy
                                                     v-if="
                                                         history.season === null
                                                     "
-                                                    class="h-3 w-3"
+                                                    class="h-2.5 w-2.5 sm:h-3 sm:w-3"
                                                 />
-                                                <Award v-else class="h-3 w-3" />
+                                                <Award
+                                                    v-else
+                                                    class="h-2.5 w-2.5 sm:h-3 sm:w-3"
+                                                />
                                                 <span
-                                                    class="max-w-[200px] truncate"
+                                                    class="max-w-[150px] truncate sm:max-w-[200px]"
                                                 >
                                                     {{ history.display_name }}
                                                 </span>
@@ -572,10 +579,13 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                         <!-- Activity Streak -->
                         <Card>
                             <CardHeader>
-                                <CardTitle>{{
+                                <CardTitle class="text-lg sm:text-xl">{{
                                     t('profile.activity_streak')
                                 }}</CardTitle>
-                                <CardDescription v-if="is_own_profile">
+                                <CardDescription
+                                    class="text-sm"
+                                    v-if="is_own_profile"
+                                >
                                     {{ t('profile.health_journey') }}
                                 </CardDescription>
                             </CardHeader>
@@ -593,13 +603,13 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                 <div
                                     v-if="is_own_profile && selectedDate"
                                     ref="activitiesContainer"
-                                    class="mt-6 space-y-4"
+                                    class="mt-4 space-y-3 sm:mt-6 sm:space-y-4"
                                 >
                                     <div
-                                        class="flex items-center justify-between border-t border-border pt-4"
+                                        class="flex items-center justify-between border-t border-border pt-3 sm:pt-4"
                                     >
                                         <h4
-                                            class="text-lg font-semibold text-foreground"
+                                            class="text-base font-semibold text-foreground sm:text-lg"
                                         >
                                             {{ formatDate(selectedDate) }}
                                         </h4>
@@ -608,10 +618,10 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                     <!-- Loading State -->
                                     <div
                                         v-if="loadingActivities"
-                                        class="flex items-center justify-center py-8"
+                                        class="flex items-center justify-center py-6 sm:py-8"
                                     >
                                         <div
-                                            class="text-sm text-muted-foreground"
+                                            class="text-xs text-muted-foreground sm:text-sm"
                                         >
                                             {{ t('activity.loading') }}
                                         </div>
@@ -622,27 +632,51 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                         v-else-if="
                                             selectedDateActivities.length > 0
                                         "
-                                        class="space-y-3"
+                                        class="space-y-2 sm:space-y-3"
                                     >
                                         <div
                                             v-for="activity in selectedDateActivities"
                                             :key="activity.id"
-                                            class="flex items-center justify-between rounded-lg border border-border/50 bg-card/50 p-4 transition-colors hover:bg-card"
+                                            :class="[
+                                                'flex items-center justify-between rounded-lg border p-3 transition-colors sm:p-4',
+                                                activity.is_inactive
+                                                    ? 'border-orange-200 bg-orange-50/50 hover:bg-orange-100/50 dark:border-orange-800 dark:bg-orange-950/20 dark:hover:bg-orange-900/30'
+                                                    : 'border-border/50 bg-card/50 hover:bg-card',
+                                            ]"
                                         >
                                             <div
-                                                class="flex items-center gap-3"
+                                                class="flex items-center gap-2 sm:gap-3"
                                             >
-                                                <span class="text-2xl">{{
-                                                    activity.activity_type_icon
-                                                }}</span>
-                                                <div class="flex-1">
-                                                    <p
-                                                        class="font-medium text-foreground"
+                                                <span
+                                                    class="text-lg sm:text-2xl"
+                                                    >{{
+                                                        activity.activity_type_icon
+                                                    }}</span
+                                                >
+                                                <div class="min-w-0 flex-1">
+                                                    <div
+                                                        class="flex items-center gap-2"
                                                     >
-                                                        {{
-                                                            activity.custom_name
-                                                        }}
-                                                    </p>
+                                                        <p
+                                                            class="truncate text-sm font-medium text-foreground sm:text-base"
+                                                        >
+                                                            {{
+                                                                activity.custom_name
+                                                            }}
+                                                        </p>
+                                                        <span
+                                                            v-if="
+                                                                activity.is_inactive
+                                                            "
+                                                            class="inline-flex items-center rounded-full bg-orange-100 px-2 py-0.5 text-xs font-medium text-orange-800 dark:bg-orange-900/30 dark:text-orange-300"
+                                                        >
+                                                            {{
+                                                                t(
+                                                                    'activity.inactive_habit',
+                                                                )
+                                                            }}
+                                                        </span>
+                                                    </div>
                                                     <!-- <p
                                                         class="text-sm text-muted-foreground"
                                                     >
@@ -652,7 +686,7 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                                     </p> -->
                                                     <p
                                                         v-if="activity.notes"
-                                                        class="mt-1 text-xs text-muted-foreground italic"
+                                                        class="mt-1 text-xs text-muted-foreground italic sm:text-sm"
                                                     >
                                                         "{{ activity.notes }}"
                                                     </p>
@@ -663,7 +697,7 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                                         variant="outline"
                                                         size="sm"
                                                         as-child
-                                                        class="mt-2 h-7 border-border/50 bg-white/50 backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-primary hover:text-primary-foreground dark:bg-black/20 dark:hover:bg-primary dark:hover:text-primary-foreground"
+                                                        class="mt-1.5 h-6 border-border/50 bg-white/50 backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-primary hover:text-primary-foreground sm:mt-2 sm:h-7 dark:bg-black/20 dark:hover:bg-primary dark:hover:text-primary-foreground"
                                                     >
                                                         <a
                                                             :href="
@@ -671,10 +705,10 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                                             "
                                                             target="_blank"
                                                             rel="noopener noreferrer"
-                                                            class="flex items-center gap-1.5 text-xs"
+                                                            class="flex items-center gap-1 text-xs sm:gap-1.5"
                                                         >
                                                             <LinkIcon
-                                                                class="h-3 w-3"
+                                                                class="h-2.5 w-2.5 sm:h-3 sm:w-3"
                                                             />
                                                             {{
                                                                 t(
@@ -687,7 +721,7 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                             </div>
                                             <Badge
                                                 variant="secondary"
-                                                class="ml-2 flex-shrink-0"
+                                                class="ml-1 flex-shrink-0 text-xs sm:ml-2 sm:text-sm"
                                             >
                                                 +{{ activity.points_earned }}
                                                 {{ t('profile.pts') }}
@@ -698,13 +732,13 @@ const getRankingBadgeStyle = (history: RankingHistory) => {
                                     <!-- Empty State -->
                                     <div
                                         v-else
-                                        class="flex flex-col items-center justify-center rounded-lg border border-dashed border-border py-8 text-center"
+                                        class="flex flex-col items-center justify-center rounded-lg border border-dashed border-border py-6 text-center sm:py-8"
                                     >
                                         <Activity
-                                            class="mb-2 h-8 w-8 text-muted-foreground opacity-50"
+                                            class="mb-2 h-6 w-6 text-muted-foreground opacity-50 sm:h-8 sm:w-8"
                                         />
                                         <p
-                                            class="text-sm text-muted-foreground"
+                                            class="text-xs text-muted-foreground sm:text-sm"
                                         >
                                             {{ t('activity.no_activities') }}
                                         </p>

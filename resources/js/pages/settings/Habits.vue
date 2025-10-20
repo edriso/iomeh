@@ -251,7 +251,7 @@ function getCategoryColor(category: string): string {
         <Head :title="t('habits.title')" />
 
         <SettingsLayout>
-            <div class="space-y-6">
+            <div class="space-y-4 sm:space-y-6">
                 <HeadingSmall
                     :title="t('habits.title')"
                     :description="t('habits.description')"
@@ -259,18 +259,19 @@ function getCategoryColor(category: string): string {
 
                 <!-- Habit Counter -->
                 <div
-                    class="flex items-center justify-between rounded-lg border bg-muted/50 p-4"
+                    class="flex flex-col gap-3 rounded-lg border bg-muted/50 p-3 sm:flex-row sm:items-center sm:justify-between sm:gap-0 sm:p-4"
                 >
                     <div class="flex items-center gap-2">
                         <div
-                            class="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10"
+                            class="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 sm:h-8 sm:w-8"
                         >
-                            <span class="text-sm font-medium text-primary">{{
-                                localHabits.length
-                            }}</span>
+                            <span
+                                class="text-xs font-medium text-primary sm:text-sm"
+                                >{{ localHabits.length }}</span
+                            >
                         </div>
                         <div>
-                            <p class="text-sm font-medium">
+                            <p class="text-xs font-medium sm:text-sm">
                                 {{ t('habits.current_habits') }}
                             </p>
                             <p class="text-xs text-muted-foreground">
@@ -278,13 +279,17 @@ function getCategoryColor(category: string): string {
                             </p>
                         </div>
                     </div>
-                    <div class="text-right">
-                        <div class="text-sm font-medium text-muted-foreground">
+                    <div class="text-left sm:text-right">
+                        <div
+                            class="text-xs font-medium text-muted-foreground sm:text-sm"
+                        >
                             {{ localHabits.length }}/15
                         </div>
-                        <div class="h-2 w-20 rounded-full bg-muted">
+                        <div
+                            class="h-1.5 w-16 rounded-full bg-muted sm:h-2 sm:w-20"
+                        >
                             <div
-                                class="h-2 rounded-full bg-primary transition-all duration-300"
+                                class="h-1.5 rounded-full bg-primary transition-all duration-300 sm:h-2"
                                 :style="{
                                     width: `${(localHabits.length / 15) * 100}%`,
                                 }"
@@ -294,16 +299,22 @@ function getCategoryColor(category: string): string {
                 </div>
 
                 <Alert>
-                    <Info class="h-4 w-4" />
-                    <AlertDescription>
+                    <Info class="h-3 w-3 sm:h-4 sm:w-4" />
+                    <AlertDescription class="text-xs sm:text-sm">
                         {{ t('habits.add_activities_description') }}
                     </AlertDescription>
                 </Alert>
 
-                <div class="space-y-4">
+                <div class="space-y-3 sm:space-y-4">
                     <!-- Current Habits -->
-                    <div v-if="localHabits.length > 0" class="space-y-3">
-                        <div ref="habitsContainer" class="space-y-3">
+                    <div
+                        v-if="localHabits.length > 0"
+                        class="space-y-2 sm:space-y-3"
+                    >
+                        <div
+                            ref="habitsContainer"
+                            class="space-y-2 sm:space-y-3"
+                        >
                             <SortableHabitItem
                                 v-for="(habit, index) in localHabits"
                                 :key="habit.id"
@@ -322,9 +333,11 @@ function getCategoryColor(category: string): string {
 
                     <div
                         v-else
-                        class="rounded-lg border-2 border-dashed py-12 text-center"
+                        class="rounded-lg border-2 border-dashed py-8 text-center sm:py-12"
                     >
-                        <p class="mb-4 text-muted-foreground">
+                        <p
+                            class="mb-3 text-sm text-muted-foreground sm:mb-4 sm:text-base"
+                        >
                             {{ t('habits.no_habits_added') }}
                         </p>
                     </div>
@@ -341,46 +354,60 @@ function getCategoryColor(category: string): string {
                             localHabits.length >= 15
                         "
                     >
-                        <Plus class="mr-2 h-4 w-4" />
-                        {{ t('habits.add_activity') }}
+                        <Plus class="mr-1.5 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
+                        <span class="text-sm sm:text-base">{{
+                            t('habits.add_activity')
+                        }}</span>
                     </Button>
 
                     <p
                         v-if="availableTypes.length === 0"
-                        class="text-center text-sm text-muted-foreground"
+                        class="text-center text-xs text-muted-foreground sm:text-sm"
                     >
                         {{ t('habits.youve_added_all') }}
                     </p>
 
                     <p
                         v-else-if="localHabits.length >= 15"
-                        class="text-center text-sm text-muted-foreground"
+                        class="text-center text-xs text-muted-foreground sm:text-sm"
                     >
                         {{ t('habits.maximum_reached') }}
                     </p>
 
                     <!-- Action Buttons -->
-                    <div class="flex items-center gap-3 pt-4">
-                        <Button
-                            @click="handleSubmit"
-                            :disabled="localHabits.length === 0"
-                        >
-                            <Save class="mr-2 h-4 w-4" />
-                            {{ t('common.save') }}
-                        </Button>
-                        <Button
-                            variant="outline"
-                            @click="
-                                localHabits = JSON.parse(
-                                    JSON.stringify(props.habits),
-                                )
-                            "
-                        >
-                            {{ t('habits.reset') }}
-                        </Button>
+                    <div
+                        class="flex flex-col gap-3 pt-3 sm:flex-row sm:items-center sm:gap-3 sm:pt-4"
+                    >
+                        <div class="flex flex-col gap-2 sm:flex-row sm:gap-3">
+                            <Button
+                                @click="handleSubmit"
+                                :disabled="localHabits.length === 0"
+                                class="w-full sm:w-auto"
+                            >
+                                <Save
+                                    class="mr-1.5 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4"
+                                />
+                                <span class="text-sm sm:text-base">{{
+                                    t('common.save')
+                                }}</span>
+                            </Button>
+                            <Button
+                                variant="outline"
+                                class="w-full sm:w-auto"
+                                @click="
+                                    localHabits = JSON.parse(
+                                        JSON.stringify(props.habits),
+                                    )
+                                "
+                            >
+                                <span class="text-sm sm:text-base">{{
+                                    t('habits.reset')
+                                }}</span>
+                            </Button>
+                        </div>
                         <span
                             v-if="recentlySuccessful"
-                            class="text-sm text-muted-foreground"
+                            class="text-xs text-muted-foreground sm:text-sm"
                         >
                             {{ t('habits.saved_successfully') }}
                         </span>
@@ -392,24 +419,24 @@ function getCategoryColor(category: string): string {
         <!-- Add Activity Dialog -->
         <Dialog v-model:open="showAddDialog">
             <DialogContent
-                class="max-h-[80vh] w-[calc(100%-2rem)] max-w-sm sm:mx-0 sm:max-w-2xl lg:max-w-3xl"
+                class="max-h-[85vh] w-[calc(100%-1rem)] max-w-sm sm:mx-0 sm:max-w-2xl lg:max-w-3xl"
             >
                 <DialogHeader class="space-y-2 sm:space-y-3">
-                    <DialogTitle class="text-base sm:text-lg lg:text-xl">{{
+                    <DialogTitle class="text-lg sm:text-xl lg:text-2xl">{{
                         t('habits.add_new_activity')
                     }}</DialogTitle>
-                    <DialogDescription class="text-xs sm:text-sm">
+                    <DialogDescription class="text-sm sm:text-base">
                         {{ t('habits.select_activity_type') }}
                     </DialogDescription>
                 </DialogHeader>
 
-                <div class="space-y-3 sm:space-y-4">
+                <div class="space-y-2 sm:space-y-3 lg:space-y-4">
                     <!-- Category Filter -->
-                    <div class="flex flex-wrap gap-1.5 sm:gap-2">
+                    <div class="flex flex-wrap gap-1 sm:gap-1.5 lg:gap-2">
                         <Button
                             variant="outline"
                             size="sm"
-                            class="text-xs sm:text-sm"
+                            class="px-2 py-1 text-xs sm:px-3 sm:py-1.5 sm:text-sm"
                             :class="{
                                 'bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground':
                                     selectedCategory === null,
@@ -423,7 +450,7 @@ function getCategoryColor(category: string): string {
                             :key="category"
                             variant="outline"
                             size="sm"
-                            class="text-xs capitalize sm:text-sm"
+                            class="px-2 py-1 text-xs capitalize sm:px-3 sm:py-1.5 sm:text-sm"
                             :class="{
                                 'bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground':
                                     selectedCategory === category,
@@ -435,33 +462,45 @@ function getCategoryColor(category: string): string {
                     </div>
 
                     <!-- Activity Types List -->
-                    <ScrollArea class="h-[400px] pr-4">
-                        <div class="space-y-2">
+                    <ScrollArea
+                        class="h-[250px] pr-1 sm:h-[350px] sm:pr-2 lg:h-[400px] lg:pr-4"
+                    >
+                        <div class="space-y-1 sm:space-y-1.5 lg:space-y-2">
                             <Card
                                 v-for="type in filteredAvailableTypes"
                                 :key="type.id"
-                                class="cursor-pointer transition-colors hover:border-primary"
+                                class="cursor-pointer transition-all duration-200 hover:border-primary hover:shadow-sm"
                                 @click="addHabit(type)"
                             >
-                                <CardHeader class="p-4">
-                                    <div class="flex items-center gap-3">
-                                        <span v-if="type.icon" class="text-3xl">
+                                <CardHeader class="p-2.5 sm:p-3 lg:p-4">
+                                    <div
+                                        class="flex items-start gap-2 sm:gap-3"
+                                    >
+                                        <span
+                                            v-if="type.icon"
+                                            class="flex-shrink-0 text-xl sm:text-2xl lg:text-3xl"
+                                        >
                                             {{ type.icon }}
                                         </span>
-                                        <div class="flex-1">
-                                            <CardTitle class="text-base">
+                                        <div class="min-w-0 flex-1">
+                                            <CardTitle
+                                                class="text-sm font-medium sm:text-base"
+                                            >
                                                 {{ type.name }}
                                             </CardTitle>
                                             <CardDescription
                                                 v-if="type.description"
-                                                class="mt-1 text-xs"
+                                                class="mt-0.5 text-xs text-muted-foreground sm:mt-1"
                                             >
                                                 {{ type.description }}
                                             </CardDescription>
                                         </div>
-                                        <div class="flex items-center gap-2">
+                                        <div
+                                            class="flex flex-shrink-0 flex-col items-end gap-1 sm:flex-row sm:items-center sm:gap-2"
+                                        >
                                             <Badge
                                                 variant="outline"
+                                                class="px-1.5 py-0.5 text-xs"
                                                 :class="
                                                     getCategoryColor(
                                                         type.category,
@@ -473,7 +512,7 @@ function getCategoryColor(category: string): string {
                                                 }}
                                             </Badge>
                                             <span
-                                                class="text-sm font-medium text-primary"
+                                                class="text-xs font-semibold text-primary sm:text-sm"
                                             >
                                                 {{ type.base_points }}
                                                 {{ t('habits.points') }}
@@ -485,9 +524,19 @@ function getCategoryColor(category: string): string {
 
                             <div
                                 v-if="filteredAvailableTypes.length === 0"
-                                class="py-8 text-center text-muted-foreground"
+                                class="py-8 text-center text-muted-foreground sm:py-12"
                             >
-                                {{ t('habits.no_available_types') }}
+                                <div class="flex flex-col items-center gap-2">
+                                    <div class="text-4xl opacity-50">🔍</div>
+                                    <p class="text-sm font-medium sm:text-base">
+                                        {{ t('habits.no_available_types') }}
+                                    </p>
+                                    <p
+                                        class="text-xs text-muted-foreground sm:text-sm"
+                                    >
+                                        {{ t('habits.try_different_category') }}
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </ScrollArea>

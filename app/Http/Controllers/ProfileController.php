@@ -78,20 +78,46 @@ class ProfileController extends Controller
      */
     private function getRecentActivities(User $user): array
     {
-        return $user->activities()
-            ->with(['habit.activityType'])
-            ->orderBy('date', 'desc')
+        return Activity::where('activities.user_id', $user->id)
+            ->join('habits', 'activities.habit_id', '=', 'habits.id')
+            ->join('activity_types', 'habits.activity_type_id', '=', 'activity_types.id')
+            ->select([
+                'activities.id',
+                'activities.habit_id',
+                'activities.date',
+                'activities.points_earned',
+                'activities.notes',
+                'habits.custom_name',
+                'habits.is_active',
+                'activity_types.name as activity_type_name',
+                'activity_types.icon as activity_type_icon',
+            ])
+            ->orderBy('activities.date', 'desc')
             ->limit(20)
             ->get()
-            ->map(fn($activity) => [
-                'id' => $activity->id,
-                'activity_type_name' => $activity->habit->activityType->getTranslatedName(),
-                'activity_type_icon' => $activity->habit->activityType->icon,
-                'custom_name' => $activity->habit->custom_name,
-                'date' => $activity->date->format('Y-m-d'),
-                'points_earned' => $activity->points_earned,
-                'notes' => $activity->notes,
-            ])
+            ->map(function ($activity) {
+                // Parse activity type name
+                $activityTypeName = 'Unknown Activity';
+                if ($activity->activity_type_name) {
+                    $nameData = is_string($activity->activity_type_name) 
+                        ? json_decode($activity->activity_type_name, true) 
+                        : $activity->activity_type_name;
+                    $activityTypeName = $nameData[app()->getLocale()] ?? $nameData['en'] ?? 'Unknown Activity';
+                }
+                
+                $isInactive = !$activity->is_active;
+                
+                return [
+                    'id' => $activity->id,
+                    'activity_type_name' => $activityTypeName,
+                    'activity_type_icon' => $activity->activity_type_icon,
+                    'custom_name' => $activity->custom_name,
+                    'date' => $activity->date->format('Y-m-d'),
+                    'points_earned' => $activity->points_earned,
+                    'notes' => $activity->notes,
+                    'is_inactive' => $isInactive,
+                ];
+            })
             ->toArray();
     }
 

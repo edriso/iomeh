@@ -21,10 +21,9 @@ class HabitsController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        // Get user's current habits with activity type details
-        $userHabits = $user->habits()
+        // Get user's active habits with activity type details
+        $userHabits = $user->activeHabits()
             ->with('activityType')
-            ->orderBy('display_order')
             ->get()
             ->map(function ($habit) {
                 return [
@@ -89,18 +88,43 @@ class HabitsController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        // Clear all existing habits and recreate them
-        $user->habits()->delete();
+        // Get current active habits
+        $currentHabits = $user->activeHabits()->get();
+        $newHabitIds = collect($validated['habits'])->pluck('id')->filter()->toArray();
+        
+        // Soft delete habits that are not in the new list
+        foreach ($currentHabits as $habit) {
+            if (!in_array($habit->id, $newHabitIds)) {
+                $habit->softDelete();
+            }
+        }
 
-        // Create new habits
+        // Update or create habits
         foreach ($validated['habits'] as $index => $habitData) {
-            $user->habits()->create([
-                'activity_type_id' => $habitData['activity_type_id'],
-                'custom_name' => $habitData['custom_name'],
-                'custom_icon' => $habitData['custom_icon'] ?? null,
-                'notes' => $habitData['notes'] ?? null,
-                'display_order' => $index,
-            ]);
+            if (isset($habitData['id']) && $habitData['id']) {
+                // Update existing habit
+                $habit = $user->habits()->find($habitData['id']);
+                if ($habit) {
+                    $habit->update([
+                        'activity_type_id' => $habitData['activity_type_id'],
+                        'custom_name' => $habitData['custom_name'],
+                        'custom_icon' => $habitData['custom_icon'] ?? null,
+                        'notes' => $habitData['notes'] ?? null,
+                        'display_order' => $index,
+                        'is_active' => true, // Ensure it's active
+                    ]);
+                }
+            } else {
+                // Create new habit
+                $user->habits()->create([
+                    'activity_type_id' => $habitData['activity_type_id'],
+                    'custom_name' => $habitData['custom_name'],
+                    'custom_icon' => $habitData['custom_icon'] ?? null,
+                    'notes' => $habitData['notes'] ?? null,
+                    'display_order' => $index,
+                    'is_active' => true,
+                ]);
+            }
         }
 
         // Clear the home page cache for this user
