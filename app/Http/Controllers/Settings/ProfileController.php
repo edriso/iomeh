@@ -44,9 +44,8 @@ class ProfileController extends Controller
         $user->fill($validated);
         $user->save();
 
-        // Clear the home page cache for this user
-        $cacheKey = "home_data_user_{$user->id}";
-        Cache::forget($cacheKey);
+        // Clear user-related caches since profile was updated
+        $this->clearUserCaches($user);
 
         return to_route('profile.edit');
     }
@@ -70,5 +69,19 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+    /**
+     * Clear user-related caches when profile is updated
+     */
+    private function clearUserCaches($user): void
+    {
+        // Clear the home page cache for this user
+        $homeCacheKey = "home_data_user_{$user->id}";
+        Cache::forget($homeCacheKey);
+        
+        // Clear the rankings cache for this user
+        $rankingsCacheKey = "rankings_page_{$user->id}";
+        Cache::forget($rankingsCacheKey);
     }
 }

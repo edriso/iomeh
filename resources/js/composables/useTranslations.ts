@@ -318,6 +318,7 @@ const translations = {
         'profile_settings.title': 'Profile Settings',
         'profile_settings.description':
             "Update your account's profile information",
+        'profile.description': 'Update your account\'s profile information',
         'profile.username': 'Username',
         'profile.name': 'Name',
         'profile.personal_website': 'Personal Website',
@@ -822,6 +823,7 @@ const translations = {
         // Profile Settings
         'profile_settings.title': 'إعدادات الملف الشخصي',
         'profile_settings.description': 'تحديث معلومات الملف الشخصي لحسابك',
+        'profile.description': 'تحديث معلومات الملف الشخصي لحسابك',
         'profile.username': 'اسم المستخدم',
         'profile.name': 'الاسم',
         'profile.personal_website': 'الموقع الشخصي',

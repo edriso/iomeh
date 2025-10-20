@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Support\Facades\Cache;
 
 test('profile page is displayed', function () {
     $user = User::factory()->create();
@@ -101,4 +102,69 @@ test('user can upload profile picture regardless of points', function () {
 
     $user->refresh();
     expect($user->avatar)->toBe('https://example.com/profile.jpg');
+});
+
+test('profile update clears user caches', function () {
+    $user = User::factory()->create();
+    
+    // Pre-populate caches to simulate existing cached data
+    $homeCacheKey = "home_data_user_{$user->id}";
+    $rankingsCacheKey = "rankings_page_{$user->id}";
+    
+    Cache::put($homeCacheKey, ['cached' => 'data'], 300);
+    Cache::put($rankingsCacheKey, ['cached' => 'rankings'], 300);
+    
+    // Verify caches exist
+    expect(Cache::has($homeCacheKey))->toBeTrue();
+    expect(Cache::has($rankingsCacheKey))->toBeTrue();
+    
+    // Update profile with new avatar
+    $response = $this
+        ->actingAs($user)
+        ->patch(route('profile.update'), [
+            'name' => 'Updated Name',
+            'username' => 'updateduser',
+            'avatar' => 'https://example.com/new-avatar.jpg',
+        ]);
+    
+    $response
+        ->assertSessionHasNoErrors()
+        ->assertRedirect(route('profile.edit'));
+    
+    // Verify caches are cleared
+    expect(Cache::has($homeCacheKey))->toBeFalse();
+    expect(Cache::has($rankingsCacheKey))->toBeFalse();
+    
+    // Verify profile was updated
+    $user->refresh();
+    expect($user->name)->toBe('Updated Name');
+    expect($user->username)->toBe('updateduser');
+    expect($user->avatar)->toBe('https://example.com/new-avatar.jpg');
+});
+
+test('profile update without avatar also clears caches', function () {
+    $user = User::factory()->create();
+    
+    // Pre-populate caches
+    $homeCacheKey = "home_data_user_{$user->id}";
+    $rankingsCacheKey = "rankings_page_{$user->id}";
+    
+    Cache::put($homeCacheKey, ['cached' => 'data'], 300);
+    Cache::put($rankingsCacheKey, ['cached' => 'rankings'], 300);
+    
+    // Update profile without avatar
+    $response = $this
+        ->actingAs($user)
+        ->patch(route('profile.update'), [
+            'name' => 'Updated Name Only',
+            'username' => 'nameonly',
+        ]);
+    
+    $response
+        ->assertSessionHasNoErrors()
+        ->assertRedirect(route('profile.edit'));
+    
+    // Verify caches are cleared even without avatar update
+    expect(Cache::has($homeCacheKey))->toBeFalse();
+    expect(Cache::has($rankingsCacheKey))->toBeFalse();
 });

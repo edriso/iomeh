@@ -8,6 +8,7 @@ use App\Models\SocialLogin;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
@@ -86,6 +87,9 @@ class SocialAuthController extends Controller
                     'avatar' => $googleUser->getAvatar(),
                 ]);
 
+                // Clear user caches since avatar was updated
+                $this->clearUserCaches($socialLogin->user);
+
                 // Ensure email is verified since Google emails are verified
                 $this->ensureEmailVerified($socialLogin->user);
 
@@ -111,6 +115,9 @@ class SocialAuthController extends Controller
                 $existingUser->update([
                     'avatar' => $googleUser->getAvatar(),
                 ]);
+
+                // Clear user caches since avatar was updated
+                $this->clearUserCaches($existingUser);
 
                 // Mark email as verified since Google emails are verified
                 $this->ensureEmailVerified($existingUser);
@@ -267,6 +274,9 @@ class SocialAuthController extends Controller
                 'avatar' => $socialUser->getAvatar(),
             ]);
 
+            // Clear user caches since avatar was updated
+            $this->clearUserCaches($user);
+
             $successMessage = $this->getTranslatedMessage('success.social_linked');
             return redirect()->back()->with('success', $successMessage);
 
@@ -312,6 +322,20 @@ class SocialAuthController extends Controller
 
         $successMessage = $this->getTranslatedMessage('success.social_unlinked');
         return redirect()->back()->with('success', $successMessage);
+    }
+
+    /**
+     * Clear user-related caches when profile is updated
+     */
+    private function clearUserCaches(User $user): void
+    {
+        // Clear the home page cache for this user
+        $homeCacheKey = "home_data_user_{$user->id}";
+        Cache::forget($homeCacheKey);
+        
+        // Clear the rankings cache for this user
+        $rankingsCacheKey = "rankings_page_{$user->id}";
+        Cache::forget($rankingsCacheKey);
     }
 
     /**

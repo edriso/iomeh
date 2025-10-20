@@ -25,10 +25,10 @@ class RankingsController extends Controller
         $data = Cache::remember($cacheKey, 300, function () use ($currentUser) {
             return [
                 'rankings' => [
-                    'today' => $this->getTodayRankings(20),
-                    'yesterday' => $this->getYesterdayRankings(20),
-                    'season' => $this->getCurrentSeasonRankings(20),
-                    'year' => $this->getCurrentYearRankings(20),
+                    'today' => $this->getTodayRankingsWithUser(20, $currentUser),
+                    'yesterday' => $this->getYesterdayRankingsWithUser(20, $currentUser),
+                    'season' => $this->getCurrentSeasonRankingsWithUser(20, $currentUser),
+                    'year' => $this->getCurrentYearRankingsWithUser(20, $currentUser),
                 ],
                 'current_user_rank' => [
                     'today' => $this->getCurrentUserRankToday($currentUser),
@@ -110,7 +110,7 @@ class RankingsController extends Controller
             ->limit($limit)
             ->get();
 
-        return $users->map(function ($user, $index) {
+        $rankings = $users->map(function ($user, $index) {
             return [
                 'rank' => $index + 1,
                 'user' => [
@@ -125,6 +125,50 @@ class RankingsController extends Controller
                     ->count(),
             ];
         });
+
+        return $rankings;
+    }
+
+    /**
+     * Get today's rankings including current user if not in top list.
+     */
+    private function getTodayRankingsWithUser($limit, $currentUser)
+    {
+        $rankings = $this->getTodayRankings($limit);
+        
+        // Check if current user is already in the rankings
+        $userInRankings = $rankings->contains(function ($ranking) use ($currentUser) {
+            return $ranking['user']['id'] === $currentUser->id;
+        });
+        
+        // If user is not in top rankings but has activities today, add them
+        if (!$userInRankings) {
+            $today = now()->toDateString();
+            $userPoints = $currentUser->activities()
+                ->whereDate('date', $today)
+                ->sum('points_earned');
+                
+            if ($userPoints > 0) {
+                $userRank = $this->getCurrentUserRankToday($currentUser);
+                if ($userRank) {
+                    $rankings->push([
+                        'rank' => $userRank['rank'],
+                        'user' => [
+                            'id' => $currentUser->id,
+                            'username' => $currentUser->username,
+                            'name' => $currentUser->name ?: $currentUser->username,
+                            'avatar' => $currentUser->avatar,
+                        ],
+                        'points' => $userPoints,
+                        'activities_count' => $currentUser->activities()
+                            ->whereDate('date', $today)
+                            ->count(),
+                    ]);
+                }
+            }
+        }
+        
+        return $rankings;
     }
 
     /**
@@ -159,6 +203,48 @@ class RankingsController extends Controller
                     ->count(),
             ];
         });
+    }
+
+    /**
+     * Get yesterday's rankings including current user if not in top list.
+     */
+    private function getYesterdayRankingsWithUser($limit, $currentUser)
+    {
+        $rankings = $this->getYesterdayRankings($limit);
+        
+        // Check if current user is already in the rankings
+        $userInRankings = $rankings->contains(function ($ranking) use ($currentUser) {
+            return $ranking['user']['id'] === $currentUser->id;
+        });
+        
+        // If user is not in top rankings but has activities yesterday, add them
+        if (!$userInRankings) {
+            $yesterday = now()->subDay()->toDateString();
+            $userPoints = $currentUser->activities()
+                ->whereDate('date', $yesterday)
+                ->sum('points_earned');
+                
+            if ($userPoints > 0) {
+                $userRank = $this->getCurrentUserRankYesterday($currentUser);
+                if ($userRank) {
+                    $rankings->push([
+                        'rank' => $userRank['rank'],
+                        'user' => [
+                            'id' => $currentUser->id,
+                            'username' => $currentUser->username,
+                            'name' => $currentUser->name ?: $currentUser->username,
+                            'avatar' => $currentUser->avatar,
+                        ],
+                        'points' => $userPoints,
+                        'activities_count' => $currentUser->activities()
+                            ->whereDate('date', $yesterday)
+                            ->count(),
+                    ]);
+                }
+            }
+        }
+        
+        return $rankings;
     }
 
     /**
@@ -224,6 +310,73 @@ class RankingsController extends Controller
     }
 
     /**
+     * Get current season rankings including current user if not in top list.
+     */
+    private function getCurrentSeasonRankingsWithUser($limit, $currentUser)
+    {
+        $rankings = $this->getCurrentSeasonRankings($limit);
+        
+        // Check if current user is already in the rankings
+        $userInRankings = $rankings->contains(function ($ranking) use ($currentUser) {
+            return $ranking['user']['id'] === $currentUser->id;
+        });
+        
+        // If user is not in top rankings but has season data, add them
+        if (!$userInRankings) {
+            $userRank = $this->getCurrentUserRankSeason($currentUser);
+            if ($userRank) {
+                $rankings->push([
+                    'rank' => $userRank['rank'],
+                    'user' => [
+                        'id' => $currentUser->id,
+                        'username' => $currentUser->username,
+                        'name' => $currentUser->name ?: $currentUser->username,
+                        'avatar' => $currentUser->avatar,
+                    ],
+                    'points' => $userRank['points'],
+                    'season' => $userRank['season'],
+                    'year' => now()->year,
+                ]);
+            }
+        }
+        
+        return $rankings;
+    }
+
+    /**
+     * Get current year rankings including current user if not in top list.
+     */
+    private function getCurrentYearRankingsWithUser($limit, $currentUser)
+    {
+        $rankings = $this->getCurrentYearRankings($limit);
+        
+        // Check if current user is already in the rankings
+        $userInRankings = $rankings->contains(function ($ranking) use ($currentUser) {
+            return $ranking['user']['id'] === $currentUser->id;
+        });
+        
+        // If user is not in top rankings but has year data, add them
+        if (!$userInRankings) {
+            $userRank = $this->getCurrentUserRankYear($currentUser);
+            if ($userRank) {
+                $rankings->push([
+                    'rank' => $userRank['rank'],
+                    'user' => [
+                        'id' => $currentUser->id,
+                        'username' => $currentUser->username,
+                        'name' => $currentUser->name ?: $currentUser->username,
+                        'avatar' => $currentUser->avatar,
+                    ],
+                    'points' => $userRank['points'],
+                    'year' => now()->year,
+                ]);
+            }
+        }
+        
+        return $rankings;
+    }
+
+    /**
      * Get current user's rank for today.
      */
     private function getCurrentUserRankToday($user)
@@ -237,17 +390,20 @@ class RankingsController extends Controller
             return null;
         }
 
-        $rank = User::whereHas('activities', function ($query) use ($today) {
+        // Count users with more points than current user
+        $usersWithMorePoints = User::whereHas('activities', function ($query) use ($today) {
                 $query->whereDate('date', $today);
             })
             ->withSum(['activities as today_points' => function ($query) use ($today) {
                 $query->whereDate('date', $today);
             }], 'points_earned')
             ->get()
-            ->sortByDesc('today_points')
-            ->search(function ($u) use ($user) {
-                return $u->id === $user->id;
-            }) + 1;
+            ->filter(function ($u) use ($userPoints) {
+                return ($u->today_points ?? 0) > $userPoints;
+            })
+            ->count();
+
+        $rank = $usersWithMorePoints + 1;
 
         return [
             'rank' => $rank,
@@ -269,17 +425,20 @@ class RankingsController extends Controller
             return null;
         }
 
-        $rank = User::whereHas('activities', function ($query) use ($yesterday) {
+        // Count users with more points than current user
+        $usersWithMorePoints = User::whereHas('activities', function ($query) use ($yesterday) {
                 $query->whereDate('date', $yesterday);
             })
             ->withSum(['activities as yesterday_points' => function ($query) use ($yesterday) {
                 $query->whereDate('date', $yesterday);
             }], 'points_earned')
             ->get()
-            ->sortByDesc('yesterday_points')
-            ->search(function ($u) use ($user) {
-                return $u->id === $user->id;
-            }) + 1;
+            ->filter(function ($u) use ($userPoints) {
+                return ($u->yesterday_points ?? 0) > $userPoints;
+            })
+            ->count();
+
+        $rank = $usersWithMorePoints + 1;
 
         return [
             'rank' => $rank,
@@ -300,11 +459,23 @@ class RankingsController extends Controller
             ->where('quarter_number', $currentSeasonName)
             ->first();
 
-        return $season ? [
-            'rank' => $season->season_rank,
+        if (!$season) {
+            return null;
+        }
+
+        // Count users with more points in the same season
+        $usersWithMorePoints = Season::where('year', $currentYear)
+            ->where('quarter_number', $currentSeasonName)
+            ->where('points', '>', $season->points)
+            ->count();
+
+        $rank = $usersWithMorePoints + 1;
+
+        return [
+            'rank' => $rank,
             'points' => $season->points,
             'season' => 'Q' . $currentSeasonName,
-        ] : null;
+        ];
     }
 
     /**
@@ -319,9 +490,20 @@ class RankingsController extends Controller
             ->orderBy('season_year_points', 'desc')
             ->first();
 
-        return $season ? [
-            'rank' => $season->year_rank,
+        if (!$season) {
+            return null;
+        }
+
+        // Count users with more season_year_points in the same year
+        $usersWithMorePoints = Season::where('year', $currentYear)
+            ->where('season_year_points', '>', $season->season_year_points)
+            ->count();
+
+        $rank = $usersWithMorePoints + 1;
+
+        return [
+            'rank' => $rank,
             'points' => $season->season_year_points,
-        ] : null;
+        ];
     }
 }
