@@ -60,7 +60,7 @@ class HandleInertiaRequests extends Middleware
                     'streak_multiplier' => $request->user()->streak_multiplier ?? 1.0,
                 ] : null,
                 'habits' => $request->user() 
-                    ? $request->user()->habits()
+                    ? $request->user()->activeHabits()
                         ->with(['activityType', 'activities' => function ($query) {
                             $query->whereDate('date', now()->toDateString());
                         }])

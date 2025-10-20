@@ -46,8 +46,29 @@ const updatePosition = () => {
     
     if (trigger) {
       const triggerRect = trigger.getBoundingClientRect()
+      const viewportHeight = window.innerHeight
+      const dropdownHeight = 384 // max-h-96 = 24rem = 384px
+      const spaceBelow = viewportHeight - triggerRect.bottom
+      const spaceAbove = triggerRect.top
+      
+      // If there's not enough space below, position above the trigger
+      let topPosition = 'auto'
+      let bottomPosition = 'auto'
+      
+      if (spaceBelow < dropdownHeight && spaceAbove > spaceBelow) {
+        // Position above the trigger
+        bottomPosition = `${viewportHeight - triggerRect.top + 4}px`
+        topPosition = 'auto'
+      } else {
+        // Position below the trigger (default)
+        topPosition = 'auto'
+        bottomPosition = 'auto'
+      }
+      
       contentStyle.value = {
         width: `${triggerRect.width}px`,
+        top: topPosition,
+        bottom: bottomPosition,
       }
     } else {
       // Fallback: use parent width
@@ -58,16 +79,23 @@ const updatePosition = () => {
   }
 }
 
-watch(open, (isOpen) => {
+watch(() => open, (isOpen) => {
   if (isOpen) {
     // Use nextTick to ensure DOM is updated
     setTimeout(updatePosition, 10)
+    
+    // Add resize listener to recalculate position
+    const handleResize = () => updatePosition()
+    window.addEventListener('resize', handleResize)
+    
+    // Clean up listener when dropdown closes
+    return () => window.removeEventListener('resize', handleResize)
   }
 })
 
 const contentClass = computed(() => {
   return cva(
-    'absolute left-0 right-0 z-[100] mt-1 max-h-96 w-full overflow-y-auto overflow-x-hidden rounded-md border bg-popover text-popover-foreground shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
+    'absolute left-0 right-0 z-[9999] mt-1 max-h-96 w-full overflow-y-auto overflow-x-hidden rounded-md border bg-popover text-popover-foreground shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
     {
       variants: {
         position: {
@@ -92,7 +120,7 @@ const handleKeydown = (event: KeyboardEvent) => {
 }
 
 // Close on outside click
-watch(open, (isOpen) => {
+watch(() => open, (isOpen) => {
   if (isOpen) {
     const handleClickOutside = (event: MouseEvent) => {
       if (contentRef.value && !contentRef.value.contains(event.target as Node)) {
