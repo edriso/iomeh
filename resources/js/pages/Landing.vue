@@ -100,34 +100,65 @@ const seoData = {
         <nav
             class="sticky top-0 z-50 border-b border-border/40 bg-background/95 backdrop-blur-sm"
         >
-            <div class="container mx-auto px-4 py-4">
+            <div class="container mx-auto px-4 py-3 sm:py-4">
                 <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
+                    <!-- Logo and App Name -->
+                    <div
+                        class="flex min-w-0 flex-shrink-0 items-center gap-2 sm:gap-3"
+                    >
                         <AppLogo />
-                        <div>
+                        <div class="min-w-0">
                             <h1
-                                class="text-lg font-bold text-foreground md:text-2xl"
+                                class="truncate text-base font-bold text-foreground sm:text-lg md:text-2xl"
                             >
                                 {{ appName }}
                             </h1>
-                            <p class="text-xs text-muted-foreground md:text-sm">
+                            <p
+                                class="hidden text-xs text-muted-foreground sm:block sm:text-sm"
+                            >
                                 I Owe Me Health
                             </p>
                         </div>
                     </div>
 
-                    <div class="flex items-center gap-3">
-                        <LanguageSwitcher
-                            :show-label="false"
-                            variant="single"
-                        />
+                    <!-- Right Side Actions -->
+                    <div
+                        class="flex flex-shrink-0 items-center gap-1 sm:gap-2 md:gap-3"
+                    >
+                        <!-- Language Switcher - Compact on mobile -->
+                        <div class="flex-shrink-0">
+                            <LanguageSwitcher
+                                :show-label="false"
+                                variant="single"
+                                class="scale-90 sm:scale-100"
+                            />
+                        </div>
+
+                        <!-- Login Button -->
                         <Link href="/login">
-                            <Button variant="ghost" size="sm">{{
-                                t('nav.login')
-                            }}</Button>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                class="px-2 text-xs sm:px-3 sm:text-sm"
+                            >
+                                <span class="hidden sm:inline">{{
+                                    t('nav.login')
+                                }}</span>
+                                <span class="sm:hidden">Login</span>
+                            </Button>
                         </Link>
+
+                        <!-- Register Button -->
                         <Link href="/register">
-                            <Button size="sm">{{ t('nav.register') }}</Button>
+                            <Button
+                                size="sm"
+                                class="px-2 text-xs sm:px-3 sm:text-sm"
+                            >
+                                <span class="hidden sm:inline">{{
+                                    t('nav.register')
+                                }}</span>
+                                <span class="sm:hidden">Sign Up</span>
+                            </Button>
                         </Link>
                     </div>
                 </div>
@@ -135,35 +166,38 @@ const seoData = {
         </nav>
 
         <!-- Hero Section -->
-        <section class="container mx-auto px-4 py-20">
+        <section class="container mx-auto px-4 py-12 sm:py-16 md:py-20">
             <div class="mx-auto max-w-4xl text-center">
-                <div class="mb-8">
+                <div class="mb-6 sm:mb-8">
                     <div
-                        class="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium"
+                        class="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-2 text-xs font-medium sm:px-4 sm:text-sm"
                     >
-                        <Trophy class="h-4 w-4" />
+                        <Trophy class="h-3 w-3 sm:h-4 sm:w-4" />
                         <span>{{ t('landing.badge') }}</span>
                     </div>
                 </div>
 
                 <h1
-                    class="mb-6 text-4xl font-bold text-foreground md:text-6xl lg:text-7xl"
+                    class="mb-4 text-3xl font-bold text-foreground sm:mb-6 sm:text-4xl md:text-6xl lg:text-7xl"
                 >
                     {{ t('landing.hero_title') }}
                 </h1>
 
                 <p
-                    class="mx-auto mb-10 max-w-3xl text-xl text-muted-foreground md:text-2xl"
+                    class="mx-auto mb-8 max-w-3xl text-lg text-muted-foreground sm:mb-10 sm:text-xl md:text-2xl"
                 >
                     {{ t('landing.subtitle') }}
                 </p>
 
                 <div
-                    class="flex flex-col items-center justify-center gap-4 sm:flex-row"
+                    class="flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4"
                 >
                     <Link href="/register">
-                        <Button size="lg" class="px-8 py-4 text-lg">
-                            <Award class="h-5 w-5" />
+                        <Button
+                            size="lg"
+                            class="w-full px-6 py-3 text-base sm:w-auto sm:px-8 sm:py-4 sm:text-lg"
+                        >
+                            <Award class="h-4 w-4 sm:h-5 sm:w-5" />
                             {{ t('landing.get_started') }}
                         </Button>
                     </Link>
@@ -171,7 +205,7 @@ const seoData = {
                         <Button
                             variant="outline"
                             size="lg"
-                            class="px-8 py-4 text-lg"
+                            class="w-full px-6 py-3 text-base sm:w-auto sm:px-8 sm:py-4 sm:text-lg"
                         >
                             {{ t('nav.login') }}
                         </Button>
@@ -179,48 +213,55 @@ const seoData = {
                 </div>
 
                 <!-- Achievement Preview -->
-                <div class="mt-16">
+                <div class="mt-12 sm:mt-16">
                     <p class="mb-4 text-center text-sm text-muted-foreground">
                         {{ t('landing.progress_text') }}
                     </p>
                     <div
-                        class="flex flex-wrap items-center justify-center gap-3"
+                        class="flex flex-wrap items-center justify-center gap-2 sm:gap-3"
                     >
                         <!-- Season Badge -->
                         <div
-                            class="group relative overflow-hidden rounded-xl border border-primary/30 bg-gradient-to-br from-primary/10 to-primary/5 px-6 py-3 transition-all hover:scale-105 hover:border-primary/50 hover:shadow-lg"
+                            class="group relative overflow-hidden rounded-xl border border-primary/30 bg-gradient-to-br from-primary/10 to-primary/5 px-4 py-2 transition-all hover:scale-105 hover:border-primary/50 hover:shadow-lg sm:px-6 sm:py-3"
                         >
-                            <div class="flex items-center gap-2">
-                                <Award class="h-5 w-5 text-primary" />
-                                <span class="font-bold text-foreground">{{
-                                    t('badge.quarter_rank')
-                                }}</span>
+                            <div class="flex items-center gap-1 sm:gap-2">
+                                <Award
+                                    class="h-4 w-4 text-primary sm:h-5 sm:w-5"
+                                />
+                                <span
+                                    class="text-sm font-bold text-foreground sm:text-base"
+                                    >{{ t('badge.quarter_rank') }}</span
+                                >
                             </div>
                         </div>
 
                         <!-- Year Badge -->
                         <div
-                            class="group relative overflow-hidden rounded-xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-orange-500/5 px-6 py-3 transition-all hover:scale-105 hover:border-amber-500/50 hover:shadow-lg"
+                            class="group relative overflow-hidden rounded-xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-orange-500/5 px-4 py-2 transition-all hover:scale-105 hover:border-amber-500/50 hover:shadow-lg sm:px-6 sm:py-3"
                         >
-                            <div class="flex items-center gap-2">
+                            <div class="flex items-center gap-1 sm:gap-2">
                                 <Trophy
-                                    class="h-5 w-5 text-amber-600 dark:text-amber-500"
+                                    class="h-4 w-4 text-amber-600 sm:h-5 sm:w-5 dark:text-amber-500"
                                 />
-                                <span class="font-bold text-foreground">{{
-                                    t('badge.year_rank')
-                                }}</span>
+                                <span
+                                    class="text-sm font-bold text-foreground sm:text-base"
+                                    >{{ t('badge.year_rank') }}</span
+                                >
                             </div>
                         </div>
 
                         <!-- Streak Badge -->
                         <div
-                            class="group relative overflow-hidden rounded-xl border border-orange-500/30 bg-gradient-to-br from-orange-500/10 to-red-500/5 px-6 py-3 transition-all hover:scale-105 hover:border-orange-500/50 hover:shadow-lg"
+                            class="group relative overflow-hidden rounded-xl border border-orange-500/30 bg-gradient-to-br from-orange-500/10 to-red-500/5 px-4 py-2 transition-all hover:scale-105 hover:border-orange-500/50 hover:shadow-lg sm:px-6 sm:py-3"
                         >
-                            <div class="flex items-center gap-2">
-                                <Flame class="h-5 w-5 text-orange-500" />
-                                <span class="font-bold text-foreground">{{
-                                    t('badge.streak')
-                                }}</span>
+                            <div class="flex items-center gap-1 sm:gap-2">
+                                <Flame
+                                    class="h-4 w-4 text-orange-500 sm:h-5 sm:w-5"
+                                />
+                                <span
+                                    class="text-sm font-bold text-foreground sm:text-base"
+                                    >{{ t('badge.streak') }}</span
+                                >
                             </div>
                         </div>
                     </div>

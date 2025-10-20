@@ -318,7 +318,7 @@ const translations = {
         'profile_settings.title': 'Profile Settings',
         'profile_settings.description':
             "Update your account's profile information",
-        'profile.description': 'Update your account\'s profile information',
+        'profile.description': "Update your account's profile information",
         'profile.username': 'Username',
         'profile.name': 'Name',
         'profile.personal_website': 'Personal Website',
