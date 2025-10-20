@@ -46,8 +46,8 @@ it('sets avatar from Google OAuth during new user registration', function () {
     expect($socialLogin->provider_id)->toBe('123456789');
 });
 
-it('updates avatar from Google OAuth during existing user login', function () {
-    // Create existing user
+it('preserves existing avatar during Google OAuth login', function () {
+    // Create existing user with avatar
     $user = User::factory()->create([
         'email' => 'test@gmail.com',
         'avatar' => 'https://old-avatar.com/image.jpg'
@@ -83,7 +83,52 @@ it('updates avatar from Google OAuth during existing user login', function () {
     
     $response = $this->get('/auth/google/callback');
 
-    // Verify avatar was updated
+    // Verify avatar was NOT updated (preserved)
+    $user->refresh();
+    expect($user->avatar)->toBe('https://old-avatar.com/image.jpg');
+    
+    // Verify user is authenticated
+    $this->assertAuthenticated();
+});
+
+it('sets avatar from Google OAuth during login when user has no avatar', function () {
+    // Create existing user without avatar
+    $user = User::factory()->create([
+        'email' => 'test@gmail.com',
+        'avatar' => null
+    ]);
+
+    // Create social login for user
+    SocialLogin::create([
+        'user_id' => $user->id,
+        'provider' => 'google',
+        'provider_id' => '123456789',
+        'token' => 'old-token',
+    ]);
+
+    // Mock Google user with new avatar
+    $googleUser = Mockery::mock(SocialiteUser::class);
+    $googleUser->shouldReceive('getId')->andReturn('123456789');
+    $googleUser->shouldReceive('getEmail')->andReturn('test@gmail.com');
+    $googleUser->shouldReceive('getName')->andReturn('Test User');
+    $googleUser->shouldReceive('getAvatar')->andReturn('https://lh3.googleusercontent.com/new-avatar.jpg');
+    $googleUser->token = 'new-access-token';
+    $googleUser->refreshToken = 'new-refresh-token';
+    $googleUser->expiresIn = 3600;
+
+    // Mock Socialite
+    Socialite::shouldReceive('driver')
+        ->with('google')
+        ->andReturn(Mockery::mock([
+            'user' => $googleUser
+        ]));
+
+    // Simulate OAuth callback for login
+    session(['oauth_context' => 'login']);
+    
+    $response = $this->get('/auth/google/callback');
+
+    // Verify avatar was set (user had no avatar)
     $user->refresh();
     expect($user->avatar)->toBe('https://lh3.googleusercontent.com/new-avatar.jpg');
     
@@ -131,8 +176,8 @@ it('sets avatar when linking Google account to existing user', function () {
     expect($socialLogin->provider)->toBe('google');
 });
 
-it('clears user caches when avatar is updated via OAuth login', function () {
-    // Create existing user
+it('does not clear user caches when avatar is not updated via OAuth login', function () {
+    // Create existing user with avatar
     $user = User::factory()->create([
         'email' => 'test@gmail.com',
         'avatar' => 'https://old-avatar.com/image.jpg'
@@ -179,13 +224,13 @@ it('clears user caches when avatar is updated via OAuth login', function () {
     
     $response = $this->get('/auth/google/callback');
 
-    // Verify avatar was updated
+    // Verify avatar was NOT updated (preserved)
     $user->refresh();
-    expect($user->avatar)->toBe('https://lh3.googleusercontent.com/new-avatar.jpg');
+    expect($user->avatar)->toBe('https://old-avatar.com/image.jpg');
     
-    // Verify caches are cleared
-    expect(Cache::has($homeCacheKey))->toBeFalse();
-    expect(Cache::has($rankingsCacheKey))->toBeFalse();
+    // Verify caches are NOT cleared (since avatar wasn't updated)
+    expect(Cache::has($homeCacheKey))->toBeTrue();
+    expect(Cache::has($rankingsCacheKey))->toBeTrue();
     
     // Verify user is authenticated
     $this->assertAuthenticated();

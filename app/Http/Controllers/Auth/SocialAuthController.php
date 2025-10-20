@@ -79,16 +79,17 @@ class SocialAuthController extends Controller
                 ->first();
 
             if ($socialLogin) {
-                // User exists, update tokens and avatar
+                // User exists, update tokens only (not avatar on login)
                 $socialLogin->update($this->getOAuthTokenData($googleUser));
 
-                // Update user avatar from Google profile
-                $socialLogin->user->update([
-                    'avatar' => $googleUser->getAvatar(),
-                ]);
-
-                // Clear user caches since avatar was updated
-                $this->clearUserCaches($socialLogin->user);
+                // Only update avatar if user doesn't have one (first time login)
+                if (!$socialLogin->user->avatar) {
+                    $socialLogin->user->update([
+                        'avatar' => $googleUser->getAvatar(),
+                    ]);
+                    // Clear user caches since avatar was updated
+                    $this->clearUserCaches($socialLogin->user);
+                }
 
                 // Ensure email is verified since Google emails are verified
                 $this->ensureEmailVerified($socialLogin->user);
@@ -111,13 +112,14 @@ class SocialAuthController extends Controller
                 // Link the Google account to existing user
                 $existingUser->socialLogins()->create($this->getOAuthTokenData($googleUser));
 
-                // Update user avatar from Google profile if they don't have one or to keep it synced
-                $existingUser->update([
-                    'avatar' => $googleUser->getAvatar(),
-                ]);
-
-                // Clear user caches since avatar was updated
-                $this->clearUserCaches($existingUser);
+                // Only update avatar if user doesn't have one (first time linking)
+                if (!$existingUser->avatar) {
+                    $existingUser->update([
+                        'avatar' => $googleUser->getAvatar(),
+                    ]);
+                    // Clear user caches since avatar was updated
+                    $this->clearUserCaches($existingUser);
+                }
 
                 // Mark email as verified since Google emails are verified
                 $this->ensureEmailVerified($existingUser);
@@ -269,13 +271,14 @@ class SocialAuthController extends Controller
                 $user->socialLogins()->create($this->getOAuthTokenData($socialUser));
             }
 
-            // Update user avatar from Google profile
-            $user->update([
-                'avatar' => $socialUser->getAvatar(),
-            ]);
-
-            // Clear user caches since avatar was updated
-            $this->clearUserCaches($user);
+            // Only update avatar if user doesn't have one (first time linking)
+            if (!$user->avatar) {
+                $user->update([
+                    'avatar' => $socialUser->getAvatar(),
+                ]);
+                // Clear user caches since avatar was updated
+                $this->clearUserCaches($user);
+            }
 
             $successMessage = $this->getTranslatedMessage('success.social_linked');
             return redirect()->back()->with('success', $successMessage);
