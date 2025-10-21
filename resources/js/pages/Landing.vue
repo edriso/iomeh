@@ -100,16 +100,18 @@ const seoData = {
         <nav
             class="sticky top-0 z-50 border-b border-border/40 bg-background/95 backdrop-blur-sm"
         >
-            <div class="container mx-auto px-4 py-3 sm:py-4">
-                <div class="flex items-center justify-between">
+            <div class="container mx-auto px-2 py-2 sm:px-4 sm:py-3 md:py-4">
+                <div class="flex items-center justify-between gap-1 sm:gap-2">
                     <!-- Logo and App Name -->
                     <div
-                        class="flex min-w-0 flex-shrink-0 items-center gap-2 sm:gap-3"
+                        class="flex min-w-0 flex-shrink-0 items-center gap-1 sm:gap-2 md:gap-3"
                     >
-                        <AppLogo />
-                        <div class="min-w-0">
+                        <div class="flex-shrink-0">
+                            <AppLogo />
+                        </div>
+                        <div class="min-w-0 flex-1">
                             <h1
-                                class="truncate text-base font-bold text-foreground sm:text-lg md:text-2xl"
+                                class="truncate text-xs font-bold text-foreground sm:text-sm md:text-base lg:text-lg xl:text-2xl"
                             >
                                 {{ appName }}
                             </h1>
@@ -123,15 +125,17 @@ const seoData = {
 
                     <!-- Right Side Actions -->
                     <div
-                        class="flex flex-shrink-0 items-center gap-1 sm:gap-2 md:gap-3"
+                        class="flex flex-shrink-0 items-center gap-0.5 sm:gap-1 md:gap-2 lg:gap-3"
                     >
                         <!-- Language Switcher - Compact on mobile -->
-                        <div class="flex-shrink-0">
-                            <LanguageSwitcher
-                                :show-label="false"
-                                variant="single"
-                                class="scale-90 sm:scale-100"
-                            />
+                        <div class="flex-shrink-0 w-auto">
+                            <div class="scale-70 sm:scale-80 md:scale-90 lg:scale-100">
+                                <LanguageSwitcher
+                                    :show-label="false"
+                                    variant="single"
+                                    class="[&_button]:px-1 [&_button]:py-1 sm:[&_button]:px-2 sm:[&_button]:py-2 md:[&_button]:px-3 md:[&_button]:py-2"
+                                />
+                            </div>
                         </div>
 
                         <!-- Login Button -->
@@ -139,7 +143,7 @@ const seoData = {
                             <Button
                                 variant="ghost"
                                 size="sm"
-                                class="px-2 text-xs sm:px-3 sm:text-sm"
+                                class="h-7 px-1.5 text-xs sm:h-8 sm:px-2 sm:text-sm md:h-9 md:px-3"
                             >
                                 <span class="hidden sm:inline">{{
                                     t('nav.login')
@@ -152,7 +156,7 @@ const seoData = {
                         <Link href="/register">
                             <Button
                                 size="sm"
-                                class="px-2 text-xs sm:px-3 sm:text-sm"
+                                class="h-7 px-1.5 text-xs sm:h-8 sm:px-2 sm:text-sm md:h-9 md:px-3"
                             >
                                 <span class="hidden sm:inline">{{
                                     t('nav.register')
