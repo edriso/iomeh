@@ -144,7 +144,7 @@ const seoData = {
                                 <span class="hidden sm:inline">{{
                                     t('nav.login')
                                 }}</span>
-                                <span class="sm:hidden">Login</span>
+                                <span class="sm:hidden">{{ t('nav.login') }}</span>
                             </Button>
                         </Link>
 
@@ -157,7 +157,7 @@ const seoData = {
                                 <span class="hidden sm:inline">{{
                                     t('nav.register')
                                 }}</span>
-                                <span class="sm:hidden">Sign Up</span>
+                                <span class="sm:hidden">{{ t('nav.register') }}</span>
                             </Button>
                         </Link>
                     </div>
