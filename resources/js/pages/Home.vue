@@ -260,15 +260,23 @@ const habitUtils = {
         const tooltipMap = {
             completedWithNotes: t('home.habit_completed_with_notes'),
             completed: t('home.habit_completed'),
+            clickToViewNotes: t('home.habit_click_to_view_notes'),
             clickToLog: t('home.habit_click_to_log'),
         };
 
+        // If habit is completed today and has notes, show completed with notes
         if (habit.has_activity_today && habit.notes) {
             return tooltipMap.completedWithNotes;
         }
+        // If habit is completed today but no notes, just show completed
         if (habit.has_activity_today) {
             return tooltipMap.completed;
         }
+        // If habit has notes but not completed today, clicking will open notes modal
+        if (habit.notes) {
+            return tooltipMap.clickToViewNotes;
+        }
+        // If habit not completed today and no notes, clicking will open log modal
         return tooltipMap.clickToLog;
     },
 
