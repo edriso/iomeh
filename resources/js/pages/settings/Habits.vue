@@ -119,7 +119,7 @@ function addHabit(activityType: ActivityType) {
         activity_type_id: activityType.id,
         custom_name: activityType.name,
         custom_icon: null,
-        notes: null,
+        notes: activityType.description || null, // Auto-populate with activity description
         display_order: localHabits.value.length,
         activity_type: activityType,
     };
