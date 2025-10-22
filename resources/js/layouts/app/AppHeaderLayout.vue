@@ -17,7 +17,7 @@ withDefaults(defineProps<Props>(), {
 });
 
 const page = usePage();
-const { showLogActivityModal } = useLogActivity();
+const { showLogActivityModal, preselectedHabit } = useLogActivity();
 
 // Get current locale from shared Inertia data and initialize
 const initialLocale = (page.props.currentLocale as string) || 'en';
@@ -39,6 +39,7 @@ const habits = computed(() => (page.props.auth?.habits || []) as any[]);
         <LogActivityModal
             v-model:open="showLogActivityModal"
             :habits="habits"
+            :preselected-habit="preselectedHabit"
         />
     </div>
 </template>

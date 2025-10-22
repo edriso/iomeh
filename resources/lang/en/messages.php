@@ -100,6 +100,9 @@ return [
     'home.add_activity' => 'Add Activity',
     'home.no_activities_today' => 'No activities logged today',
     'home.no_recent_activities' => 'No recent activities',
+    'home.habit_completed' => 'Habit completed today',
+    'home.habit_completed_with_notes' => 'Habit completed today - Click to view notes',
+    'home.habit_click_to_log' => 'Click to log activity for this habit',
 
     // Settings
     'settings.title' => 'Settings',
@@ -290,6 +293,8 @@ return [
     'modal.log_activity.cancel' => 'Cancel',
     'modal.log_activity.logging' => 'Logging...',
     'modal.log_activity.log_activity' => 'Log Activity',
+    'modal.log_activity.already_logged' => 'Already Logged',
+    'modal.log_activity.already_logged_warning' => 'This activity has already been logged today.',
     'modal.log_activity.points_youll_earn' => 'Points You\'ll Earn',
     'modal.log_activity.pts' => 'pts',
     'modal.log_activity.streak_bonus_applied' => ' day streak bonus applied',

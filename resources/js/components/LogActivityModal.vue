@@ -34,9 +34,12 @@ interface Habit {
 interface Props {
     open: boolean;
     habits: Habit[];
+    preselectedHabit?: Habit | null;
 }
 
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+    preselectedHabit: null,
+});
 const emit = defineEmits<{
     (e: 'update:open', value: boolean): void;
 }>();
@@ -58,12 +61,12 @@ const userStreak = computed(() => {
 });
 
 const form = useForm({
-    habit_id: '',
+    habit_id: props.preselectedHabit?.id?.toString() || '',
     notes: '',
     memory_url: '',
 });
 
-// Filter out habits that already have activities today
+// Filter out habits that already have activities today, but include preselected habit
 const availableHabits = computed(() => {
     if (
         !props.habits ||
@@ -72,6 +75,16 @@ const availableHabits = computed(() => {
     ) {
         return [];
     }
+
+    // If there's a preselected habit, include it even if it has activities today
+    if (props.preselectedHabit) {
+        return props.habits.filter(
+            (habit) =>
+                !habit.has_activity_today ||
+                habit.id === props.preselectedHabit?.id,
+        );
+    }
+
     return props.habits.filter((habit) => !habit.has_activity_today);
 });
 
@@ -84,6 +97,11 @@ const selectedHabit = computed(() => {
         return null;
     }
     return props.habits.find((i) => i.id === Number(form.habit_id));
+});
+
+// Check if the selected habit already has activity today
+const isHabitAlreadyLogged = computed(() => {
+    return selectedHabit.value?.has_activity_today || false;
 });
 
 const calculatedPoints = computed(() => {
@@ -102,6 +120,11 @@ const calculatedPoints = computed(() => {
 });
 
 const handleSubmit = () => {
+    // Prevent submission if habit is already logged today
+    if (isHabitAlreadyLogged.value) {
+        return;
+    }
+
     form.post('/activities', {
         preserveScroll: true,
         onSuccess: () => {
@@ -128,6 +151,27 @@ watch(
                 form.reset();
                 form.clearErrors();
             });
+        }
+    },
+);
+
+// Watch for preselected habit changes
+watch(
+    () => props.preselectedHabit,
+    (newHabit) => {
+        if (newHabit && props.open) {
+            form.habit_id = newHabit.id.toString();
+        }
+    },
+    { immediate: true },
+);
+
+// Watch for modal opening with preselected habit
+watch(
+    () => props.open,
+    (isOpen) => {
+        if (isOpen && props.preselectedHabit) {
+            form.habit_id = props.preselectedHabit.id.toString();
         }
     },
 );
@@ -211,6 +255,21 @@ watch(
                             </SelectContent>
                         </Select>
                         <InputError :message="form.errors.habit_id" />
+
+                        <!-- Already logged warning -->
+                        <div
+                            v-if="isHabitAlreadyLogged"
+                            class="flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-amber-800 dark:border-amber-800 dark:bg-amber-900/20 dark:text-amber-300"
+                        >
+                            <span class="text-sm">⚠️</span>
+                            <p class="text-sm">
+                                {{
+                                    t(
+                                        'modal.log_activity.already_logged_warning',
+                                    )
+                                }}
+                            </p>
+                        </div>
 
                         <!-- No available activities message -->
                         <div
@@ -367,13 +426,16 @@ watch(
                             :disabled="
                                 form.processing ||
                                 !form.habit_id ||
-                                availableHabits.length === 0
+                                availableHabits.length === 0 ||
+                                isHabitAlreadyLogged
                             "
                         >
                             {{
                                 form.processing
                                     ? t('modal.log_activity.logging')
-                                    : t('modal.log_activity.log_activity')
+                                    : isHabitAlreadyLogged
+                                      ? t('modal.log_activity.already_logged')
+                                      : t('modal.log_activity.log_activity')
                             }}
                         </Button>
                     </div>

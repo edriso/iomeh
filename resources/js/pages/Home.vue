@@ -33,7 +33,7 @@ import {
     TrendingUp,
     Trophy,
 } from 'lucide-vue-next';
-import { computed, ref } from 'vue';
+import { computed, onUnmounted, ref, shallowRef } from 'vue';
 
 // Types
 interface TodayActivity {
@@ -104,8 +104,8 @@ const { t, isRTL } = useTranslations();
 // Composables
 const { openLogActivityModal } = useLogActivity();
 
-// State
-const selectedHabit = ref<Habit | null>(null);
+// State (using shallowRef for better performance)
+const selectedHabit = shallowRef<Habit | null>(null);
 const showHabitModal = ref(false);
 
 // Computed Properties
@@ -116,41 +116,14 @@ const todayPoints = computed(() =>
     ),
 );
 
-// Computed Properties
 const streakProgress = computed(() =>
     getTierProgress(props.user.current_streak),
 );
 
-// Translate streak tier name
-const translatedTierName = computed(() => {
-    const tierMap: Record<string, string> = {
-        Newcomer: t('streak.newcomer'),
-        Beginner: t('streak.beginner'),
-        Regular: t('streak.regular'),
-        Committed: t('streak.committed'),
-        Dedicated: t('streak.dedicated'),
-        Expert: t('streak.expert'),
-        Master: t('streak.master'),
-        Legend: t('streak.legend'),
-    };
-
-    return tierMap[props.user.streak_tier.name] || props.user.streak_tier.name;
-});
-const streakMessage = computed(() => {
-    const message = getNextTierMessage(props.user.current_streak);
-
-    // Translate the message
-    if (message === 'Legend status achieved!') {
-        return t('home.legend_status_achieved');
-    }
-
-    // Parse the message format: "X days to TierName (X×)"
-    const match = message.match(/(\d+) days to (.+) \((\d+(?:\.\d+)?)×\)/);
-    if (match) {
-        const [, days, tierName, multiplier] = match;
-
-        // Map tier names to translation keys
-        const tierMap: Record<string, string> = {
+// Tier name mapping (memoized)
+const tierNameMap = computed(
+    () =>
+        ({
             Newcomer: t('streak.newcomer'),
             Beginner: t('streak.beginner'),
             Regular: t('streak.regular'),
@@ -159,13 +132,29 @@ const streakMessage = computed(() => {
             Expert: t('streak.expert'),
             Master: t('streak.master'),
             Legend: t('streak.legend'),
-        };
+        }) as Record<string, string>,
+);
 
-        const translatedTierName = tierMap[tierName] || tierName;
+const translatedTierName = computed(
+    () =>
+        tierNameMap.value[props.user.streak_tier.name] ||
+        props.user.streak_tier.name,
+);
+
+const streakMessage = computed(() => {
+    const message = getNextTierMessage(props.user.current_streak);
+
+    if (message === 'Legend status achieved!') {
+        return t('home.legend_status_achieved');
+    }
+
+    const match = message.match(/(\d+) days to (.+) \((\d+(?:\.\d+)?)×\)/);
+    if (match) {
+        const [, days, tierName, multiplier] = match;
+        const translatedTierName = tierNameMap.value[tierName] || tierName;
         return `${days} ${t('home.days_to')} ${translatedTierName} (${multiplier}×)`;
     }
 
-    // If no match, return original message (fallback)
     return message;
 });
 
@@ -173,13 +162,17 @@ const streakMessage = computed(() => {
 const navigateToRankings = () => router.visit('/rankings');
 const navigateToHabits = () => router.visit('/settings/habits');
 
+// Computed properties for better performance
+const hasHabits = computed(() => props.habits && props.habits.length > 0);
+const recentActivitiesSlice = computed(() =>
+    props.recent_activities.slice(0, 5),
+);
+
 // Conditional navigation for activities
 const handleActivityAction = () => {
-    if (props.habits && props.habits.length > 0) {
-        // User has habits, open activity modal
+    if (hasHabits.value) {
         handleLogActivity();
     } else {
-        // User has no habits, go to habits settings
         navigateToHabits();
     }
 };
@@ -197,6 +190,124 @@ const closeHabitModal = () => {
 
 // Activity Methods
 const handleLogActivity = () => openLogActivityModal();
+
+// State for enhanced click handling
+const clickTimeout = ref<number | null>(null);
+const isDoubleClick = ref(false);
+const hoveredHabit = ref<number | null>(null);
+
+// Constants
+const CLICK_DELAY = 200;
+
+// Habit interaction handlers
+const habitHandlers = {
+    // Handle single click on a habit
+    click: (habit: Habit) => {
+        if (clickTimeout.value) {
+            clearTimeout(clickTimeout.value);
+            clickTimeout.value = null;
+        }
+
+        isDoubleClick.value = false;
+
+        clickTimeout.value = setTimeout(() => {
+            if (!isDoubleClick.value) {
+                if (habit.notes) {
+                    openHabitModal(habit);
+                } else if (!habit.has_activity_today) {
+                    openLogActivityModal(habit);
+                }
+            }
+        }, CLICK_DELAY);
+    },
+
+    // Handle double click on a habit
+    doubleClick: (habit: Habit, event: MouseEvent) => {
+        if (clickTimeout.value) {
+            clearTimeout(clickTimeout.value);
+            clickTimeout.value = null;
+        }
+
+        isDoubleClick.value = true;
+        event.preventDefault();
+        event.stopPropagation();
+
+        // Prevent text selection
+        window.getSelection()?.removeAllRanges();
+
+        if (!habit.has_activity_today) {
+            openLogActivityModal(habit);
+        }
+    },
+
+    // Handle hover states
+    hover: (habitId: number | null) => {
+        hoveredHabit.value = habitId;
+    },
+
+    // Handle mousedown to prevent text selection
+    mouseDown: (event: MouseEvent) => {
+        if (event.button === 0) {
+            event.preventDefault();
+        }
+    },
+};
+
+// Habit utility functions
+const habitUtils = {
+    // Get tooltip text for habit badges
+    getTooltip: (habit: Habit): string => {
+        const tooltipMap = {
+            completedWithNotes: t('home.habit_completed_with_notes'),
+            completed: t('home.habit_completed'),
+            clickToLog: t('home.habit_click_to_log'),
+        };
+
+        if (habit.has_activity_today && habit.notes) {
+            return tooltipMap.completedWithNotes;
+        }
+        if (habit.has_activity_today) {
+            return tooltipMap.completed;
+        }
+        return tooltipMap.clickToLog;
+    },
+
+    // Get dynamic classes for habit badges
+    getClasses: (habit: Habit) => {
+        const baseClasses =
+            'border-border/20 bg-card px-2 py-1 text-xs text-card-foreground transition-all duration-200 hover:border-primary/30 select-none sm:px-3 sm:py-1.5 sm:text-sm';
+
+        const isCompleted = habit.has_activity_today;
+        const isInteractive = habit.notes || !isCompleted;
+        const isHovered = hoveredHabit.value === habit.id && !isCompleted;
+
+        return [
+            baseClasses,
+            {
+                'cursor-pointer': isInteractive,
+                'cursor-default': !isInteractive,
+                'opacity-60': isCompleted && !habit.notes,
+                'hover:bg-primary/5': !isCompleted,
+                'hover:scale-105': !isCompleted,
+                'hover:shadow-md': !isCompleted,
+                'ring-2 ring-primary/20': isHovered,
+                'bg-muted/50 border-muted text-muted-foreground': isCompleted,
+                'hover:bg-muted/70': isCompleted,
+            },
+        ];
+    },
+};
+
+// Cleanup function
+const cleanup = () => {
+    if (clickTimeout.value) {
+        clearTimeout(clickTimeout.value);
+        clickTimeout.value = null;
+    }
+};
+
+// Cleanup on component unmount
+onUnmounted(cleanup);
 
 // Helper Methods
 </script>
@@ -243,7 +354,7 @@ const handleLogActivity = () => openLogActivityModal();
                                     <Button
                                         size="sm"
                                         variant="outline"
-                                        class="w-full sm:w-auto"
+                                        class="w-full max-sm:order-2 sm:w-auto"
                                         @click="navigateToHabits"
                                     >
                                         {{ t('common.edit') }}
@@ -261,23 +372,22 @@ const handleLogActivity = () => openLogActivityModal();
                         </CardHeader>
                         <CardContent>
                             <div
-                                v-if="habits && habits.length > 0"
+                                v-if="hasHabits"
                                 class="flex cursor-default flex-wrap gap-2"
                             >
                                 <Badge
                                     v-for="habit in habits"
                                     :key="habit.id"
                                     variant="outline"
-                                    class="border-secondary/20 bg-secondary px-2 py-1 text-xs text-secondary-foreground transition-colors hover:border-primary/30 sm:px-3 sm:py-1.5 sm:text-sm"
-                                    :class="{
-                                        'cursor-pointer': habit.notes,
-                                        'cursor-default': !habit.notes,
-                                    }"
-                                    @click="
-                                        habit.notes
-                                            ? openHabitModal(habit)
-                                            : null
+                                    :class="habitUtils.getClasses(habit)"
+                                    :title="habitUtils.getTooltip(habit)"
+                                    @click="habitHandlers.click(habit)"
+                                    @dblclick="
+                                        habitHandlers.doubleClick(habit, $event)
                                     "
+                                    @mousedown="habitHandlers.mouseDown"
+                                    @mouseenter="habitHandlers.hover(habit.id)"
+                                    @mouseleave="habitHandlers.hover(null)"
                                 >
                                     <span class="mr-1 sm:mr-1.5">{{
                                         habit.icon
@@ -287,11 +397,12 @@ const handleLogActivity = () => openLogActivityModal();
                                     }}</span>
                                     <CheckCircle
                                         v-if="habit.has_activity_today"
-                                        class="ml-1 h-3 w-3 sm:ml-1.5"
+                                        class="ml-1 h-3 w-3 text-green-500 sm:ml-1.5 dark:text-green-400"
                                     />
                                     <Info
                                         v-if="habit.notes"
-                                        class="ml-1 h-3 w-3 sm:ml-1.5"
+                                        @click.stop="openHabitModal(habit)"
+                                        class="ml-1 h-3 w-3 cursor-pointer text-primary transition-colors hover:text-primary/80 sm:ml-1.5"
                                     />
                                 </Badge>
                             </div>
@@ -382,14 +493,10 @@ const handleLogActivity = () => openLogActivityModal();
                                     size="sm"
                                     class="w-full sm:w-auto"
                                     @click="handleActivityAction"
-                                    :variant="
-                                        props.habits && props.habits.length > 0
-                                            ? 'default'
-                                            : 'outline'
-                                    "
+                                    :variant="hasHabits ? 'default' : 'outline'"
                                 >
                                     {{
-                                        props.habits && props.habits.length > 0
+                                        hasHabits
                                             ? t('home.log_activity')
                                             : t('common.edit')
                                     }}
@@ -573,10 +680,7 @@ const handleLogActivity = () => openLogActivityModal();
                                 class="space-y-2 sm:space-y-3"
                             >
                                 <div
-                                    v-for="activity in recent_activities.slice(
-                                        0,
-                                        5,
-                                    )"
+                                    v-for="activity in recentActivitiesSlice"
                                     :key="activity.id"
                                     :class="[
                                         'flex items-center justify-between text-xs sm:text-sm',
@@ -646,29 +750,32 @@ const handleLogActivity = () => openLogActivityModal();
             <DialogContent
                 class="w-[calc(100%-2rem)] max-w-sm sm:mx-0 sm:max-w-md lg:max-w-lg"
             >
-                <DialogHeader class="space-y-2 sm:space-y-3">
-                    <DialogTitle
-                        class="flex items-center gap-2 text-base sm:text-lg lg:text-xl"
-                    >
-                        <span
-                            class="flex-shrink-0 text-lg sm:text-xl lg:text-2xl"
-                            >{{ selectedHabit?.icon }}</span
+                <div :dir="isRTL ? 'rtl' : 'ltr'">
+                    <DialogHeader class="space-y-2 sm:space-y-3">
+                        <DialogTitle
+                            class="flex items-center gap-2 text-base sm:text-lg lg:text-xl"
+                            :class="isRTL ? 'flex-row-reverse' : ''"
                         >
-                        <span class="min-w-0 truncate">{{
-                            selectedHabit?.name
-                        }}</span>
-                    </DialogTitle>
-                    <DialogDescription class="text-xs sm:text-sm">
-                        {{ t('home.personal_notes') }}
-                    </DialogDescription>
-                </DialogHeader>
-                <div class="mt-2 sm:mt-3 lg:mt-4">
-                    <div class="rounded-lg bg-muted/50 p-3 sm:p-4 lg:p-5">
-                        <p
-                            class="text-xs leading-relaxed text-muted-foreground sm:text-sm lg:text-base"
-                        >
-                            {{ selectedHabit?.notes }}
-                        </p>
+                            <span
+                                class="flex-shrink-0 text-lg sm:text-xl lg:text-2xl"
+                                >{{ selectedHabit?.icon }}</span
+                            >
+                            <span class="min-w-0 truncate">{{
+                                selectedHabit?.name
+                            }}</span>
+                        </DialogTitle>
+                        <DialogDescription class="text-xs sm:text-sm">
+                            {{ t('home.personal_notes') }}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div class="mt-2 sm:mt-3 lg:mt-4">
+                        <div class="rounded-lg bg-muted/50 p-3 sm:p-4 lg:p-5">
+                            <p
+                                class="text-xs leading-relaxed text-muted-foreground sm:text-sm lg:text-base"
+                            >
+                                {{ selectedHabit?.notes }}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </DialogContent>

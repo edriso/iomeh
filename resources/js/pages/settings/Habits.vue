@@ -216,6 +216,7 @@ function handleSubmit() {
 
     const formData = {
         habits: localHabits.value.map((habit) => ({
+            id: habit.id && habit.id < 1000000000000 ? habit.id : null, // Only include real DB IDs (< 1 trillion), not Date.now() timestamps
             activity_type_id: habit.activity_type_id,
             custom_name: habit.custom_name,
             custom_icon: habit.custom_icon || null,

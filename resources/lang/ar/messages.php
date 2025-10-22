@@ -100,6 +100,9 @@ return [
     'home.add_activity' => 'إضافة نشاط',
     'home.no_activities_today' => 'لم يتم تسجيل أي أنشطة اليوم',
     'home.no_recent_activities' => 'لا توجد أنشطة حديثة',
+    'home.habit_completed' => 'تم إنجاز العادة اليوم',
+    'home.habit_completed_with_notes' => 'تم إنجاز العادة اليوم - انقر لعرض الملاحظات',
+    'home.habit_click_to_log' => 'انقر لتسجيل نشاط لهذه العادة',
 
     // Settings
     'settings.title' => 'الإعدادات',
@@ -290,6 +293,8 @@ return [
     'modal.log_activity.cancel' => 'إلغاء',
     'modal.log_activity.logging' => 'جاري التسجيل...',
     'modal.log_activity.log_activity' => 'تسجيل النشاط',
+    'modal.log_activity.already_logged' => 'تم التسجيل بالفعل',
+    'modal.log_activity.already_logged_warning' => 'تم تسجيل هذا النشاط بالفعل اليوم.',
     'modal.log_activity.points_youll_earn' => 'النقاط التي ستحصل عليها',
     'modal.log_activity.pts' => 'نقطة',
     'modal.log_activity.streak_bonus_applied' => ' يوم مكافأة السلسلة مطبقة',

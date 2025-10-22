@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
+use App\Models\Activity;
 use App\Models\ActivityType;
-use App\Models\Habit;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -71,6 +71,7 @@ class HabitsController extends Controller
     {
         $validated = $request->validate([
             'habits' => ['required', 'array', 'min:1', 'max:15'],
+            'habits.*.id' => ['nullable', 'integer', 'exists:habits,id'],
             'habits.*.activity_type_id' => ['nullable', 'exists:activity_types,id'],
             'habits.*.custom_name' => ['required', 'string', 'max:100'],
             'habits.*.custom_icon' => ['nullable', 'string', 'max:50'],
@@ -78,6 +79,7 @@ class HabitsController extends Controller
         ], [
             'habits.required' => __('validation.required'),
             'habits.max' => __('habits.maximum_reached'),
+            'habits.*.id.exists' => __('validation.exists'),
             'habits.*.activity_type_id.exists' => __('validation.in'),
             'habits.*.custom_name.required' => __('validation.required'),
             'habits.*.custom_name.max' => __('validation.max.string', ['max' => 100]),
@@ -88,9 +90,18 @@ class HabitsController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        // Get current active habits
-        $currentHabits = $user->activeHabits()->get();
+        // Get current active habits with their activity types for comparison
+        $currentHabits = $user->activeHabits()->with('activityType')->get();
         $newHabitIds = collect($validated['habits'])->pluck('id')->filter()->toArray();
+        
+        // Track activity type mappings for transferring activities
+        $activityTypeToOldHabitMap = [];
+        foreach ($currentHabits as $habit) {
+            $activityTypeToOldHabitMap[$habit->activity_type_id] = $habit->id;
+        }
+        
+        // Track new habit mappings
+        $activityTypeToNewHabitMap = [];
         
         // Soft delete habits that are not in the new list
         foreach ($currentHabits as $habit) {
@@ -101,6 +112,8 @@ class HabitsController extends Controller
 
         // Update or create habits
         foreach ($validated['habits'] as $index => $habitData) {
+            $newHabit = null;
+            
             if (isset($habitData['id']) && $habitData['id']) {
                 // Update existing habit
                 $habit = $user->habits()->find($habitData['id']);
@@ -113,10 +126,11 @@ class HabitsController extends Controller
                         'display_order' => $index,
                         'is_active' => true, // Ensure it's active
                     ]);
+                    $newHabit = $habit;
                 }
             } else {
                 // Create new habit
-                $user->habits()->create([
+                $newHabit = $user->habits()->create([
                     'activity_type_id' => $habitData['activity_type_id'],
                     'custom_name' => $habitData['custom_name'],
                     'custom_icon' => $habitData['custom_icon'] ?? null,
@@ -124,6 +138,26 @@ class HabitsController extends Controller
                     'display_order' => $index,
                     'is_active' => true,
                 ]);
+            }
+            
+            // Track the new habit for this activity type
+            if ($newHabit) {
+                $activityTypeToNewHabitMap[$habitData['activity_type_id']] = $newHabit->id;
+            }
+        }
+
+        // Transfer activities from old habits to new habits for the same activity types
+        foreach ($activityTypeToOldHabitMap as $activityTypeId => $oldHabitId) {
+            if (isset($activityTypeToNewHabitMap[$activityTypeId])) {
+                $newHabitId = $activityTypeToNewHabitMap[$activityTypeId];
+                
+                // Only transfer if it's a different habit (avoid self-update)
+                if ($oldHabitId !== $newHabitId) {
+                    // Update activities from old habit to new habit
+                    Activity::where('user_id', $user->id)
+                        ->where('habit_id', $oldHabitId)
+                        ->update(['habit_id' => $newHabitId]);
+                }
             }
         }
 

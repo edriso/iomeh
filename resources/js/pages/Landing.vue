@@ -128,8 +128,10 @@ const seoData = {
                         class="flex flex-shrink-0 items-center gap-0.5 sm:gap-1 md:gap-2 lg:gap-3"
                     >
                         <!-- Language Switcher - Compact on mobile -->
-                        <div class="flex-shrink-0 w-auto">
-                            <div class="scale-70 sm:scale-80 md:scale-90 lg:scale-100">
+                        <div class="w-auto flex-shrink-0">
+                            <div
+                                class="scale-70 sm:scale-80 md:scale-90 lg:scale-100"
+                            >
                                 <LanguageSwitcher
                                     :show-label="false"
                                     variant="single"
@@ -148,7 +150,9 @@ const seoData = {
                                 <span class="hidden sm:inline">{{
                                     t('nav.login')
                                 }}</span>
-                                <span class="sm:hidden">{{ t('nav.login') }}</span>
+                                <span class="sm:hidden">{{
+                                    t('nav.login')
+                                }}</span>
                             </Button>
                         </Link>
 
@@ -161,7 +165,9 @@ const seoData = {
                                 <span class="hidden sm:inline">{{
                                     t('nav.register')
                                 }}</span>
-                                <span class="sm:hidden">{{ t('nav.register') }}</span>
+                                <span class="sm:hidden">{{
+                                    t('nav.register')
+                                }}</span>
                             </Button>
                         </Link>
                     </div>
