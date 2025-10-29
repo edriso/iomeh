@@ -158,7 +158,8 @@ const translations = {
         'home.legend_status_achieved': 'Legend status achieved!',
         'home.days_to': 'days to',
         'home.habit_completed': 'Habit completed today',
-        'home.habit_completed_with_notes': 'Habit completed today - Click to view notes',
+        'home.habit_completed_with_notes':
+            'Habit completed today - Click to view notes',
         'home.habit_click_to_view_notes': 'Click to view notes',
         'home.habit_click_to_log': 'Click to log activity for this habit',
         // Streak Tiers
@@ -690,7 +691,8 @@ const translations = {
         'home.legend_status_achieved': 'تم تحقيق حالة الأسطورة!',
         'home.days_to': 'أيام للوصول إلى',
         'home.habit_completed': 'تم إنجاز العادة اليوم',
-        'home.habit_completed_with_notes': 'تم إنجاز العادة اليوم - انقر لعرض الملاحظات',
+        'home.habit_completed_with_notes':
+            'تم إنجاز العادة اليوم - انقر لعرض الملاحظات',
         'home.habit_click_to_view_notes': 'انقر لعرض الملاحظات',
         'home.habit_click_to_log': 'انقر لتسجيل نشاط لهذه العادة',
         // Streak Tiers
