@@ -48,22 +48,42 @@ class ActivityController extends Controller
         // Get base points from activity type
         $basePoints = $habit->activityType->base_points;
         
-        // Apply streak bonus multiplier (uses CURRENT streak before increment)
-        $pointsEarned = $user->calculatePointsWithStreakBonus($basePoints);
-        
         // Calculate what the NEW streak will be after this activity
         $today = now()->toDateString();
         $yesterday = now()->subDay()->toDateString();
         $predictedStreak = $user->current_streak;
+        $isNewDay = false;
         
         if ($user->last_activity_date && $user->last_activity_date->toDateString() === $yesterday) {
             // Consecutive day - streak will increment
             $predictedStreak = $user->current_streak + 1;
+            $isNewDay = true;
         } elseif (!$user->last_activity_date || $user->last_activity_date->toDateString() !== $today) {
             // Gap or first activity - streak will reset to 1
             $predictedStreak = 1;
+            $isNewDay = true;
         }
-        // else: same day, streak stays the same
+        // else: same day, streak stays the same (isNewDay = false)
+        
+        // Calculate the streak that should be used for multiplier calculation
+        // This should be the streak that was current at the beginning of the day,
+        // before any activities were created today
+        
+        // Count how many activities have been created today
+        $activitiesTodayCount = Activity::where('user_id', $user->id)
+            ->where('date', $today)
+            ->count();
+        
+        // Calculate the streak at the beginning of today
+        if ($user->last_activity_date && $user->last_activity_date->toDateString() === $yesterday) {
+            // If last activity was yesterday, the streak at the beginning of today was current_streak - activities_today_count
+            $streakForMultiplier = $user->current_streak - $activitiesTodayCount;
+        } else {
+            // If gap or first activity, the streak at the beginning of today was 0 (so first activity used 1)
+            $streakForMultiplier = 1;
+        }
+        
+        $pointsEarned = $this->calculatePointsWithStreakBonus($basePoints, $streakForMultiplier);
         
         // Check for milestone bonus based on the NEW streak
         $milestones = config('gamification.milestone_bonuses', []);
@@ -92,6 +112,25 @@ class ActivityController extends Controller
         }
 
         return back()->with('success', __('success.activity_logged'));
+    }
+
+    /**
+     * Calculate points with streak bonus applied using a specific streak value
+     */
+    private function calculatePointsWithStreakBonus(int $basePoints, int $streak): int
+    {
+        $tiers = config('gamification.streak_tiers', []);
+        
+        foreach ($tiers as $tier) {
+            if ($streak >= $tier['min'] && $streak <= $tier['max']) {
+                $multiplier = $tier['multiplier'] ?? 1.0;
+                return (int) round($basePoints * $multiplier);
+            }
+        }
+        
+        // Fallback to first tier if no match
+        $multiplier = $tiers[0]['multiplier'] ?? 1.0;
+        return (int) round($basePoints * $multiplier);
     }
 
     /**
