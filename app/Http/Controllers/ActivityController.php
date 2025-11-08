@@ -48,46 +48,54 @@ class ActivityController extends Controller
         // Get base points from activity type
         $basePoints = $habit->activityType->base_points;
         
-        // Calculate what the NEW streak will be after this activity
+        // Determine the streak value to use for the multiplier
+        // This should be the streak that exists RIGHT NOW, before this activity is logged
         $today = now()->toDateString();
         $yesterday = now()->subDay()->toDateString();
-        $predictedStreak = $user->current_streak;
-        $isNewDay = false;
         
-        if ($user->last_activity_date && $user->last_activity_date->toDateString() === $yesterday) {
-            // Consecutive day - streak will increment
-            $predictedStreak = $user->current_streak + 1;
-            $isNewDay = true;
-        } elseif (!$user->last_activity_date || $user->last_activity_date->toDateString() !== $today) {
-            // Gap or first activity - streak will reset to 1
-            $predictedStreak = 1;
-            $isNewDay = true;
-        }
-        // else: same day, streak stays the same (isNewDay = false)
-        
-        // Calculate the streak that should be used for multiplier calculation
-        // This should be the streak that was current at the beginning of the day,
-        // before any activities were created today
-        
-        // Count how many activities have been created today
-        $activitiesTodayCount = Activity::where('user_id', $user->id)
+        // Check if this is the first activity today
+        $isFirstActivityToday = !Activity::where('user_id', $user->id)
             ->where('date', $today)
-            ->count();
+            ->exists();
         
-        // Calculate the streak at the beginning of today
-        if ($user->last_activity_date && $user->last_activity_date->toDateString() === $yesterday) {
-            // If last activity was yesterday, the streak at the beginning of today was current_streak - activities_today_count
-            $streakForMultiplier = $user->current_streak - $activitiesTodayCount;
+        if ($isFirstActivityToday) {
+            // This is the first activity today
+            if (!$user->last_activity_date) {
+                // Very first activity ever - use streak 1
+                $streakForMultiplier = 1;
+                $predictedStreak = 1;
+            } elseif ($user->last_activity_date->toDateString() === $yesterday) {
+                // Consecutive day - the new streak will be current + 1
+                // But for this activity, use the current streak (before incrementing)
+                $streakForMultiplier = $user->current_streak;
+                $predictedStreak = $user->current_streak + 1;
+            } elseif ($user->last_activity_date->toDateString() === $today) {
+                // This shouldn't happen since we checked isFirstActivityToday, but just in case
+                $streakForMultiplier = $user->current_streak;
+                $predictedStreak = $user->current_streak;
+            } else {
+                // Gap in activities - streak resets to 1
+                $streakForMultiplier = 1;
+                $predictedStreak = 1;
+            }
         } else {
-            // If gap or first activity, the streak at the beginning of today was 0 (so first activity used 1)
-            $streakForMultiplier = 1;
+            // Multiple activities on the same day - use current streak
+            // The streak was already updated by the first activity today
+            $streakForMultiplier = $user->current_streak;
+            $predictedStreak = $user->current_streak;
         }
         
+        // Calculate points with streak multiplier
         $pointsEarned = $this->calculatePointsWithStreakBonus($basePoints, $streakForMultiplier);
         
-        // Check for milestone bonus based on the NEW streak
+        // Check for milestone bonus based on the predicted NEW streak (only for first activity of the day)
         $milestones = config('gamification.milestone_bonuses', []);
-        $milestoneBonus = $milestones[$predictedStreak] ?? 0;
+        $milestoneBonus = 0;
+        
+        if ($isFirstActivityToday && $predictedStreak > ($user->current_streak ?? 0)) {
+            // Only give milestone bonus if streak is increasing
+            $milestoneBonus = $milestones[$predictedStreak] ?? 0;
+        }
         
         if ($milestoneBonus > 0) {
             $pointsEarned += $milestoneBonus;
