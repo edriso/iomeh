@@ -1083,6 +1083,10 @@ export function useTranslations(currentLocale?: string) {
 // Function to update locale globally
 export function setLocale(locale: string) {
     globalLocale.value = locale;
+    // Save to localStorage for persistence
+    if (typeof window !== 'undefined') {
+        localStorage.setItem('locale', locale);
+    }
 }
 
 // Function to get translated quarter name

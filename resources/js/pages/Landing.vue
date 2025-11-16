@@ -34,9 +34,21 @@ withDefaults(defineProps<Props>(), {
     }),
 });
 
-// Get current locale from shared Inertia data and initialize
+// Get current locale - check localStorage first, then Inertia data, then default to 'en'
 const page = usePage();
-const initialLocale = (page.props.currentLocale as string) || 'en';
+const getInitialLocale = (): string => {
+    // Check localStorage first
+    if (typeof window !== 'undefined') {
+        const storedLocale = localStorage.getItem('locale');
+        if (storedLocale && (storedLocale === 'en' || storedLocale === 'ar')) {
+            return storedLocale;
+        }
+    }
+    // Fall back to Inertia data
+    return (page.props.currentLocale as string) || 'en';
+};
+
+const initialLocale = getInitialLocale();
 
 // Use translations with reactive locale
 const { t, isRTL } = useTranslations(initialLocale);
