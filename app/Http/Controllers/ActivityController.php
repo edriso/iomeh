@@ -30,7 +30,8 @@ class ActivityController extends Controller
 
         /** @var User $user */
         // Get user directly from database to ensure we have latest data
-        // This is important in tests where Auth::user() might be cached
+        // This is critical in tests where Auth::user() might be cached or not properly set
+        // Don't refresh here as it might cause issues with test data
         $user = User::findOrFail(Auth::id());
         
         // Get base points from activity type
@@ -38,9 +39,11 @@ class ActivityController extends Controller
         
         // Determine the streak value to use for the multiplier
         // This should be the streak that exists RIGHT NOW, before this activity is logged
-        $today = now();
+        // Use a single now() call to ensure consistency
+        $now = now();
+        $today = $now->copy();
         $todayString = $today->toDateString();
-        $yesterday = $today->copy()->subDay();
+        $yesterday = $now->copy()->subDay();
         $yesterdayString = $yesterday->toDateString();
         
         // Check if activity already exists for today and this habit
@@ -75,19 +78,34 @@ class ActivityController extends Controller
                 // Normalize both to start of day for accurate comparison
                 $lastActivityDateNormalized = $lastActivityDate->copy()->startOfDay();
                 $yesterdayNormalized = $yesterday->copy()->startOfDay();
+                $todayNormalized = $today->copy()->startOfDay();
                 
-                // Check if last activity was yesterday using multiple methods
-                // Try isYesterday() first, then fall back to date comparison
-                $isYesterday = $lastActivityDate->isYesterday() 
+                // Calculate the difference in days between last activity and today
+                // Positive means last activity is in the past
+                $daysSinceLastActivity = $lastActivityDateNormalized->diffInDays($todayNormalized, false);
+                
+                // Get date strings for direct comparison - this is the most reliable method
+                // The test sets last_activity_date to now()->subDay()->toDateString()
+                // and we calculate yesterday as now()->subDay()->toDateString()
+                // They should match if calculated at the same time
+                $lastActivityDateStr = $lastActivityDate->toDateString();
+                
+                // Check if last activity was exactly 1 day ago (consecutive day)
+                // Primary check: direct date string comparison (most reliable)
+                // Also check diffInDays as fallback for edge cases
+                $isYesterday = $lastActivityDateStr === $yesterdayString
+                    || ($daysSinceLastActivity == 1)
                     || $lastActivityDateNormalized->equalTo($yesterdayNormalized)
-                    || $lastActivityDate->toDateString() === $yesterdayString;
+                    || $lastActivityDate->isYesterday();
                 
                 if ($isYesterday) {
                     // Consecutive day - the new streak will be current + 1
                     // But for this activity, use the current streak (before incrementing)
-                    $streakForMultiplier = max(1, $user->current_streak ?? 1);
+                    // Ensure we use the actual current_streak value, not 0
+                    $currentStreak = $user->current_streak ?? 0;
+                    $streakForMultiplier = max(1, $currentStreak);
                     $predictedStreak = $streakForMultiplier + 1;
-                } elseif ($lastActivityDate->isToday() || $lastActivityDate->toDateString() === $todayString) {
+                } elseif ($daysSinceLastActivity == 0 || $lastActivityDate->isToday() || $lastActivityDate->toDateString() === $todayString) {
                     // This shouldn't happen since we checked isFirstActivityToday, but just in case
                     $streakForMultiplier = max(1, $user->current_streak ?? 1);
                     $predictedStreak = $streakForMultiplier;
@@ -107,19 +125,36 @@ class ActivityController extends Controller
                 $lastActivityDate = $user->last_activity_date instanceof \Carbon\Carbon 
                     ? $user->last_activity_date->copy()
                     : \Carbon\Carbon::parse($user->last_activity_date);
+                
+                // Normalize to start of day for accurate comparison
+                $lastActivityDateNormalized = $lastActivityDate->copy()->startOfDay();
+                $yesterdayNormalized = $yesterday->copy()->startOfDay();
+                $todayNormalized = $today->copy()->startOfDay();
+                
+                // Calculate the difference in days
+                $daysSinceLastActivity = $lastActivityDateNormalized->diffInDays($todayNormalized, false);
+                
+                // Get date strings for direct comparison
+                $lastActivityDateStr = $lastActivityDate->toDateString();
                     
                 // Count activities today to determine what streak was used for first activity
                 $activitiesTodayCount = Activity::where('user_id', $user->id)
                     ->whereDate('date', $todayString)
                     ->count();
                 
-                // Check if last activity was yesterday using multiple methods
-                $isYesterday = $lastActivityDate->isYesterday() 
-                    || $lastActivityDate->toDateString() === $yesterdayString;
+                // Check if last activity was exactly 1 day ago
+                // Primary check: direct date string comparison (most reliable)
+                // Also check diffInDays as fallback
+                $isYesterday = $lastActivityDateStr === $yesterdayString
+                    || ($daysSinceLastActivity == 1)
+                    || $lastActivityDateNormalized->equalTo($yesterdayNormalized)
+                    || $lastActivityDate->isYesterday();
                 
                 if ($isYesterday) {
                     // First activity used: current_streak - activities_today_count
-                    $streakForMultiplier = max(1, ($user->current_streak ?? 1) - $activitiesTodayCount);
+                    // Ensure we use the actual current_streak value
+                    $currentStreak = $user->current_streak ?? 0;
+                    $streakForMultiplier = max(1, $currentStreak - $activitiesTodayCount);
                 } else {
                     // Gap or first activity - first activity used streak 1
                     $streakForMultiplier = 1;
