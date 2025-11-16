@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Activity;
 use App\Models\Habit;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -21,19 +22,31 @@ class ActivityController extends Controller
             'memory_url' => ['nullable', 'url', 'max:255'],
         ]);
 
-        // Always use today's date
-        $today = now()->toDateString();
-
         // Verify the habit belongs to the authenticated user and load activity type
         $habit = Habit::with('activityType')
             ->where('id', $validated['habit_id'])
             ->where('user_id', Auth::id())
             ->firstOrFail();
 
+        /** @var User $user */
+        // Get user directly from database to ensure we have latest data
+        // This is important in tests where Auth::user() might be cached
+        $user = User::findOrFail(Auth::id());
+        
+        // Get base points from activity type
+        $basePoints = $habit->activityType->base_points;
+        
+        // Determine the streak value to use for the multiplier
+        // This should be the streak that exists RIGHT NOW, before this activity is logged
+        $today = now();
+        $todayString = $today->toDateString();
+        $yesterday = $today->copy()->subDay();
+        $yesterdayString = $yesterday->toDateString();
+        
         // Check if activity already exists for today and this habit
         $existingActivity = Activity::where('user_id', Auth::id())
             ->where('habit_id', $validated['habit_id'])
-            ->where('date', $today)
+            ->whereDate('date', $todayString)
             ->first();
 
         if ($existingActivity) {
@@ -41,21 +54,10 @@ class ActivityController extends Controller
                 'habit_id' => __('activity.already_logged_today')
             ]);
         }
-
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
-        
-        // Get base points from activity type
-        $basePoints = $habit->activityType->base_points;
-        
-        // Determine the streak value to use for the multiplier
-        // This should be the streak that exists RIGHT NOW, before this activity is logged
-        $today = now()->toDateString();
-        $yesterday = now()->subDay()->toDateString();
         
         // Check if this is the first activity today
         $isFirstActivityToday = !Activity::where('user_id', $user->id)
-            ->where('date', $today)
+            ->whereDate('date', $todayString)
             ->exists();
         
         if ($isFirstActivityToday) {
@@ -64,25 +66,66 @@ class ActivityController extends Controller
                 // Very first activity ever - use streak 1
                 $streakForMultiplier = 1;
                 $predictedStreak = 1;
-            } elseif ($user->last_activity_date->toDateString() === $yesterday) {
-                // Consecutive day - the new streak will be current + 1
-                // But for this activity, use the current streak (before incrementing)
-                $streakForMultiplier = $user->current_streak;
-                $predictedStreak = $user->current_streak + 1;
-            } elseif ($user->last_activity_date->toDateString() === $today) {
-                // This shouldn't happen since we checked isFirstActivityToday, but just in case
-                $streakForMultiplier = $user->current_streak;
-                $predictedStreak = $user->current_streak;
             } else {
-                // Gap in activities - streak resets to 1
-                $streakForMultiplier = 1;
-                $predictedStreak = 1;
+                // Convert last_activity_date to Carbon for comparison
+                $lastActivityDate = $user->last_activity_date instanceof \Carbon\Carbon 
+                    ? $user->last_activity_date->copy()
+                    : \Carbon\Carbon::parse($user->last_activity_date);
+                
+                // Normalize both to start of day for accurate comparison
+                $lastActivityDateNormalized = $lastActivityDate->copy()->startOfDay();
+                $yesterdayNormalized = $yesterday->copy()->startOfDay();
+                
+                // Check if last activity was yesterday using multiple methods
+                // Try isYesterday() first, then fall back to date comparison
+                $isYesterday = $lastActivityDate->isYesterday() 
+                    || $lastActivityDateNormalized->equalTo($yesterdayNormalized)
+                    || $lastActivityDate->toDateString() === $yesterdayString;
+                
+                if ($isYesterday) {
+                    // Consecutive day - the new streak will be current + 1
+                    // But for this activity, use the current streak (before incrementing)
+                    $streakForMultiplier = max(1, $user->current_streak ?? 1);
+                    $predictedStreak = $streakForMultiplier + 1;
+                } elseif ($lastActivityDate->isToday() || $lastActivityDate->toDateString() === $todayString) {
+                    // This shouldn't happen since we checked isFirstActivityToday, but just in case
+                    $streakForMultiplier = max(1, $user->current_streak ?? 1);
+                    $predictedStreak = $streakForMultiplier;
+                } else {
+                    // Gap in activities - streak resets to 1
+                    $streakForMultiplier = 1;
+                    $predictedStreak = 1;
+                }
             }
         } else {
-            // Multiple activities on the same day - use current streak
-            // The streak was already updated by the first activity today
-            $streakForMultiplier = $user->current_streak;
-            $predictedStreak = $user->current_streak;
+            // Multiple activities on the same day - use the streak from the first activity of the day
+            // We need to calculate what streak was used for the first activity
+            if (!$user->last_activity_date) {
+                $streakForMultiplier = 1;
+            } else {
+                // Convert last_activity_date to Carbon for comparison
+                $lastActivityDate = $user->last_activity_date instanceof \Carbon\Carbon 
+                    ? $user->last_activity_date->copy()
+                    : \Carbon\Carbon::parse($user->last_activity_date);
+                    
+                // Count activities today to determine what streak was used for first activity
+                $activitiesTodayCount = Activity::where('user_id', $user->id)
+                    ->whereDate('date', $todayString)
+                    ->count();
+                
+                // Check if last activity was yesterday using multiple methods
+                $isYesterday = $lastActivityDate->isYesterday() 
+                    || $lastActivityDate->toDateString() === $yesterdayString;
+                
+                if ($isYesterday) {
+                    // First activity used: current_streak - activities_today_count
+                    $streakForMultiplier = max(1, ($user->current_streak ?? 1) - $activitiesTodayCount);
+                } else {
+                    // Gap or first activity - first activity used streak 1
+                    $streakForMultiplier = 1;
+                }
+            }
+            $predictedStreak = max(1, $user->current_streak ?? 1);
         }
         
         // Calculate points with streak multiplier
@@ -104,7 +147,7 @@ class ActivityController extends Controller
         $activity = Activity::create([
             'user_id' => Auth::id(),
             'habit_id' => $validated['habit_id'],
-            'date' => $today,
+            'date' => $todayString,
             'points_earned' => $pointsEarned,
             'notes' => $validated['notes'] ?? null,
             'memory_url' => $validated['memory_url'] ?? null,
