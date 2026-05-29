@@ -62,7 +62,7 @@ test('it calculates correct points for first activity', function () {
 
     $response->assertStatus(302); // Redirect back with success
 
-    $activity = Activity::latest()->first();
+    $activity = Activity::latest('id')->first();
     expect($activity->points_earned)->toBe(10); // 10 * 1.0 = 10
 
     $this->user->refresh();
@@ -93,7 +93,7 @@ test('it calculates correct points for consecutive days', function () {
         'habit_id' => $this->habit->id,
     ]);
 
-    $activity = Activity::latest()->first();
+    $activity = Activity::latest('id')->first();
     expect($activity->points_earned)->toBe(10); // 10 * 1.0 (using streak 1)
     
     $this->user->refresh();
@@ -136,7 +136,7 @@ test('it uses correct multiplier for day 3', function () {
         'habit_id' => $this->habit->id,
     ]);
 
-    $activity = Activity::latest()->first();
+    $activity = Activity::latest('id')->first();
     expect($activity->points_earned)->toBe(10); // 10 * 1.0 (using streak 2)
 
     $this->user->refresh();
@@ -184,7 +184,7 @@ test('it uses correct multiplier for day 4', function () {
         'habit_id' => $this->habit->id,
     ]);
 
-    $activity = Activity::latest()->first();
+    $activity = Activity::latest('id')->first();
     expect($activity->points_earned)->toBe(12); // 10 * 1.2 (using streak 3)
 
     $this->user->refresh();
@@ -233,7 +233,7 @@ test('it resets streak and uses multiplier 1 after gap', function () {
         'habit_id' => $this->habit->id,
     ]);
 
-    $activity = Activity::latest()->first();
+    $activity = Activity::latest('id')->first();
     expect($activity->points_earned)->toBe(10); // 10 * 1.0 (streak reset to 1)
 
     $this->user->refresh();
@@ -262,7 +262,7 @@ test('it handles multiple activities on same day', function () {
         'habit_id' => $habit2->id,
     ]);
 
-    $activity = Activity::latest()->first();
+    $activity = Activity::latest('id')->first();
     expect($activity->points_earned)->toBe(10); // 10 * 1.0 (same streak)
 
     $this->user->refresh();
@@ -299,7 +299,7 @@ test('it awards milestone bonus at streak 7', function () {
         'habit_id' => $this->habit->id,
     ]);
 
-    $activity = Activity::latest()->first();
+    $activity = Activity::latest('id')->first();
     // Base: 10 * 1.2 (streak 6) = 12
     // Milestone bonus: 50
     // Total: 62
@@ -356,7 +356,7 @@ test('it calculates points correctly at streak tier boundaries', function () {
         'habit_id' => $this->habit->id,
     ]);
 
-    $activity = Activity::latest()->first();
+    $activity = Activity::latest('id')->first();
     expect($activity->points_earned)->toBe(15); // 10 * 1.5
 
     $this->user->refresh();

@@ -227,7 +227,7 @@ test('streak bonus is calculated before activity is logged', function () {
         ]);
     
     // Check the activity points
-    $activity = Activity::where('user_id', $user->id)->latest()->first();
+    $activity = Activity::where('user_id', $user->id)->latest('id')->first();
     
     // With streak 6 (before increment), should get 1.2x = 12 points
     // But if streak is incremented first to 7, it would be 1.5x = 15 points
@@ -289,7 +289,7 @@ test('user gets correct points with streak and milestone bonus combined', functi
             'notes' => 'Test activity',
         ]);
     
-    $activity = Activity::where('user_id', $user->id)->latest()->first();
+    $activity = Activity::where('user_id', $user->id)->latest('id')->first();
     $user->refresh();
     
     expect($user->current_streak)->toBe(7);
