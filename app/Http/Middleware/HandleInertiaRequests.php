@@ -36,19 +36,18 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
-
-        $currentLocale = app()->getLocale();
-        
-        // Log for debugging (remove in production)
-        // \Log::info("HandleInertiaRequests: Locale={$currentLocale}");
-        
         return [
             ...parent::share($request),
             'name' => config('app.name'),
-            'currentLocale' => $currentLocale,
-            'quote' => ['message' => trim($message), 'author' => trim($author)],
-            'auth' => [
+            'currentLocale' => app()->getLocale(),
+            // Closures are only resolved for Inertia responses, so these are not
+            // computed on plain JSON/API requests that also pass through this middleware.
+            'quote' => function () {
+                [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
+
+                return ['message' => trim($message), 'author' => trim($author)];
+            },
+            'auth' => fn () => [
                 'user' => $request->user() ? [
                     'id' => $request->user()->id,
                     'username' => $request->user()->username,
@@ -59,7 +58,7 @@ class HandleInertiaRequests extends Middleware
                     'streak_tier' => $request->user()->getStreakTier(),
                     'streak_multiplier' => $request->user()->streak_multiplier ?? 1.0,
                 ] : null,
-                'habits' => $request->user() 
+                'habits' => $request->user()
                     ? $request->user()->activeHabits()
                         ->with(['activityType', 'activities' => function ($query) {
                             $query->whereDate('date', now()->toDateString());
@@ -82,10 +81,10 @@ class HandleInertiaRequests extends Middleware
                     : [],
             ],
             'session' => [
-                'expires_at' => $request->session()->get('login_web_' . sha1('web')) 
-                    ? time() + (config('session.lifetime', 120) * 60) 
+                'expires_at' => $request->session()->get('login_web_'.sha1('web'))
+                    ? time() + (config('session.lifetime', 120) * 60)
                     : null,
-                'is_valid' => $request->session()->has('login_web_' . sha1('web')),
+                'is_valid' => $request->session()->has('login_web_'.sha1('web')),
                 'csrf_token' => csrf_token(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',

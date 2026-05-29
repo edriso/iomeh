@@ -23,12 +23,14 @@ beforeEach(function () {
 });
 
 test('home page reflects newly logged activity (cache invalidation)', function () {
-    // First load home -> populates cache
+    // First load home -> populates cache. Also confirms the lazily-shared
+    // auth data (used by the global log-activity modal) is resolved.
     $resp = $this->get('/');
-    $resp->assertInertia(fn ($p) =>
-        $p->component('Home')
-          ->where('today_activities', [])
-          ->where('habits.0.has_activity_today', false)
+    $resp->assertInertia(fn ($p) => $p->component('Home')
+        ->where('today_activities', [])
+        ->where('habits.0.has_activity_today', false)
+        ->where('auth.user.id', $this->user->id)
+        ->where('auth.habits.0.has_activity_today', false)
     );
 
     // Log an activity
@@ -36,11 +38,10 @@ test('home page reflects newly logged activity (cache invalidation)', function (
         ->assertRedirect();
 
     // Reload home -> should reflect the new activity, NOT stale cache
-    $this->get('/')->assertInertia(fn ($p) =>
-        $p->component('Home')
-          ->where('habits.0.has_activity_today', true)
-          ->has('today_activities', 1)
-          ->where('user.lifetime_points', 10)
+    $this->get('/')->assertInertia(fn ($p) => $p->component('Home')
+        ->where('habits.0.has_activity_today', true)
+        ->has('today_activities', 1)
+        ->where('user.lifetime_points', 10)
     );
 });
 
@@ -49,8 +50,7 @@ test('home reflects deleted activity', function () {
     $activity = Activity::latest('id')->first();
     $this->get('/'); // cache with the activity
     $this->delete(route('activities.destroy', $activity))->assertRedirect();
-    $this->get('/')->assertInertia(fn ($p) =>
-        $p->where('habits.0.has_activity_today', false)
-          ->has('today_activities', 0)
+    $this->get('/')->assertInertia(fn ($p) => $p->where('habits.0.has_activity_today', false)
+        ->has('today_activities', 0)
     );
 });
