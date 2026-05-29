@@ -135,6 +135,7 @@ class HomeController extends Controller
             ->whereDate('activities.date', '>=', now()->subDays(7))
             ->orderBy('activities.date', 'desc')
             ->orderBy('activities.created_at', 'desc')
+            ->orderBy('activities.id', 'desc')
             ->limit(20)
             ->get()
             ->map(function ($activity) {
@@ -211,6 +212,7 @@ class HomeController extends Controller
             ->whereDate('activities.date', '>=', now()->subDays($days))
             ->orderBy('activities.date', 'desc')
             ->orderBy('activities.created_at', 'desc')
+            ->orderBy('activities.id', 'desc')
             ->get()
             ->map(function ($activity) {
                 $isInactive = !$activity->is_active;

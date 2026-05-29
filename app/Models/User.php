@@ -176,6 +176,7 @@ class User extends Authenticatable implements MustVerifyEmail
             ->whereDate('date', now()->toDateString())
             ->with(['habit.activityType'])
             ->orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
             ->get();
     }
 

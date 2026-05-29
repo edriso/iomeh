@@ -290,6 +290,7 @@ class ActivityController extends Controller
                 'activity_types.icon as activity_type_icon',
             ])
             ->orderBy('activities.created_at', 'desc')
+            ->orderBy('activities.id', 'desc')
             ->get();
 
         // Format activities for response
