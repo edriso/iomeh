@@ -30,7 +30,7 @@ beforeEach(function () {
     ]);
 
     $this->actingAs($this->user);
-    
+
     // Helper function to create activities for past days and update streak
     $this->createPastActivity = function ($daysAgo, $points = 10) {
         $date = now()->subDays($daysAgo)->toDateString();
@@ -88,14 +88,14 @@ test('it calculates correct points for consecutive days', function () {
     // Day 2: Consecutive day (streak 1 -> 2, multiplier still 1.0)
     $this->user->refresh();
     expect($this->user->current_streak)->toBe(1); // After day 1
-    
+
     $response = $this->withoutMiddleware()->postJson(route('activities.store'), [
         'habit_id' => $this->habit->id,
     ]);
 
     $activity = Activity::latest('id')->first();
     expect($activity->points_earned)->toBe(10); // 10 * 1.0 (using streak 1)
-    
+
     $this->user->refresh();
     expect($this->user->current_streak)->toBe(2);
     expect($this->user->lifetime_points)->toBe(20);
@@ -105,7 +105,7 @@ test('it uses correct multiplier for day 3', function () {
     // Build up to day 3 to test multiplier progression
     // Skip auto-update for test setup
     Activity::$skipAutoUpdate = true;
-    
+
     Activity::create([
         'user_id' => $this->user->id,
         'habit_id' => $this->habit->id,
@@ -119,13 +119,13 @@ test('it uses correct multiplier for day 3', function () {
         'date' => now()->subDay()->toDateString(),
         'points_earned' => 10,
     ]);
-    
+
     // Manually set user state as if they completed 2 consecutive days
     $this->user->current_streak = 2;
     $this->user->longest_streak = 2;
     $this->user->last_activity_date = now()->subDay()->toDateString();
     $this->user->save();
-    
+
     Activity::$skipAutoUpdate = false;
 
     // Day 3: Should use multiplier 1.0 (streak 2) before incrementing to 3
@@ -146,7 +146,7 @@ test('it uses correct multiplier for day 3', function () {
 test('it uses correct multiplier for day 4', function () {
     // Build up to day 4 to test 1.2 multiplier
     Activity::$skipAutoUpdate = true;
-    
+
     Activity::create([
         'user_id' => $this->user->id,
         'habit_id' => $this->habit->id,
@@ -167,13 +167,13 @@ test('it uses correct multiplier for day 4', function () {
         'date' => now()->subDay()->toDateString(),
         'points_earned' => 10,
     ]);
-    
+
     // Manually set user state as if they completed 3 consecutive days
     $this->user->current_streak = 3;
     $this->user->longest_streak = 3;
     $this->user->last_activity_date = now()->subDay()->toDateString();
     $this->user->save();
-    
+
     Activity::$skipAutoUpdate = false;
 
     // Day 4: Should use multiplier 1.2 (streak 3)
@@ -194,7 +194,7 @@ test('it uses correct multiplier for day 4', function () {
 test('it resets streak and uses multiplier 1 after gap', function () {
     // Build up a streak of 3
     Activity::$skipAutoUpdate = true;
-    
+
     Activity::create([
         'user_id' => $this->user->id,
         'habit_id' => $this->habit->id,
@@ -215,13 +215,13 @@ test('it resets streak and uses multiplier 1 after gap', function () {
         'date' => now()->subDays(8)->toDateString(),
         'points_earned' => 10,
     ]);
-    
+
     // Manually set user state as if they completed 3 consecutive days (10 days ago)
     $this->user->current_streak = 3;
     $this->user->longest_streak = 3;
     $this->user->last_activity_date = now()->subDays(8)->toDateString();
     $this->user->save();
-    
+
     Activity::$skipAutoUpdate = false;
 
     $this->user->refresh();
@@ -273,7 +273,7 @@ test('it handles multiple activities on same day', function () {
 test('it awards milestone bonus at streak 7', function () {
     // Build up to day 6
     Activity::$skipAutoUpdate = true;
-    
+
     for ($i = 6; $i >= 1; $i--) {
         Activity::create([
             'user_id' => $this->user->id,
@@ -282,13 +282,13 @@ test('it awards milestone bonus at streak 7', function () {
             'points_earned' => 10,
         ]);
     }
-    
+
     // Manually set user state as if they completed 6 consecutive days
     $this->user->current_streak = 6;
     $this->user->longest_streak = 6;
     $this->user->last_activity_date = now()->subDay()->toDateString();
     $this->user->save();
-    
+
     Activity::$skipAutoUpdate = false;
 
     $this->user->refresh();
@@ -330,7 +330,7 @@ test('it prevents duplicate activity for same habit on same day', function () {
 test('it calculates points correctly at streak tier boundaries', function () {
     // Test at streak 7 (multiplier changes from 1.2 to 1.5)
     Activity::$skipAutoUpdate = true;
-    
+
     for ($i = 7; $i >= 1; $i--) {
         Activity::create([
             'user_id' => $this->user->id,
@@ -339,13 +339,13 @@ test('it calculates points correctly at streak tier boundaries', function () {
             'points_earned' => 10,
         ]);
     }
-    
+
     // Manually set user state as if they completed 7 consecutive days
     $this->user->current_streak = 7;
     $this->user->longest_streak = 7;
     $this->user->last_activity_date = now()->subDay()->toDateString();
     $this->user->save();
-    
+
     Activity::$skipAutoUpdate = false;
 
     $this->user->refresh();
@@ -361,4 +361,48 @@ test('it calculates points correctly at streak tier boundaries', function () {
 
     $this->user->refresh();
     expect($this->user->current_streak)->toBe(8);
+});
+
+test('additional same-day activities use the same streak multiplier as the first', function () {
+    // Build a 7-day streak (multiplier 1.5x) ending yesterday.
+    Activity::$skipAutoUpdate = true;
+    for ($i = 7; $i >= 1; $i--) {
+        Activity::create([
+            'user_id' => $this->user->id,
+            'habit_id' => $this->habit->id,
+            'date' => now()->subDays($i)->toDateString(),
+            'points_earned' => 10,
+        ]);
+    }
+    $this->user->current_streak = 7;
+    $this->user->longest_streak = 7;
+    $this->user->last_activity_date = now()->subDay()->toDateString();
+    $this->user->save();
+    Activity::$skipAutoUpdate = false;
+
+    // First activity today -> scored with streak 7 (1.5x) = 15
+    $this->withoutMiddleware()->postJson(route('activities.store'), [
+        'habit_id' => $this->habit->id,
+    ]);
+    expect(Activity::latest('id')->first()->points_earned)->toBe(15);
+
+    // Second activity today (different habit) -> must use the SAME 1.5x multiplier = 15
+    $habit2 = Habit::factory()->create([
+        'user_id' => $this->user->id,
+        'activity_type_id' => $this->activityType->id,
+    ]);
+    $this->withoutMiddleware()->postJson(route('activities.store'), [
+        'habit_id' => $habit2->id,
+    ]);
+    expect(Activity::latest('id')->first()->points_earned)->toBe(15);
+
+    // A third same-day activity must also be consistent.
+    $habit3 = Habit::factory()->create([
+        'user_id' => $this->user->id,
+        'activity_type_id' => $this->activityType->id,
+    ]);
+    $this->withoutMiddleware()->postJson(route('activities.store'), [
+        'habit_id' => $habit3->id,
+    ]);
+    expect(Activity::latest('id')->first()->points_earned)->toBe(15);
 });

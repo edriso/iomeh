@@ -66,11 +66,16 @@ if ($isFirstActivityToday) {
         $predictedStreak = 1;
     }
 } else {
-    // Same day multiple activities - use current streak
-    $streakForMultiplier = $user->current_streak;
-    $predictedStreak = $user->current_streak;
+    // Same day, additional activity - reuse the streak the first activity of the
+    // day was scored with. The observer already counted today once, so the streak
+    // coming into today is current_streak - 1 (floored at 1).
+    $streakForMultiplier = max(1, $user->current_streak - 1);
+    $predictedStreak = max(1, $user->current_streak);
 }
 ```
+
+This logic now lives in the dedicated `determineStreaks()` helper on the
+controller, which keeps `store()` small and the rules in one place.
 
 ## Manual Testing Scenarios
 
@@ -156,3 +161,50 @@ WHERE user_id = YOUR_USER_ID;
 - The streak is updated by the `Activity` model's observer AFTER the activity is created
 - The points calculation happens BEFORE creation, using the current user state
 - Milestone bonuses are only awarded on streak increments (first activity of a new consecutive day)
+
+---
+
+## Update (2026-05) — Persistence & Consistency Pass
+
+A follow-up review fixed several correctness, persistence, and performance issues:
+
+### 1. Same-day multiplier consistency (correctness)
+Additional activities logged on the same day were scored with a **1.0× multiplier**
+instead of the streak multiplier the first activity used (e.g. a user on a 7-day
+streak got 15 pts for the first activity but only 10 pts for the second). The old
+recovery branch was dead code because the observer had already advanced
+`last_activity_date` to today. `determineStreaks()` now derives the multiplier from
+`current_streak - 1`, so every activity on the same day earns the same multiplier
+and the streak still grows only once per day. Covered by a new test in
+`tests/Feature/ActivityPointsAndStreakTest.php`.
+
+### 2. Profile page showed stale day data (UI persistence)
+The profile day-detail panel cached fetched activities per date for the life of the
+page. Logging an activity via the global header modal reloaded the page but left the
+cache untouched, so reopening the same day hid the new activity until a hard refresh.
+`resources/js/pages/Profile.vue` now watches `calendar_data` and clears/refetches the
+open day when server props change.
+
+### 3. Deterministic activity ordering
+Activities logged in the same second tied on `created_at`, producing an arbitrary
+display order. An `id` tiebreaker was added to the today/recent/by-date queries.
+
+### 4. Atomic activity creation
+`ActivityController@store` wraps the `Activity::create()` (and its streak/season
+observer side effects) in a `DB::transaction` so a mid-write failure can't leave the
+user's streak or points inconsistent.
+
+### 5. Lazily-shared Inertia data (performance)
+`HandleInertiaRequests::share()` ran on every request — including plain JSON/API
+calls — eagerly querying the user's habits + today's activities and computing a
+random quote. `auth` and `quote` are now closures, so they are only resolved for
+actual Inertia responses.
+
+### 6. Cleanup
+Removed the unused `routes/web_backup.php` and `routes/web_clean.php` leftovers
+(only `routes/web.php` is registered in `bootstrap/app.php`).
+
+### Test reliability
+`Activity::latest()` (orders by `created_at`) tied between seeded setup rows and the
+row created by the request, so assertions could read the wrong activity. Tests now
+use `Activity::latest('id')` to deterministically read the most recently inserted row.
