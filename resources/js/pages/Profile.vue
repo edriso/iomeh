@@ -29,7 +29,7 @@ import {
     Lock,
     Trophy,
 } from 'lucide-vue-next';
-import { computed, nextTick, ref } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 
 interface ProfileUser {
     id: number;
@@ -224,6 +224,41 @@ const handleDayClick = async (date: string) => {
         loadingActivities.value = false;
     }
 };
+
+// Fetch activities for a date, bypassing the cache (used to refresh stale data)
+const fetchActivitiesForDate = async (date: string) => {
+    try {
+        const response = await fetch(`/api/activities/date/${date}`, {
+            headers: {
+                Accept: 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        });
+        if (response.ok) {
+            const data = await response.json();
+            const activities = data.activities || [];
+            activitiesCache.value[date] = activities;
+            if (selectedDate.value === date) {
+                selectedDateActivities.value = activities;
+            }
+        }
+    } catch {
+        // Ignore network errors; keep showing whatever we already have.
+    }
+};
+
+// When the server props change (e.g. an activity was logged via the global
+// header modal and Inertia reloaded the page), the per-date cache can be stale.
+// Clear it and refetch the open day so newly saved activities appear immediately.
+watch(
+    () => props.calendar_data,
+    () => {
+        activitiesCache.value = {};
+        if (selectedDate.value) {
+            fetchActivitiesForDate(selectedDate.value);
+        }
+    },
+);
 
 // Function to scroll to activities container
 const scrollToActivities = () => {
